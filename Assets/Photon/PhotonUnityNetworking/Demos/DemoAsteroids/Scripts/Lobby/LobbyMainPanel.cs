@@ -37,6 +37,9 @@ namespace Photon.Pun.Demo.Asteroids
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
 
+        [Header("Misc")]
+        public byte maxPlayersPerRoom = 4;
+
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
         private Dictionary<int, GameObject> playerListEntries;
@@ -91,7 +94,7 @@ namespace Photon.Pun.Demo.Asteroids
         {
             string roomName = "Room " + Random.Range(1000, 10000);
 
-            RoomOptions options = new RoomOptions {MaxPlayers = 8};
+            RoomOptions options = new RoomOptions {MaxPlayers = maxPlayersPerRoom};
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
@@ -210,9 +213,10 @@ namespace Photon.Pun.Demo.Asteroids
             string roomName = RoomNameInputField.text;
             roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
 
-            byte maxPlayers;
-            byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
-            maxPlayers = (byte) Mathf.Clamp(maxPlayers, 2, 8);
+            byte maxPlayers = maxPlayersPerRoom;
+            // byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
+
+            maxPlayers = (byte) Mathf.Clamp(maxPlayers, 2, maxPlayersPerRoom);
 
             RoomOptions options = new RoomOptions {MaxPlayers = maxPlayers};
 
@@ -261,7 +265,7 @@ namespace Photon.Pun.Demo.Asteroids
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
-            PhotonNetwork.LoadLevel("DemoAsteroids-GameScene");
+            PhotonNetwork.LoadLevel("Game");
         }
 
         #endregion
