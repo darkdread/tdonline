@@ -10,10 +10,16 @@ public class TdPlayerUi : MonoBehaviour
 {
     private TdPlayerController _playerController;
     public TextMeshProUGUI playerNameText;
+    public GameObject playerUseButton;
 
     public void SetTarget(TdPlayerController playerController){
         _playerController = playerController;
+
         playerNameText.text = playerController.photonView.Owner.NickName;
+    }
+
+    public void ShowUseButton(bool show){
+        playerUseButton.SetActive(show);
     }
 
     private void Update(){
@@ -23,6 +29,7 @@ public class TdPlayerUi : MonoBehaviour
             return;
         }
 
-        playerNameText.transform.position = Camera.main.WorldToScreenPoint(_playerController.transform.position);
+        transform.position = Camera.main.WorldToScreenPoint(_playerController.transform.position);
+        // playerNameText.transform.position = Camera.main.WorldToScreenPoint(_playerController.transform.position);
     }
 }

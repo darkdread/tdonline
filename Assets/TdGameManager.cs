@@ -16,20 +16,15 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 {
     public static TdGameManager instance = null;
     public static int playersLoaded = 0;
-
-    [Header("Setup")]
-    public Transform[] playerStartPositions;
+    public static TdGameSettings gameSettings;
 
 
     [Header("Game Interface")]
     public GameObject gameCanvas;
 
-
-    private Dictionary<int, TdPlayerController> playerControllers = new Dictionary<int, TdPlayerController>();
-    private Dictionary<int, TextMeshProUGUI> playerNameTexts = new Dictionary<int, TextMeshProUGUI>();
-
     private void Awake(){
         instance = this;
+        gameSettings = GetComponent<TdGameSettings>();
     }
 
     private void Start(){
@@ -42,29 +37,12 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
-    public TdPlayerController GetPlayerController(int playerId){
-        return playerControllers[playerId];
-    }
-
-    private void Update(){
-        foreach(KeyValuePair<int, TextMeshProUGUI> kvp in playerNameTexts){
-            TdPlayerController currentPlayer = GetPlayerController(kvp.Key);
-
-            if (currentPlayer == null){
-                print($"Player {kvp.Key} is empty!");
-                continue;
-            }
-
-            kvp.Value.transform.position = Camera.main.WorldToScreenPoint(currentPlayer.transform.position);
-        }
-    }
-
     private void StartGame(){
         int localPlayerId = PhotonNetwork.LocalPlayer.GetPlayerNumber();
 
         print(localPlayerId);
 
-        Vector3 position = instance.playerStartPositions[localPlayerId].position;
+        Vector3 position = gameSettings.playerStartPositions[localPlayerId].position;
         Quaternion rotation = Quaternion.identity;
 
         // Instantiate the player, player name, and set custom property of player controller for local player.
@@ -75,6 +53,17 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         {
             // StartCoroutine(SpawnAsteroid());
         }
+    }
+
+    public static TdPlayerController[] GetTdPlayerControllersNearPosition(Vector2 position, float radius){
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position, radius, 1 << 8);
+
+        List<TdPlayerController> controllers = new List<TdPlayerController>();
+        foreach(Collider2D c in colliders){
+            controllers.Add(c.GetComponent<TdPlayerController>());
+        }
+
+        return controllers.ToArray();
     }
 
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps){

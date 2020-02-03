@@ -27,12 +27,16 @@ MonoBehaviour:
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
-  StartInOfflineMode: 0
+  StartInOfflineMode: 1
   RpcList:
   - ClickRpc
   - DestroyRpc
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - OnStartClimb
+  - OnStopClimb
+  - OnStopUsingTurret
+  - OnUsingTurret
   DisableAutoOpenWizard: 1
   ShowSettings: 1
