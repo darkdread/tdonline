@@ -7,6 +7,7 @@ using Photon.Pun;
 public enum PlayerState {
     Climbing = 1,
     UsingTurret = 2,
+    CarryingItem = 4,
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -14,8 +15,14 @@ public class TdPlayerController : MonoBehaviour
     [HideInInspector]
     public PhotonView photonView;
 
+    [HideInInspector]
     public Collider2D playerCollider;
+
+    [HideInInspector]
     public Rigidbody2D playerRigidbody;
+
+    public Transform playerCarryTransform;
+    public Collider2D playerFeetCollider;
 
 
     [SerializeField]
@@ -86,11 +93,11 @@ public class TdPlayerController : MonoBehaviour
 
         if ((playerState & PlayerState.Climbing) != PlayerState.Climbing){
             
-            GameObject ladder = getCollidingLadder();
+            GameObject ladder = GetCollidingLadder();
 
             if (ladder){
                 Bounds ladderBounds = ladder.GetComponent<Collider2D>().bounds;
-                Bounds entityBounds = playerCollider.bounds;
+                Bounds entityBounds = playerFeetCollider.bounds;
 
                 // Player is pressing vertical input, is colliding with ladder, and
                 // player presses up input when he is below half the ladder, vice-versa.
@@ -110,14 +117,14 @@ public class TdPlayerController : MonoBehaviour
             velocityDelta.x = 0f;
 
             Bounds ladderBounds = playerClimbingLadder.GetComponent<Collider2D>().bounds;
-            Bounds entityBounds = playerCollider.bounds;
+            Bounds entityBounds = playerFeetCollider.bounds;
 
             // Player is not colliding with ladder, or player is climbing down and
             // player's collider's lowest y point is < ladder's collider's lowest y point
             // with offset.
 
             // To prevent player from clipping through bottom of ladder.
-            if (!isCollidingLadder() 
+            if (!IsCollidingLadder() 
             || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.3f){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
@@ -129,7 +136,7 @@ public class TdPlayerController : MonoBehaviour
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;
     }
 
-    public bool isCollidingGround(){
+    public bool IsCollidingGround(){
         List<Collider2D> colliders = new List<Collider2D>();
         ContactFilter2D contactFilter2D = new ContactFilter2D();
         Physics2D.OverlapCollider(playerCollider, contactFilter2D, colliders);
@@ -143,17 +150,17 @@ public class TdPlayerController : MonoBehaviour
         return false;
     }
 
-    public bool isCollidingLadder(){
-        if (getCollidingLadder() != null){
+    public bool IsCollidingLadder(){
+        if (GetCollidingLadder() != null){
             return true;
         }
 
         return false;
     }
 
-    public GameObject getCollidingLadder(){
+    public GameObject GetCollidingLadder(){
         List<Collider2D> colliders = new List<Collider2D>();
-        Physics2D.OverlapCollider(playerCollider, ladderFilter2D, colliders);
+        Physics2D.OverlapCollider(playerFeetCollider, ladderFilter2D, colliders);
 
         foreach(Collider2D c in colliders){
             if (c.tag == "Ladder"){
