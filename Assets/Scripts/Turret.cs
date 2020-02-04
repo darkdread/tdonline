@@ -15,7 +15,27 @@ public class Turret : Interactable {
     protected Collider2D turretCollider;
     public TdPlayerController controllingPlayer;
 
+    public List<TurretExtension> turretExtensions = new List<TurretExtension>();
+
+    [HideInInspector]
+    // For TurretExtension's usage.
+    public List<TurretExtensionData> turretExtensionDatas = new List<TurretExtensionData>();
+
     public TurretState turretState;
+
+    protected virtual void Awake(){
+        photonView = GetComponent<PhotonView>();
+        turretCollider = GetComponent<Collider2D>();
+
+        // Creates data for each attached extensions.
+        foreach(TurretExtension turretExtension in turretExtensions){
+            turretExtension.OnLoadExtension(this);
+        }
+    }
+
+    public TurretExtensionData GetTurretExtensionData(TurretExtension turretExtension){
+        return turretExtensionDatas[turretExtensions.IndexOf(turretExtension)];
+    }
 
     [PunRPC]
     protected void SetTurretState(TurretState state) {
@@ -67,11 +87,6 @@ public class Turret : Interactable {
         base.OnExitInteractRadius(playerController);
     }
 
-    private void Awake() {
-        photonView = GetComponent<PhotonView>();
-        turretCollider = GetComponent<Collider2D>();
-    }
-
     protected override void OnInteract(TdPlayerController playerController) {
         if (controllingPlayer != null && controllingPlayer != playerController) {
             return;
@@ -79,6 +94,10 @@ public class Turret : Interactable {
 
         if (!IsInRadius(playerController.transform.position)) {
             return;
+        }
+
+        foreach(TurretExtension turretExtension in turretExtensions){
+            turretExtension.OnInteract(this);
         }
 
         if ((turretState & TurretState.InUse) == TurretState.InUse) {
@@ -96,6 +115,14 @@ public class Turret : Interactable {
         // Update interactivity button when state is in use.
         if ((turretState & TurretState.InUse) == TurretState.InUse) {
             OnExitInteractRadius(playerController);
+        }
+    }
+
+    protected override void Update(){
+        base.Update();
+
+        foreach(TurretExtension turretExtension in turretExtensions){
+            turretExtension.UpdateTurretExtension(this);
         }
     }
 }

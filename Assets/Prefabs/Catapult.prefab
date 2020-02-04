@@ -155,6 +155,8 @@ MonoBehaviour:
   interactableTrigger: {fileID: 1037708926}
   photonView: {fileID: 0}
   controllingPlayer: {fileID: 0}
+  turretExtensions:
+  - {fileID: 11400000, guid: 2c16176836779084da96bbc2bf09e611, type: 2}
   turretState: 0
 --- !u!1 &1602190501763788721
 GameObject:

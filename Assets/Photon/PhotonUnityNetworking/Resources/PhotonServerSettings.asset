@@ -41,5 +41,6 @@ MonoBehaviour:
   - SetTurretState
   - SetTurretUser
   - OnCarryGameObject
+  - LoadObject
   DisableAutoOpenWizard: 1
   ShowSettings: 1

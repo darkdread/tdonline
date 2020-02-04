@@ -7,6 +7,8 @@ using Photon.Pun;
 public class Interactable : MonoBehaviour {
 
     protected bool canInteract = true;
+    protected bool wasInRadius = false;
+
     [SerializeField]
     protected Collider2D interactableTrigger;
 
@@ -20,11 +22,14 @@ public class Interactable : MonoBehaviour {
 
     protected virtual void OnEnterInteractRadius(TdPlayerController playerController) {
         print("EnterInteractRadius");
-        print(playerController);
-        playerController.playerUi.ShowUseButton(true);
+        print(this);
+        wasInRadius = true;
     }
 
     protected virtual void OnExitInteractRadius(TdPlayerController playerController) {
+        print("ExitInteractRadius");
+        print(this);
+        wasInRadius = false;
         playerController.playerUi.ShowUseButton(false);
     }
 
@@ -34,7 +39,7 @@ public class Interactable : MonoBehaviour {
 
     protected virtual void OnInteract(TdPlayerController playerController) {
         print("OnInteract");
-        print(playerController);
+        print(this);
     }
 
     protected virtual void OnInteractRadiusStay(TdPlayerController playerController) {
@@ -44,24 +49,37 @@ public class Interactable : MonoBehaviour {
 
         // Show it's usable.
         if (IsInRadius(playerController.transform.position)) {
-            OnEnterInteractRadius(playerController);
 
+            if (!wasInRadius){
+                OnEnterInteractRadius(playerController);
+            }
+
+            playerController.playerUi.ShowUseButton(true);
             if (Input.GetButtonDown("Use")) {
                 OnInteract(playerController);
             }
-        } else {
+        } else if (wasInRadius) {
             OnExitInteractRadius(playerController);
         }
     }
 
-    protected void Update() {
+    protected virtual void Update() {
         if (!canInteract) {
             return;
         }
 
-        TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
+        // TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
 
-        foreach (TdPlayerController playerController in playerControllers) {
+        List<Collider2D> colliders = new List<Collider2D>();
+        interactableTrigger.GetContacts(colliders);
+
+        foreach (Collider2D c in colliders) {
+            TdPlayerController playerController = c.GetComponent<TdPlayerController>();
+
+            if (!playerController){
+                continue;
+            }
+
             OnInteractRadiusStay(playerController);
         }
     }

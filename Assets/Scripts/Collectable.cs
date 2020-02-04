@@ -31,11 +31,16 @@ public class Collectable : Interactable {
     }
 
     protected override void OnInteract(TdPlayerController playerController) {
+        // If it's a stack, don't allow a player who's carrying object to take from stack.
         if (infinite) {
-            StartCoroutine(SpawnAndTake(playerController));
+             if (!playerController.IsCarryingObject()){
+                 StartCoroutine(SpawnAndTake(playerController));
+             }
         } else {
+            // Carry collectable object.
             playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, photonView.ViewID);
         }
+        
         base.OnInteract(playerController);
     }
 }

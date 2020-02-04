@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d309f2935c6ac4185d4d9875f21bb4, type: 3}
+  m_Name: ReloadableExtension
+  m_EditorClassIdentifier: 
+  requiredObject: {fileID: 57118556139921570, guid: 39aabbfca4b4f9d49b07ef4f697d3109,
+    type: 3}

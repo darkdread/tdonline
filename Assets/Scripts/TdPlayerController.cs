@@ -7,7 +7,7 @@ using Photon.Pun;
 public enum PlayerState {
     Climbing = 1,
     UsingTurret = 2,
-    CarryingItem = 4,
+    CarryingObject = 4,
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -80,22 +80,33 @@ public class TdPlayerController : MonoBehaviour
     public void OnCarryGameObject(int viewId) {
         print($"Player {photonView.ControllerActorNr} Carrying {viewId}");
 
-        if (viewId == -1) {
-            playerState = playerState & ~PlayerState.CarryingItem;
+        // Current carried item of player.
+        if (playerCarriedObject != null){
             playerCarriedObject.GetComponent<Interactable>().IsInteractable(true);
-            playerCarriedObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            playerCarriedObject.GetComponent<Rigidbody2D>().isKinematic = false;
+        }
+
+        // Stop carrying item.
+        if (viewId == -1) {
+            playerState = playerState & ~PlayerState.CarryingObject;
             playerCarriedObject = null;
             return;
         }
 
-        playerState = playerState | PlayerState.CarryingItem;
+        // Carry item.
+        playerState = playerState | PlayerState.CarryingObject;
         playerCarriedObject = PhotonNetwork.GetPhotonView(viewId).gameObject;
         playerCarriedObject.GetComponent<Interactable>().IsInteractable(false);
+        playerCarriedObject.GetComponent<Rigidbody2D>().isKinematic = true;
         playerUi.ShowUseButton(false);
     }
 
+    public bool IsCarryingObject(){
+        return (playerState & PlayerState.CarryingObject) != 0;
+    }
+
     private void UpdateView() {
-        if ((playerState & PlayerState.CarryingItem) != 0) {
+        if (IsCarryingObject()) {
             playerCarriedObject.transform.position = playerCarryTransform.transform.position;
         }
     }
@@ -116,7 +127,7 @@ public class TdPlayerController : MonoBehaviour
         }
 
         // Drop object if carrying.
-        if ((playerState & PlayerState.CarryingItem) != 0) {
+        if (IsCarryingObject()) {
             if (Input.GetButtonDown("Use")) {
                 print("Drop");
                 photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
