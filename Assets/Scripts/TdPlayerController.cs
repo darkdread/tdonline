@@ -21,13 +21,17 @@ public class TdPlayerController : MonoBehaviour
     [HideInInspector]
     public Rigidbody2D playerRigidbody;
 
+    [Header("Initialization")]
     public Transform playerCarryTransform;
     public Collider2D playerFeetCollider;
 
-
+    [Header("Ladder")]
     [SerializeField]
     public ContactFilter2D ladderFilter2D;
     public GameObject playerClimbingLadder;
+
+    [Header("Carry")]
+    public GameObject playerCarriedObject;
 
     [HideInInspector]
     public TdPlayerUi playerUi;
@@ -72,20 +76,54 @@ public class TdPlayerController : MonoBehaviour
         playerState = playerState & ~PlayerState.UsingTurret;
     }
 
+    [PunRPC]
+    public void OnCarryGameObject(int viewId) {
+        print($"Player {photonView.ControllerActorNr} Carrying {viewId}");
+
+        if (viewId == -1) {
+            playerState = playerState & ~PlayerState.CarryingItem;
+            playerCarriedObject.GetComponent<Interactable>().IsInteractable(true);
+            playerCarriedObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            playerCarriedObject = null;
+            return;
+        }
+
+        playerState = playerState | PlayerState.CarryingItem;
+        playerCarriedObject = PhotonNetwork.GetPhotonView(viewId).gameObject;
+        playerCarriedObject.GetComponent<Interactable>().IsInteractable(false);
+        playerUi.ShowUseButton(false);
+    }
+
+    private void UpdateView() {
+        if ((playerState & PlayerState.CarryingItem) != 0) {
+            playerCarriedObject.transform.position = playerCarryTransform.transform.position;
+        }
+    }
+
     private void Update(){
+        UpdateView();
+
         if (!photonView.IsMine){
             return;
         }
 
         print(playerState);
 
+        // Stop movement if using turret.
         if ((playerState & PlayerState.UsingTurret) != 0){
             playerRigidbody.velocity = Vector2.zero;
             return;
         }
 
-        // Movement logic.
+        // Drop object if carrying.
+        if ((playerState & PlayerState.CarryingItem) != 0) {
+            if (Input.GetButtonDown("Use")) {
+                print("Drop");
+                photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
+            }
+        }
 
+        // Movement logic.
         float horizontalAxis = Input.GetAxisRaw("Horizontal");
         float verticalAxis = Input.GetAxisRaw("Vertical");
 

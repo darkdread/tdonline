@@ -5,8 +5,18 @@ using UnityEngine;
 using Photon.Pun;
 
 public class Interactable : MonoBehaviour {
+
+    protected bool canInteract = true;
     [SerializeField]
     protected Collider2D interactableTrigger;
+
+    public bool IsInteractable() {
+        return canInteract;
+    }
+
+    public void IsInteractable(bool interactable) {
+        canInteract = interactable;
+    }
 
     protected virtual void OnEnterInteractRadius(TdPlayerController playerController) {
         print("EnterInteractRadius");
@@ -45,6 +55,10 @@ public class Interactable : MonoBehaviour {
     }
 
     protected void Update() {
+        if (!canInteract) {
+            return;
+        }
+
         TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
 
         foreach (TdPlayerController playerController in playerControllers) {
