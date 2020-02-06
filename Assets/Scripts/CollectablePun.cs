@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 
+// https://stackoverflow.com/questions/1446547/how-to-convert-an-object-to-a-byte-array-in-c-sharp
 public class CollectablePun {
     public string resourceName;
     public Int32 playerViewId;

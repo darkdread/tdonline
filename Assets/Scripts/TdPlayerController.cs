@@ -133,12 +133,23 @@ public class TdPlayerController : MonoBehaviour
     public void DropObject(bool remove = false){
         SetInteractingInstant(true);
 
+        PhotonView objectPhotonView = playerCarriedObject.GetComponent<PhotonView>();
+
         if (remove){
-            PhotonNetwork.Destroy(playerCarriedObject);
+            // It is a scene object, run rpc to destroy.
+            if (objectPhotonView.IsSceneView){
+                if (PhotonNetwork.IsMasterClient){
+                    PhotonNetwork.Destroy(objectPhotonView);
+                } else {
+                    TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, objectPhotonView.ViewID);
+                }
+            } else {
+                PhotonNetwork.Destroy(objectPhotonView);
+            }
+            
         }
         
         photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
-
 
         SetInteractingDelayFrame(false, 1);
     }

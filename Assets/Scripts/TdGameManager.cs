@@ -43,6 +43,12 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    public void DestroySceneObject(int viewId){
+        PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
+        PhotonNetwork.Destroy(obj);
+    }
+
+    [PunRPC]
     public void SpawnObject(byte[] customType){
         print("SpawnObject");
 
