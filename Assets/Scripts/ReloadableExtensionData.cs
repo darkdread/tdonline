@@ -31,8 +31,6 @@ public class ReloadableExtensionData : TurretExtensionData {
         // Although it still doesn't make sense of why the master client has a normal scale.
         transform.localScale = Vector3.one;
 
-        turret.turretExtensionDatas.Add(this);
-
         base.OnPhotonInstantiate(info);
     }
 }

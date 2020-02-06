@@ -17,7 +17,7 @@ public class TurretExtensionData : MonoBehaviourPunCallbacks, IPunInstantiateMag
     }
 
     public virtual void OnPhotonInstantiate(PhotonMessageInfo info){
-        // turret.turretExtensionDatas.Add(this);
+        
     }
 }
 
@@ -41,6 +41,6 @@ public abstract class TurretExtension : ScriptableObject {
         // Workaround: Modify all view ids of instances of objects in scene to a high number.
         GameObject obj = PhotonNetwork.InstantiateSceneObject(resourceName, Vector3.zero, Quaternion.identity);
         PhotonView photonView = obj.GetComponent<PhotonView>();
-        photonView.RPC("OnLoad", RpcTarget.All, turret.photonView.ViewID);
+        photonView.RPC("OnLoad", RpcTarget.AllBufferedViaServer, turret.photonView.ViewID);
     }
 }
