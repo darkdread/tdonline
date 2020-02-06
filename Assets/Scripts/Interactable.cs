@@ -7,7 +7,7 @@ using Photon.Pun;
 public class Interactable : MonoBehaviour {
 
     protected bool canInteract = true;
-    protected bool wasInRadius = false;
+    protected HashSet<TdPlayerController> interactedCached = new HashSet<TdPlayerController>();
 
     [SerializeField]
     protected Collider2D interactableTrigger;
@@ -16,20 +16,23 @@ public class Interactable : MonoBehaviour {
         return canInteract;
     }
 
-    public void IsInteractable(bool interactable) {
+    public void SetInteractable(bool interactable) {
         canInteract = interactable;
+
+        if (!canInteract){
+            RemoveAllInteracted();
+        }
+        // UpdateInteractivity();
     }
 
     protected virtual void OnEnterInteractRadius(TdPlayerController playerController) {
         print("EnterInteractRadius");
         print(this);
-        wasInRadius = true;
     }
 
     protected virtual void OnExitInteractRadius(TdPlayerController playerController) {
         print("ExitInteractRadius");
         print(this);
-        wasInRadius = false;
         playerController.playerUi.ShowUseButton(false);
     }
 
@@ -50,30 +53,34 @@ public class Interactable : MonoBehaviour {
         }
 
         // Show it's usable.
-        if (IsInRadius(playerController.transform.position)) {
-
-            if (!wasInRadius){
-                OnEnterInteractRadius(playerController);
-            }
+        // if (IsInRadius(playerController.transform.position)) {
 
             playerController.playerUi.ShowUseButton(true);
+
             if (Input.GetButtonDown("Use") && !playerController.IsInteracting()) {
                 OnInteract(playerController);
             }
-        } else if (wasInRadius) {
-            OnExitInteractRadius(playerController);
-        }
+        // }
     }
 
-    protected virtual void Update() {
-        if (!canInteract) {
-            return;
+    public void RemoveAllInteracted(){
+        print("RemoveAllInteracted");
+
+        foreach(TdPlayerController playerController in interactedCached){
+            OnExitInteractRadius(playerController);
         }
 
-        // TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
+        interactedCached = new HashSet<TdPlayerController>();
+    }
+
+    public void UpdateInteractivity(){
+        print("UpdateInteractivity");
 
         List<Collider2D> colliders = new List<Collider2D>();
         interactableTrigger.GetContacts(colliders);
+
+        HashSet<TdPlayerController> cached = new HashSet<TdPlayerController>(interactedCached);
+        HashSet<TdPlayerController> current = new HashSet<TdPlayerController>();
 
         foreach (Collider2D c in colliders) {
             TdPlayerController playerController = c.GetComponent<TdPlayerController>();
@@ -82,7 +89,26 @@ public class Interactable : MonoBehaviour {
                 continue;
             }
 
+            current.Add(playerController);
             OnInteractRadiusStay(playerController);
         }
+
+        cached.ExceptWith(current);
+
+        foreach(TdPlayerController playerController in cached){
+            OnExitInteractRadius(playerController);
+        }
+
+        interactedCached = current;
+    }
+
+    protected virtual void Update() {
+        if (!canInteract) {
+            return;
+        }
+
+        // TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
+        UpdateInteractivity();
+        
     }
 }

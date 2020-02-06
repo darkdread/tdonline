@@ -79,6 +79,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         GameObject playerObject = PhotonNetwork.Instantiate("Player", position, rotation, 0);
         TdPlayerController playerController = playerObject.GetComponent<TdPlayerController>();
 
+        playerObject.name = playerObject.name + localPlayerId;
+
         if (PhotonNetwork.IsMasterClient)
         {
             // StartCoroutine(SpawnAsteroid());

@@ -83,7 +83,7 @@ public class TdPlayerController : MonoBehaviour
 
         // Current carried item of player.
         if (playerCarriedObject != null){
-            playerCarriedObject.GetComponent<Interactable>().IsInteractable(true);
+            playerCarriedObject.GetComponent<Interactable>().SetInteractable(true);
             playerCarriedObject.GetComponent<Rigidbody2D>().isKinematic = false;
         }
 
@@ -97,9 +97,15 @@ public class TdPlayerController : MonoBehaviour
         // Carry item.
         playerState = playerState | PlayerState.CarryingObject;
         playerCarriedObject = PhotonNetwork.GetPhotonView(viewId).gameObject;
-        playerCarriedObject.GetComponent<Interactable>().IsInteractable(false);
         playerCarriedObject.GetComponent<Rigidbody2D>().isKinematic = true;
-        playerUi.ShowUseButton(false);
+
+        // Update the view here, so that the collider doesn't collide with other interactables.
+        // Doesn't work, not sure why. Instead, we force remove all interacted objects with
+        // RemoveAllInteracted().
+        // UpdateView();
+
+        playerCarriedObject.GetComponent<Interactable>().SetInteractable(false);
+        // playerUi.ShowUseButton(false);
     }
 
     private IEnumerator SetInteractDelayFrame(bool interacting, int frameCount){
@@ -146,7 +152,6 @@ public class TdPlayerController : MonoBehaviour
             } else {
                 PhotonNetwork.Destroy(objectPhotonView);
             }
-            
         }
         
         photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
@@ -223,7 +228,7 @@ public class TdPlayerController : MonoBehaviour
 
             // To prevent player from clipping through bottom of ladder.
             if (!IsCollidingLadder() 
-            || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.3f){
+            || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.1f){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
                 // OnStopClimb();

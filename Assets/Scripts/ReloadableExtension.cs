@@ -42,6 +42,7 @@ public class ReloadableExtension : TurretExtension {
         // Check if item is the supposed type.
         if (playerController.playerCarriedObject.GetComponent<SpriteRenderer>().sprite != requiredObject.GetComponent<SpriteRenderer>().sprite){
             Debug.Log("Not same item!");
+            return;
         }
 
         playerController.DropObject(true);
