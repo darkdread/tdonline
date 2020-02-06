@@ -22,38 +22,31 @@ public class Collectable : Interactable {
     }
 
     private IEnumerator SpawnAndCarry(TdPlayerController playerController) {
-        yield return null;
-
         CollectablePun data = new CollectablePun(){
             resourceName = collectablePrefab.name,
             playerViewId = playerController.photonView.ViewID
         };
 
         TdGameManager.instance.photonView.RPC("SpawnObject", RpcTarget.MasterClient, CollectablePun.Serialize(data));
+        yield return null;
     }
 
     
     private IEnumerator Carry(TdPlayerController playerController) {
-        yield return null;
-
         playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, photonView.ViewID);
+        yield return null;
     }
 
     protected override void OnInteractRadiusStay(TdPlayerController playerController){
-        // Don't allow a player who's carrying an object to carry again.
+        // Don't allow a player who's carrying an object to interact.
         if (playerController.IsCarryingObject()){
             return;
         }
-
+        
         base.OnInteractRadiusStay(playerController);
     }
 
     protected override void OnInteract(TdPlayerController playerController) {
-        // Don't allow a player who's carrying object to carry.
-        if (playerController.IsCarryingObject()){
-            print("Don't interact");
-            return;
-        }
 
         // If it's a stack, spawn the object and force player to carry it.
         if (infinite) {

@@ -88,17 +88,18 @@ public class Turret : Interactable {
         base.OnExitInteractRadius(playerController);
     }
 
-    protected override void OnInteract(TdPlayerController playerController) {
+    protected override void OnInteract(TdPlayerController playerController){
         if (controllingPlayer != null && controllingPlayer != playerController) {
-            return;
-        }
-
-        if (!IsInRadius(playerController.transform.position)) {
             return;
         }
 
         foreach(TurretExtension turretExtension in turretExtensions){
             turretExtension.OnInteract(this, playerController);
+        }
+
+        if (playerController.IsInteracting()){
+            print("Player is interacting, probably one of the extension set player interaction to true.");
+            return;
         }
 
         if ((turretState & TurretState.InUse) == TurretState.InUse) {

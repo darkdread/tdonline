@@ -7,7 +7,7 @@ using Photon.Pun;
 [CreateAssetMenu(fileName = "ReloadableExtension", menuName = "TurretExtension/ReloadableExtension")]
 public class ReloadableExtension : TurretExtension {
 
-    public GameObject requiredObject;
+    public List<GameObject> compatibleObjects = new List<GameObject>();
     public ReloadableExtensionData uiPrefab;
     public ItemSlot itemSlotPrefab;
 
@@ -24,14 +24,15 @@ public class ReloadableExtension : TurretExtension {
         }
     }
     
-    public void LoadObject(Turret turret, ReloadableExtensionData data){
-        Debug.Log(data.photonView);
-        data.photonView.RPC("SetAmmunition", RpcTarget.All, data.ammunition + 1);
+    public void LoadObject(Turret turret, ReloadableExtensionData data, PhotonView view){
+        data.photonView.RPC("AddAmmunition", RpcTarget.All, view.ViewID);
     }
 
     private void UpdateUi(Turret turret){
         ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
         data.transform.position = Camera.main.WorldToScreenPoint(turret.transform.position);
+
+        // Logic for item to show up in ui here.
     }
 
     override public void OnInteract(Turret turret, TdPlayerController playerController){
@@ -40,17 +41,22 @@ public class ReloadableExtension : TurretExtension {
         }
 
         // Check if item is the supposed type.
-        if (playerController.playerCarriedObject.GetComponent<SpriteRenderer>().sprite != requiredObject.GetComponent<SpriteRenderer>().sprite){
-            Debug.Log("Not same item!");
+        GameObject compatibleObject = null;
+        foreach(GameObject go in compatibleObjects){
+            if (playerController.playerCarriedObject.GetComponent<SpriteRenderer>().sprite == go.GetComponent<SpriteRenderer>().sprite){
+                compatibleObject = playerController.playerCarriedObject;
+            }
+        }
+
+        if (compatibleObject == null){
+            Debug.Log("Not a compatible item!");
             return;
         }
 
-        playerController.DropObject(true);
+        playerController.DropObject();
 
         ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
-        LoadObject(turret, data);
-
-        Debug.Log(data.ammunition);
+        LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
     }
 
     override public void UpdateTurretExtension(Turret turret){

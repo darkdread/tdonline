@@ -7,7 +7,7 @@ using Photon.Pun;
 public class Interactable : MonoBehaviour {
 
     protected bool canInteract = true;
-    protected HashSet<TdPlayerController> interactedCached = new HashSet<TdPlayerController>();
+    protected HashSet<TdPlayerController> interactedPrevious = new HashSet<TdPlayerController>();
 
     [SerializeField]
     protected Collider2D interactableTrigger;
@@ -40,6 +40,10 @@ public class Interactable : MonoBehaviour {
         return interactableTrigger.OverlapPoint(position);
     }
 
+    /// <summary>
+    /// Triggers when local player presses the Interact button.
+    /// </summary>
+    /// <param name="playerController">Local player</param>
     protected virtual void OnInteract(TdPlayerController playerController) {
         playerController.SetInteractingInstant(true);
         playerController.SetInteractingDelayFrame(false, 1);
@@ -52,34 +56,35 @@ public class Interactable : MonoBehaviour {
             return;
         }
 
-        // Show it's usable.
-        // if (IsInRadius(playerController.transform.position)) {
+        playerController.playerUi.ShowUseButton(true);
 
-            playerController.playerUi.ShowUseButton(true);
-
-            if (Input.GetButtonDown("Use") && !playerController.IsInteracting()) {
-                OnInteract(playerController);
-            }
-        // }
+        if (Input.GetButtonDown("Use") && !playerController.IsInteracting()) {
+            OnInteract(playerController);
+        }
     }
 
+    /// <summary>
+    /// Force all stored player controllers to be removed from the hashset. Also calls OnExit for each of them.
+    /// </summary>
     public void RemoveAllInteracted(){
         print("RemoveAllInteracted");
 
-        foreach(TdPlayerController playerController in interactedCached){
+        foreach(TdPlayerController playerController in interactedPrevious){
             OnExitInteractRadius(playerController);
         }
 
-        interactedCached = new HashSet<TdPlayerController>();
+        interactedPrevious = new HashSet<TdPlayerController>();
     }
 
+    /// <summary>
+    /// Handles all Interact methods. Uses a hashset internally to store all player controllers that enter
+    /// its radius.
+    /// </summary>
     public void UpdateInteractivity(){
-        print("UpdateInteractivity");
-
         List<Collider2D> colliders = new List<Collider2D>();
         interactableTrigger.GetContacts(colliders);
 
-        HashSet<TdPlayerController> cached = new HashSet<TdPlayerController>(interactedCached);
+        HashSet<TdPlayerController> tempHashset = new HashSet<TdPlayerController>(interactedPrevious);
         HashSet<TdPlayerController> current = new HashSet<TdPlayerController>();
 
         foreach (Collider2D c in colliders) {
@@ -93,13 +98,23 @@ public class Interactable : MonoBehaviour {
             OnInteractRadiusStay(playerController);
         }
 
-        cached.ExceptWith(current);
-
-        foreach(TdPlayerController playerController in cached){
+        // Previous - current.
+        tempHashset.ExceptWith(current);
+        foreach(TdPlayerController playerController in tempHashset){
             OnExitInteractRadius(playerController);
         }
 
-        interactedCached = current;
+        // Store temp as current.
+        tempHashset = new HashSet<TdPlayerController>(current);
+
+        // Current - previous.
+        tempHashset.ExceptWith(interactedPrevious);
+        foreach(TdPlayerController playerController in tempHashset){
+            OnEnterInteractRadius(playerController);
+        }
+
+        // Set previous to current.
+        interactedPrevious = current;
     }
 
     protected virtual void Update() {
@@ -109,6 +124,5 @@ public class Interactable : MonoBehaviour {
 
         // TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
         UpdateInteractivity();
-        
     }
 }

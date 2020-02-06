@@ -5,14 +5,16 @@ using UnityEngine;
 using Photon.Pun;
 
 public class ReloadableExtensionData : TurretExtensionData {
-    // public PhotonView photonView;
-    public int ammunition = 0;
+    public Stack<GameObject> ammunition = new Stack<GameObject>();
     public int maxAmmunition = 2;
 
     [PunRPC]
-    public void SetAmmunition(int amount){
-        ammunition = amount;
-        Debug.Log(ammunition);
+    public void AddAmmunition(int viewId){
+        PhotonView view = PhotonNetwork.GetPhotonView(viewId);
+
+        // Moves the carried object somewhere else.
+        view.gameObject.transform.position = Vector3.zero;
+        ammunition.Push(view.gameObject);
     }
 
     override public void OnPhotonInstantiate(PhotonMessageInfo info){

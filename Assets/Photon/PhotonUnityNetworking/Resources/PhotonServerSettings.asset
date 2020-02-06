@@ -47,5 +47,6 @@ MonoBehaviour:
   - OnLoad
   - SpawnObject
   - DestroySceneObject
+  - AddAmmunition
   DisableAutoOpenWizard: 1
   ShowSettings: 1

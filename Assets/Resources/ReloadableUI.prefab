@@ -99,5 +99,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turretExtension: {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
   turret: {fileID: 0}
-  ammunition: 0
   maxAmmunition: 2
