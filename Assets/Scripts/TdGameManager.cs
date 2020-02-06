@@ -6,6 +6,7 @@ using TMPro;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 using Photon.Pun;
+using PhotonPeer = ExitGames.Client.Photon.PhotonPeer;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class TdGame {
@@ -17,7 +18,6 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public static TdGameManager instance = null;
     public static int playersLoaded = 0;
     public static TdGameSettings gameSettings;
-
 
     [Header("Game Interface")]
     public GameObject gameCanvas;
@@ -34,7 +34,31 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             {TdGame.PLAYER_LOADED_LEVEL, true}
         };
 
+        if (PhotonPeer.RegisterType(typeof(CollectablePun), (byte)'Z', CollectablePun.Serialize, CollectablePun.Deserialize)){
+            print("he");
+        } else {
+            print("hez");
+        }
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+    }
+
+    [PunRPC]
+    public void SpawnObject(byte[] customType){
+        print("SpawnObject");
+
+        CollectablePun data = (CollectablePun) CollectablePun.Deserialize(customType);
+
+        string resourceName = data.resourceName;
+        print(resourceName);
+
+        GameObject spawnedObject = PhotonNetwork.InstantiateSceneObject(resourceName,
+                Vector3.zero, Quaternion.identity);
+        PhotonView objectPhotonView = spawnedObject.GetComponent<PhotonView>();
+
+        if (data.playerViewId != 0){
+            TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
+            playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, objectPhotonView.ViewID);
+        }
     }
 
     private void StartGame(){

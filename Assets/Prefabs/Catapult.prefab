@@ -156,7 +156,8 @@ MonoBehaviour:
   photonView: {fileID: 0}
   controllingPlayer: {fileID: 0}
   turretExtensions:
-  - {fileID: 11400000, guid: 2c16176836779084da96bbc2bf09e611, type: 2}
+  - {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
+  turretExtensionDatas: []
   turretState: 0
 --- !u!1 &1602190501763788721
 GameObject:

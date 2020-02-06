@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requiredObject: {fileID: 57118556139921570, guid: 39aabbfca4b4f9d49b07ef4f697d3109,
     type: 3}
+  uiPrefab: {fileID: 4723334397859617930, guid: 3ac89bd03be10274d9744ec2f95b5132,
+    type: 3}
+  itemSlotPrefab: {fileID: 68212910, guid: 37d9869d3a437cb4b92a99bf96afd47e, type: 3}

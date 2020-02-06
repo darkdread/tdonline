@@ -28,6 +28,7 @@ public class Turret : Interactable {
         turretCollider = GetComponent<Collider2D>();
 
         // Creates data for each attached extensions.
+        // OnLoadExtension adds an instance of TurretExtensionData to the list turretExtensionDatas.
         foreach(TurretExtension turretExtension in turretExtensions){
             turretExtension.OnLoadExtension(this);
         }
@@ -97,7 +98,7 @@ public class Turret : Interactable {
         }
 
         foreach(TurretExtension turretExtension in turretExtensions){
-            turretExtension.OnInteract(this);
+            turretExtension.OnInteract(this, playerController);
         }
 
         if ((turretState & TurretState.InUse) == TurretState.InUse) {

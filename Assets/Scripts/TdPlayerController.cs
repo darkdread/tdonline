@@ -8,6 +8,7 @@ public enum PlayerState {
     Climbing = 1,
     UsingTurret = 2,
     CarryingObject = 4,
+    Interacting = 8,
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -101,8 +102,45 @@ public class TdPlayerController : MonoBehaviour
         playerUi.ShowUseButton(false);
     }
 
+    private IEnumerator SetInteractDelayFrame(bool interacting, int frameCount){
+        for(int i = 0; i < frameCount; i++){
+            yield return null;
+        }
+
+        SetInteractingInstant(interacting);
+    }
+
+    public void SetInteractingDelayFrame(bool interacting, int frameCount){
+        StartCoroutine(SetInteractDelayFrame(interacting, frameCount));
+    }
+
+    public void SetInteractingInstant(bool interacting){
+        if (interacting){
+            playerState = playerState | PlayerState.Interacting;
+        } else {
+            playerState = playerState & ~PlayerState.Interacting;
+        }
+    }
+
+    public bool IsInteracting(){
+        return (playerState & PlayerState.Interacting) != 0;
+    }
+
     public bool IsCarryingObject(){
         return (playerState & PlayerState.CarryingObject) != 0;
+    }
+
+    public void DropObject(bool remove = false){
+        SetInteractingInstant(true);
+
+        if (remove){
+            PhotonNetwork.Destroy(playerCarriedObject);
+        }
+        
+        photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
+
+
+        SetInteractingDelayFrame(false, 1);
     }
 
     private void UpdateView() {
@@ -128,9 +166,9 @@ public class TdPlayerController : MonoBehaviour
 
         // Drop object if carrying.
         if (IsCarryingObject()) {
-            if (Input.GetButtonDown("Use")) {
+            if (Input.GetButtonDown("Use") && !IsInteracting()) {
                 print("Drop");
-                photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
+                DropObject();
             }
         }
 

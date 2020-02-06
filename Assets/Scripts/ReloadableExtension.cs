@@ -4,35 +4,50 @@ using UnityEngine;
 
 using Photon.Pun;
 
-public class ReloadableExtensionData : TurretExtensionData {
-    public int ammunition = 0;
-}
-
 [CreateAssetMenu(fileName = "ReloadableExtension", menuName = "TurretExtension/ReloadableExtension")]
 public class ReloadableExtension : TurretExtension {
 
     public GameObject requiredObject;
+    public ReloadableExtensionData uiPrefab;
+    public ItemSlot itemSlotPrefab;
 
     override public void OnLoadExtension(Turret turret){
-        ReloadableExtensionData data = new ReloadableExtensionData(){
-            ammunition = 5
-        };
+        Debug.Log(uiPrefab);
+        Debug.Log(TdGameManager.instance.gameCanvas);
 
-        turret.turretExtensionDatas.Add(data);
+        // Create UI and attach to game canvas.
+        // ReloadableExtensionData data = Instantiate<ReloadableExtensionData>(uiPrefab, TdGameManager.instance.gameCanvas.transform);
+
+        if (PhotonNetwork.IsMasterClient){
+            CreatePhotonData(turret, uiPrefab.name);
+            Debug.Log("CreatePhotonDataMaster");
+        }
     }
-
-    [PunRPC]
-    public void LoadObject(){
-
+    
+    public void LoadObject(Turret turret, ReloadableExtensionData data){
+        Debug.Log(data.photonView);
+        data.photonView.RPC("SetAmmunition", RpcTarget.All, data.ammunition + 1);
     }
 
     private void UpdateUi(Turret turret){
-
+        ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
+        data.transform.position = Camera.main.WorldToScreenPoint(turret.transform.position);
     }
 
-    override public void OnInteract(Turret turret){
+    override public void OnInteract(Turret turret, TdPlayerController playerController){
+        if (!playerController.IsCarryingObject()){
+            return;
+        }
+
+        // Check if item is the supposed type.
+        if (playerController.playerCarriedObject.GetComponent<SpriteRenderer>().sprite != requiredObject.GetComponent<SpriteRenderer>().sprite){
+            Debug.Log("Not same item!");
+        }
+
+        playerController.DropObject(true);
+
         ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
-        data.ammunition -= 1;
+        LoadObject(turret, data);
 
         Debug.Log(data.ammunition);
     }

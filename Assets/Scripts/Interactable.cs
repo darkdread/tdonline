@@ -38,6 +38,8 @@ public class Interactable : MonoBehaviour {
     }
 
     protected virtual void OnInteract(TdPlayerController playerController) {
+        playerController.SetInteractingInstant(true);
+        playerController.SetInteractingDelayFrame(false, 1);
         print("OnInteract");
         print(this);
     }
@@ -55,7 +57,7 @@ public class Interactable : MonoBehaviour {
             }
 
             playerController.playerUi.ShowUseButton(true);
-            if (Input.GetButtonDown("Use")) {
+            if (Input.GetButtonDown("Use") && !playerController.IsInteracting()) {
                 OnInteract(playerController);
             }
         } else if (wasInRadius) {
