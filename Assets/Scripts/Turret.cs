@@ -38,6 +38,10 @@ public class Turret : Interactable {
         return turretExtensionDatas[turretExtensions.IndexOf(turretExtension)];
     }
 
+    public bool IsInUse(){
+        return (turretState & TurretState.InUse) == TurretState.InUse;
+    }
+
     [PunRPC]
     protected void SetTurretState(TurretState state) {
         turretState = state;
@@ -54,7 +58,7 @@ public class Turret : Interactable {
     }
 
     protected void OnActivateTurret(TdPlayerController playerController) {
-        if ((turretState & TurretState.InUse) == TurretState.InUse) {
+        if (IsInUse()) {
             print($"Already in use by Player {controllingPlayer.photonView.Owner.UserId}");
             return;
         }
@@ -68,7 +72,7 @@ public class Turret : Interactable {
     }
 
     protected void OnDeactivateTurret() {
-        if ((turretState & TurretState.InUse) == TurretState.InUse) {
+        if (IsInUse()) {
             controllingPlayer.photonView.RPC("OnStopUsingTurret", RpcTarget.All);
 
             TurretState newTurretState = turretState & ~TurretState.InUse;
@@ -102,7 +106,7 @@ public class Turret : Interactable {
             return;
         }
 
-        if ((turretState & TurretState.InUse) == TurretState.InUse) {
+        if (IsInUse()) {
             OnDeactivateTurret();
         } else {
             OnActivateTurret(playerController);
@@ -115,7 +119,7 @@ public class Turret : Interactable {
         base.OnInteractRadiusStay(playerController);
 
         // Update interactivity button when state is in use.
-        if ((turretState & TurretState.InUse) == TurretState.InUse) {
+        if (IsInUse()) {
             OnExitInteractRadius(playerController);
         }
     }

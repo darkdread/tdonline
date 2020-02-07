@@ -5,8 +5,9 @@ using UnityEngine;
 using Photon.Pun;
 
 public class ReloadableExtensionData : TurretExtensionData {
-    public Stack<GameObject> ammunition = new Stack<GameObject>();
-    public int maxAmmunition = 2;
+    public List<GameObject> ammunition = new List<GameObject>();
+    public List<ItemSlot> itemSlots = new List<ItemSlot>();
+    public int maxAmmunition = 0;
 
     [PunRPC]
     public void AddAmmunition(int viewId){
@@ -14,16 +15,18 @@ public class ReloadableExtensionData : TurretExtensionData {
 
         // Moves the carried object somewhere else.
         view.gameObject.transform.position = Vector3.zero;
-        ammunition.Push(view.gameObject);
+        ammunition.Add(view.gameObject);
     }
 
     override public void OnPhotonInstantiate(PhotonMessageInfo info){
         ReloadableExtension reloadableExtension = (ReloadableExtension) turretExtension;
         this.transform.SetParent(TdGameManager.instance.gameCanvas.transform);
 
+        maxAmmunition = reloadableExtension.maxAmmunition;
+        
         for(int i = 0; i < this.maxAmmunition; i++){
             ItemSlot itemSlot = Instantiate<ItemSlot>(reloadableExtension.itemSlotPrefab, this.transform);
-            // itemSlot.itemImage.sprite = requiredObject.GetComponent<SpriteRenderer>().sprite;
+            itemSlots.Add(itemSlot);
         }
 
         // Bug? Why is only the first instantiated scene object small?

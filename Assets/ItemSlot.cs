@@ -16,4 +16,8 @@ public class ItemSlot : MonoBehaviour
     public void SetEmpty(){
         itemImage.sprite = emptySlotSprite;
     }
+
+    public void SetSprite(Sprite sprite){
+        itemImage.sprite = sprite;
+    }
 }

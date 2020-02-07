@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 6286363158809286981}
   - component: {fileID: 1602190501095719520}
   - component: {fileID: 1602190501095719526}
+  - component: {fileID: -4010354754505178820}
   m_Layer: 0
   m_Name: Catapult
   m_TagString: Untagged
@@ -107,10 +108,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
+  - {fileID: -4010354754505178820}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -157,8 +158,24 @@ MonoBehaviour:
   controllingPlayer: {fileID: 0}
   turretExtensions:
   - {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
+  - {fileID: 11400000, guid: b409904cb87a8914f804aa425d97a420, type: 2}
   turretExtensionDatas: []
   turretState: 0
+--- !u!114 &-4010354754505178820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602190501095719523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 0
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &1602190501763788721
 GameObject:
   m_ObjectHideFlags: 0

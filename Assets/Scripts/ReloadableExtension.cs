@@ -10,6 +10,7 @@ public class ReloadableExtension : TurretExtension {
     public List<GameObject> compatibleObjects = new List<GameObject>();
     public ReloadableExtensionData uiPrefab;
     public ItemSlot itemSlotPrefab;
+    public int maxAmmunition;
 
     override public void OnLoadExtension(Turret turret){
         Debug.Log(uiPrefab);
@@ -33,6 +34,15 @@ public class ReloadableExtension : TurretExtension {
         data.transform.position = Camera.main.WorldToScreenPoint(turret.transform.position);
 
         // Logic for item to show up in ui here.
+        for(int i = 0; i < data.itemSlots.Count; i++){
+            ItemSlot itemSlot = data.itemSlots[i];
+
+            if (i >= data.ammunition.Count){
+                break;
+            }
+
+            itemSlot.SetSprite(data.ammunition[i].GetComponent<SpriteRenderer>().sprite);
+        }
     }
 
     override public void OnInteract(Turret turret, TdPlayerController playerController){
@@ -53,9 +63,14 @@ public class ReloadableExtension : TurretExtension {
             return;
         }
 
+        ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
+        if (data.ammunition.Count >= data.maxAmmunition){
+            Debug.Log("Max ammunition reached!");
+            return;
+        }
+
         playerController.DropObject();
 
-        ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
         LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
     }
 
