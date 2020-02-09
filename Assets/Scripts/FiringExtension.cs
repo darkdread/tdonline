@@ -27,8 +27,13 @@ public class FiringExtension : TurretExtension {
         }
     }
 
-    private void Shoot(GameObject projectile){
+    private void ShootProjectile(FiringExtensionData data, GameObject turret, GameObject projectile, float speed){
+        GameObject go = projectile;
+        Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
+        Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
 
+        go.transform.position = turret.transform.position + angleVec;
+        go.GetComponent<Rigidbody2D>().velocity = angleVec * speed;
     }
 
     override public void UpdateTurretExtension(Turret turret){
@@ -42,11 +47,12 @@ public class FiringExtension : TurretExtension {
             data.aimRotation = Mathf.Clamp(data.aimRotation, (int) minMaxRotation.x, (int) minMaxRotation.y);
 
             // Calculate direction and distance.
-            Vector3 direction = turret.transform.localScale.x >= 0 ? Vector3.right : Vector3.left;
+            Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
+            Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
             float distance = direction.magnitude * 10f;
 
-            float currentSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
-            data.arc.UpdateArc(turret.transform.position, currentSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
+            float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
+            data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
             if (Input.GetButtonDown("Shoot")){
                 ReloadableExtensionData reloadableExtensionData = (ReloadableExtensionData) turret.GetTurretExtensionData(typeof(ReloadableExtensionData));
@@ -63,7 +69,7 @@ public class FiringExtension : TurretExtension {
 
                 GameObject projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded();
 
-                Shoot(projectile);
+                ShootProjectile(data, turret.gameObject, projectile, launchSpeed);
             }
         }
     }

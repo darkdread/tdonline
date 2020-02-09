@@ -12,7 +12,7 @@ public class ReloadableExtensionData : TurretExtensionData {
     [PunRPC]
     public void AddAmmunition(int viewId){
         PhotonView view = PhotonNetwork.GetPhotonView(viewId);
-
+        
         // Moves the carried object somewhere else.
         view.gameObject.transform.position = Vector3.zero;
         ammunition.Add(view.gameObject);

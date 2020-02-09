@@ -98,6 +98,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         return controllers.ToArray();
     }
 
+    public static Vector3 GetDirectionOfTransform2D(Transform transform){
+        return transform.localScale.x >= 0 ? Vector3.right : Vector3.left;
+    }
+
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps){
         object playerLoadedLevel;
 
