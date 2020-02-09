@@ -49,8 +49,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void SpawnObject(byte[] customType){
-        print("SpawnObject");
+    public void SpawnCollectableObject(byte[] customType){
+        print("SpawnCollectableObject");
 
         CollectablePun data = (CollectablePun) CollectablePun.Deserialize(customType);
 

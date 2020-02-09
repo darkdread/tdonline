@@ -29,26 +29,22 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - AddAmmunition
   - ClickRpc
   - DestroyRpc
+  - DestroySceneObject
   - DestroySpaceship
   - Fire
+  - OnCarryGameObject
+  - OnLoad
   - OnStartClimb
   - OnStopClimb
   - OnStopUsingTurret
   - OnUsingTurret
+  - RemoveAmmunition
   - RespawnSpaceship
   - SetTurretState
   - SetTurretUser
-  - OnCarryGameObject
-  - LoadObject
-  - CustomTurretExtensionData
-  - SetAmmunition
-  - OnLoad
-  - SpawnObject
-  - DestroySceneObject
-  - AddAmmunition
-  - RemoveAmmunition
-  - ShootProjectile
+  - SpawnCollectableObject
   DisableAutoOpenWizard: 1
   ShowSettings: 1

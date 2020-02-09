@@ -27,7 +27,7 @@ public class Collectable : Interactable {
             playerViewId = playerController.photonView.ViewID
         };
 
-        TdGameManager.instance.photonView.RPC("SpawnObject", RpcTarget.MasterClient, CollectablePun.Serialize(data));
+        TdGameManager.instance.photonView.RPC("SpawnCollectableObject", RpcTarget.MasterClient, CollectablePun.Serialize(data));
         yield return null;
     }
 
