@@ -13,7 +13,7 @@ public class TurretExtensionData : MonoBehaviourPunCallbacks, IPunInstantiateMag
     public void OnLoad(int viewId){
         PhotonView turretPhoton = PhotonNetwork.GetPhotonView(viewId);
         turret = turretPhoton.GetComponent<Turret>();
-        turret.turretExtensionDatas.Add(this);
+        turret.AddTurretExtensionData(this);
     }
 
     public virtual void OnPhotonInstantiate(PhotonMessageInfo info){
@@ -23,13 +23,31 @@ public class TurretExtensionData : MonoBehaviourPunCallbacks, IPunInstantiateMag
 
 
 public abstract class TurretExtension : ScriptableObject {
-    // Called on Awake.
+    
+    /// <summary>
+    /// // Called on Awake.
+    /// </summary>
+    /// <param name="turret"></param>
     public abstract void OnLoadExtension(Turret turret);
 
-    // Called when interacted upon.
-    public abstract void OnInteract(Turret turret, TdPlayerController playerController);
+    /// <summary>
+    /// Called when interacted upon before turret state has been set.
+    /// </summary>
+    /// <param name="turret"></param>
+    /// <param name="playerController"></param>
+    public virtual void OnInteract(Turret turret, TdPlayerController playerController){}
 
-    // Called per Update.
+    /// <summary>
+    /// Called when interacted upon after turret state has been set.
+    /// </summary>
+    /// <param name="turret"></param>
+    /// <param name="playerController"></param>
+    public virtual void OnInteractAfter(Turret turret, TdPlayerController playerController){}
+
+    /// <summary>
+    /// Called on Update.
+    /// </summary>
+    /// <param name="turret"></param>
     public abstract void UpdateTurretExtension(Turret turret);
 
     public void CreatePhotonData(Turret turret, string resourceName){

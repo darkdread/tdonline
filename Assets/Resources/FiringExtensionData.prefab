@@ -65,10 +65,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6341555540019438333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d73e71b2fcb3e241b68e3816fd631f6, type: 3}
+  m_Script: {fileID: 11500000, guid: a8861f65b452e3b4fa9506337204809f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretExtension: {fileID: 11400000, guid: b409904cb87a8914f804aa425d97a420, type: 2}
+  turretExtension: {fileID: 11400000, guid: d70a048fba576084ba792dfbeb5025eb, type: 2}
   turret: {fileID: 0}
   arc: {fileID: 0}
   aimRotation: 0

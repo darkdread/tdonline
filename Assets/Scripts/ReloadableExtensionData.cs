@@ -18,6 +18,19 @@ public class ReloadableExtensionData : TurretExtensionData {
         ammunition.Add(view.gameObject);
     }
 
+    [PunRPC]
+    public void RemoveAmmunition(int viewId){
+        PhotonView view = PhotonNetwork.GetPhotonView(viewId);
+        
+        ammunition.Remove(view.gameObject);
+    }
+
+    public GameObject RemoveLastAmmunitionLoaded(){
+        GameObject lastAmmunitionLoaded = ammunition[ammunition.Count - 1];
+        photonView.RPC("RemoveAmmunition", RpcTarget.All, lastAmmunitionLoaded.GetComponent<PhotonView>().ViewID);
+        return lastAmmunitionLoaded;
+    }
+
     override public void OnPhotonInstantiate(PhotonMessageInfo info){
         ReloadableExtension reloadableExtension = (ReloadableExtension) turretExtension;
         this.transform.SetParent(TdGameManager.instance.gameCanvas.transform);

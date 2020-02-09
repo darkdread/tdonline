@@ -48,5 +48,6 @@ MonoBehaviour:
   - SpawnObject
   - DestroySceneObject
   - AddAmmunition
+  - RemoveAmmunition
   DisableAutoOpenWizard: 1
   ShowSettings: 1

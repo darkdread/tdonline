@@ -120,6 +120,11 @@ public class TdPlayerController : MonoBehaviour
         StartCoroutine(SetInteractDelayFrame(interacting, frameCount));
     }
 
+    public void SetInteractingDelayFrameInstant(bool instantInteracting, bool interacting, int frameCount){
+        SetInteractingInstant(instantInteracting);
+        StartCoroutine(SetInteractDelayFrame(interacting, frameCount));
+    }
+
     public void SetInteractingInstant(bool interacting){
         if (interacting){
             playerState = playerState | PlayerState.Interacting;
@@ -137,8 +142,6 @@ public class TdPlayerController : MonoBehaviour
     }
 
     public void DropObject(bool remove = false){
-        SetInteractingInstant(true);
-
         PhotonView objectPhotonView = playerCarriedObject.GetComponent<PhotonView>();
 
         if (remove){
@@ -153,10 +156,10 @@ public class TdPlayerController : MonoBehaviour
                 PhotonNetwork.Destroy(objectPhotonView);
             }
         }
+
+        SetInteractingDelayFrameInstant(true, false, 1);
         
         photonView.RPC("OnCarryGameObject", RpcTarget.All, -1);
-
-        SetInteractingDelayFrame(false, 1);
     }
 
     private void UpdateView() {

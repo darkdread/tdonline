@@ -17,9 +17,11 @@ public class Turret : Interactable {
 
     public List<TurretExtension> turretExtensions = new List<TurretExtension>();
 
+    // For TurretExtensions' usage.
     [HideInInspector]
-    // For TurretExtension's usage.
-    public List<TurretExtensionData> turretExtensionDatas = new List<TurretExtensionData>();
+    private List<TurretExtensionData> turretExtensionDatas = new List<TurretExtensionData>();
+    [HideInInspector]
+    private HashSet<System.Type> blockTurretExtensions = new HashSet<System.Type>();
 
     public TurretState turretState;
 
@@ -34,8 +36,40 @@ public class Turret : Interactable {
         }
     }
 
+    public void AddTurretExtensionData(TurretExtensionData turretExtensionData){
+        turretExtensionDatas.Add(turretExtensionData);
+    }
+
+    public TurretExtensionData GetTurretExtensionData(System.Type turretExtensionType){
+        foreach(TurretExtensionData data in turretExtensionDatas){
+            if (data.GetType() == turretExtensionType){
+                return data;
+            }
+        }
+
+        return null;
+    }
+
     public TurretExtensionData GetTurretExtensionData(TurretExtension turretExtension){
         return turretExtensionDatas[turretExtensions.IndexOf(turretExtension)];
+    }
+
+    private IEnumerator BlockTurretExtension(System.Type turretExtensionType, float seconds){
+        blockTurretExtensions.Add(turretExtensionType);
+        yield return new WaitForSeconds(seconds);
+        UnblockTurretExtension(turretExtensionType);
+    }
+
+    public bool IsExtensionBlocked(System.Type turretExtensionType){
+        return blockTurretExtensions.Contains(turretExtensionType);
+    }
+
+    public void UnblockTurretExtension(System.Type turretExtensionType){
+        blockTurretExtensions.Remove(turretExtensionType);
+    }
+
+    public void BlockTurretExtensionUntilSeconds(System.Type turretExtensionType, float seconds = 1f){
+        StartCoroutine(BlockTurretExtension(turretExtensionType, seconds));
     }
 
     public bool IsInUse(){
@@ -98,6 +132,10 @@ public class Turret : Interactable {
         }
 
         foreach(TurretExtension turretExtension in turretExtensions){
+            if (IsExtensionBlocked(turretExtension.GetType())){
+                continue;
+            }
+
             turretExtension.OnInteract(this, playerController);
         }
 
@@ -110,6 +148,14 @@ public class Turret : Interactable {
             OnDeactivateTurret();
         } else {
             OnActivateTurret(playerController);
+        }
+
+        foreach(TurretExtension turretExtension in turretExtensions){
+            if (IsExtensionBlocked(turretExtension.GetType())){
+                continue;
+            }
+
+            turretExtension.OnInteractAfter(this, playerController);
         }
 
         base.OnInteract(playerController);
@@ -128,6 +174,10 @@ public class Turret : Interactable {
         base.Update();
 
         foreach(TurretExtension turretExtension in turretExtensions){
+            if (IsExtensionBlocked(turretExtension.GetType())){
+                continue;
+            }
+            
             turretExtension.UpdateTurretExtension(this);
         }
     }

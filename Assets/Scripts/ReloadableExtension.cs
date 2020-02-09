@@ -38,7 +38,8 @@ public class ReloadableExtension : TurretExtension {
             ItemSlot itemSlot = data.itemSlots[i];
 
             if (i >= data.ammunition.Count){
-                break;
+                itemSlot.SetEmpty();
+                continue;
             }
 
             itemSlot.SetSprite(data.ammunition[i].GetComponent<SpriteRenderer>().sprite);
@@ -60,12 +61,16 @@ public class ReloadableExtension : TurretExtension {
 
         if (compatibleObject == null){
             Debug.Log("Not a compatible item!");
+            playerController.SetInteractingDelayFrameInstant(true, false, 1);
+            turret.BlockTurretExtensionUntilSeconds(typeof(FiringExtension));
             return;
         }
 
         ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
         if (data.ammunition.Count >= data.maxAmmunition){
             Debug.Log("Max ammunition reached!");
+            playerController.SetInteractingDelayFrameInstant(true, false, 1);
+            turret.BlockTurretExtensionUntilSeconds(typeof(FiringExtension));
             return;
         }
 

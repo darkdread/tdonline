@@ -4,17 +4,18 @@ using UnityEngine;
 
 using Photon.Pun;
 
-public class AimingExtensionData : TurretExtensionData {
+public class FiringExtensionData : TurretExtensionData {
 
     public ProjectileArc arc;
     public int aimRotation = 0;
 
     private void Awake(){
         arc = GetComponent<ProjectileArc>();
+        gameObject.SetActive(false);
     }
 
     override public void OnPhotonInstantiate(PhotonMessageInfo info){
-        AimingExtension aimingExtension = (AimingExtension) turretExtension;
+        FiringExtension aimingExtension = (FiringExtension) turretExtension;
         
         base.OnPhotonInstantiate(info);
     }
