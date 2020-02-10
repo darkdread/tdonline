@@ -49,7 +49,7 @@ public class FiringExtension : TurretExtension {
             // Calculate direction and distance.
             Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
             Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
-            float distance = direction.magnitude * 10f;
+            float distance = direction.magnitude * 3f;
 
             float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);

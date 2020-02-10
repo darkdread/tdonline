@@ -13,4 +13,6 @@ public class TdGameSettings : MonoBehaviour
         Color.green
     };
     public TdPlayerUi playerUiPrefab;
+
+    public EnemySpawner[] enemySpawners;
 }

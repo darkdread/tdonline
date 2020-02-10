@@ -67,6 +67,20 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private IEnumerator SpawnEnemies(){
+        for(int i = 0; i < 100; i++){
+            if (!PhotonNetwork.IsMasterClient){
+                yield break;
+            }
+
+            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+                spawner.SpawnNextWave();
+            }
+
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
     private void StartGame(){
         int localPlayerId = PhotonNetwork.LocalPlayer.GetPlayerNumber();
 
@@ -83,7 +97,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            // StartCoroutine(SpawnAsteroid());
+            StartCoroutine(SpawnEnemies());
         }
     }
 
