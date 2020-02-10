@@ -27,7 +27,7 @@ MonoBehaviour:
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
-  StartInOfflineMode: 0
+  StartInOfflineMode: 1
   RpcList:
   - AddAmmunition
   - ClickRpc
@@ -46,5 +46,6 @@ MonoBehaviour:
   - SetTurretState
   - SetTurretUser
   - SpawnCollectableObject
+  - SpawnEnemy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
