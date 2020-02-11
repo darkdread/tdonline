@@ -3,13 +3,13 @@ using UnityEngine;
 
 [System.Serializable]
 public struct WaveStruct {
-    public Enemy[] waveEnemies;
-    public float[] waveDelays;
+    public Enemy waveEnemy;
+    public float waveDelay;
 }
 
 [CreateAssetMenu(fileName = "Wave", menuName = "Wave")]
 public class Wave: ScriptableObject {
-    public WaveStruct waveStruct;
+    public WaveStruct[] waveStructs;
 
     
 }

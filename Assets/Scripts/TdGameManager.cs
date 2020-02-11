@@ -73,11 +73,24 @@ public class TdGameManager : MonoBehaviourPunCallbacks
                 yield break;
             }
 
+            float longestWaveDuration = 0f;
+            float waveFade = 5f;
+
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+                if (spawner.currentWaveId + 1 >= spawner.waves.Length){
+                    spawner.currentWaveId = -1;
+                }
                 spawner.SpawnNextWave();
+
+                float waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
+                if (waveDuration > longestWaveDuration){
+                    longestWaveDuration = waveDuration;
+                }
             }
 
-            yield return new WaitForSeconds(5f);
+            longestWaveDuration += waveFade;
+
+            yield return new WaitForSeconds(longestWaveDuration);
         }
     }
 

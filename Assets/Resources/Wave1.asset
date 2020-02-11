@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee6e03e5c5b2ea40ba000217b005c9a, type: 3}
   m_Name: Wave1
   m_EditorClassIdentifier: 
-  waveStruct:
-    waveEnemies:
-    - {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9, type: 3}
-    - {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9, type: 3}
-    - {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9, type: 3}
-    - {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9, type: 3}
-    waveDelays:
-    - 2
-    - 0.5
-    - 0.5
-    - 2
+  waveStructs:
+  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
+      type: 3}
+    waveDelay: 3
+  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
+      type: 3}
+    waveDelay: 0.5
+  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
+      type: 3}
+    waveDelay: 0.5
+  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
+      type: 3}
+    waveDelay: 3

@@ -14,6 +14,10 @@ public class FiringExtensionData : TurretExtensionData {
         gameObject.SetActive(false);
     }
 
+    public void SetProjectileIterations(int iterations){
+        arc.iterations = iterations;
+    }
+
     override public void OnPhotonInstantiate(PhotonMessageInfo info){
         FiringExtension aimingExtension = (FiringExtension) turretExtension;
         

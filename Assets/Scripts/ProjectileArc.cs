@@ -3,7 +3,7 @@ using UnityEngine;
 public class ProjectileArc : MonoBehaviour 
 {
     [SerializeField]
-    int iterations = 20;
+    public int iterations = 20;
 
     [SerializeField]
     Color errorColor;
@@ -19,7 +19,7 @@ public class ProjectileArc : MonoBehaviour
 
     public void UpdateArc(Vector2 offset, float speed, float distance, float gravity, float angle, Vector3 direction, bool valid)
     {
-        Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, distance, gravity, angle);        
+        Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, distance, gravity, angle);
         Vector3[] points3d = new Vector3[arcPoints.Length];
 
         for (int i = 0; i < arcPoints.Length; i++)
@@ -29,8 +29,6 @@ public class ProjectileArc : MonoBehaviour
 
         lineRenderer.positionCount = arcPoints.Length;
         lineRenderer.SetPositions(points3d);
-
-        // transform.rotation = Quaternion.LookRotation(direction);
 
         lineRenderer.material.color = valid ? initialColor : errorColor;
     }

@@ -3,27 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Photon.Pun;
+
+[System.Serializable]
+public struct EnemyTypeObjective {
+    public EnemyType enemyType;
+    public Transform objective;
+}
+
 public class EnemySpawner : MonoBehaviour
 {
-    public Transform objective;
+    public EnemyTypeObjective[] enemyTypeObjectives;
     public Wave[] waves;
     public int currentWaveId = -1;
 
     public void SpawnEnemy(string resourceName){
-        Vector3 direction = (objective.transform.position - transform.position).normalized;
+        GameObject go = PhotonNetwork.InstantiateSceneObject(resourceName, transform.position, Quaternion.identity);
+        Enemy enemy = go.GetComponent<Enemy>();
 
-        GameObject go = PhotonNetwork.InstantiateSceneObject(resourceName, transform.position, Quaternion.Euler(direction));
-        go.GetComponent<Rigidbody2D>().isKinematic = true;
-        go.GetComponent<Rigidbody2D>().velocity = direction;
+        foreach(EnemyTypeObjective eto in enemyTypeObjectives){
+            if (enemy.enemyType == eto.enemyType){
+                Vector3 direction = (eto.objective.transform.position - transform.position).normalized;
+                go.transform.localScale = new Vector3(direction.x * go.transform.localScale.x,
+                    go.transform.localScale.y, go.transform.localScale.z);
+
+                enemy.SetTarget(eto.objective.transform);
+                break;
+            }
+        }
     }
 
     public IEnumerator SpawnWave(int waveId){
-        WaveStruct waveStruct = waves[waveId].waveStruct;
+        foreach(WaveStruct waveStruct in waves[waveId].waveStructs){
         
-        for(int i = 0; i < waveStruct.waveDelays.Length; i++){
-            SpawnEnemy(waveStruct.waveEnemies[i].name);
-            yield return new WaitForSeconds(waveStruct.waveDelays[i]);
+            SpawnEnemy(waveStruct.waveEnemy.name);
+            yield return new WaitForSeconds(waveStruct.waveDelay);
         }
+    }
+
+    public float GetWaveSpawnDuration(int waveId){
+        float duration = 0f;
+        
+        foreach(WaveStruct waveStruct in waves[waveId].waveStructs){
+            duration += waveStruct.waveDelay;
+        }
+
+        return duration;
     }
 
     public void SpawnNextWave(){

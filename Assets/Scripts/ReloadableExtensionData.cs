@@ -15,6 +15,7 @@ public class ReloadableExtensionData : TurretExtensionData {
         
         // Moves the carried object somewhere else.
         view.gameObject.transform.position = Vector3.zero;
+        view.gameObject.SetActive(false);
         ammunition.Add(view.gameObject);
     }
 
@@ -22,6 +23,7 @@ public class ReloadableExtensionData : TurretExtensionData {
     public void RemoveAmmunition(int viewId){
         PhotonView view = PhotonNetwork.GetPhotonView(viewId);
         
+        view.gameObject.SetActive(true);
         ammunition.Remove(view.gameObject);
     }
 

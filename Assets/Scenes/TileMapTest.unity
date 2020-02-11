@@ -132,11 +132,6 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 9999
       objectReference: {fileID: 0}
-    - target: {fileID: 3377848412693205547, guid: d6a9f417451b376499e92eebde20d0f2,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199431, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -197,15 +192,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TdGameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5004701011384378840, guid: d6a9f417451b376499e92eebde20d0f2,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7798180069415820520, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField
-      value: 9998
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6a9f417451b376499e92eebde20d0f2, type: 3}
@@ -3957,7 +3947,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -958802957
   m_SortingLayer: 2
-  m_SortingOrder: -1
+  m_SortingOrder: -10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0.03125, z: 0}
   m_MaxChunkCount: 16

@@ -8,6 +8,7 @@ using Photon.Pun;
 public class FiringExtension : TurretExtension {
 
     public FiringExtensionData prefab;
+    public int arcIterations = 20;
     public Vector2 minMaxRotation = new Vector2(20f, 60f);
 
     override public void OnLoadExtension(Turret turret){
@@ -49,9 +50,13 @@ public class FiringExtension : TurretExtension {
             // Calculate direction and distance.
             Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
             Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
-            float distance = direction.magnitude * 3f;
+            
+            float distance = direction.magnitude * 10f;
 
             float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
+            launchSpeed = data.aimRotation / 5f;
+
+            data.SetProjectileIterations(arcIterations);
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
             if (Input.GetButtonDown("Shoot")){
