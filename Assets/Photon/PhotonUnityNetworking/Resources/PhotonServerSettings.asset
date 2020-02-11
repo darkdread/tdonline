@@ -47,5 +47,6 @@ MonoBehaviour:
   - SetTurretUser
   - SpawnCollectableObject
   - SpawnEnemy
+  - SetTarget
   DisableAutoOpenWizard: 1
   ShowSettings: 1

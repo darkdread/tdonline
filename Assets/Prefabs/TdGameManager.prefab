@@ -150,6 +150,10 @@ MonoBehaviour:
     objective: {fileID: 4465938557031934539}
   waves:
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   currentWaveId: -1
 --- !u!1 &1373292524
 GameObject:
@@ -386,7 +390,7 @@ GameObject:
   - component: {fileID: 3638888300171199431}
   - component: {fileID: 3638888300171199448}
   - component: {fileID: 3638888300171199430}
-  - component: {fileID: -3930553058769445602}
+  - component: {fileID: 139034412246778836}
   m_Layer: 0
   m_Name: TdGameManager
   m_TagString: Untagged
@@ -456,7 +460,7 @@ MonoBehaviour:
   enemySpawners:
   - {fileID: 8521665033927008286}
   - {fileID: 8130816915099007518}
---- !u!114 &-3930553058769445602
+--- !u!114 &139034412246778836
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1773,6 +1777,10 @@ MonoBehaviour:
   - enemyType: 1
     objective: {fileID: 1724631269452117508}
   waves:
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
+  - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   currentWaveId: -1
 --- !u!1 &9111399764213650536

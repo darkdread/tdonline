@@ -11,6 +11,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class TdGame {
     public static string PLAYER_LOADED_LEVEL = "PlayerLoadedLevel";
+    public static string WAVE_INFO = "CurrentWaveInfo_";
 }
 
 public class TdGameManager : MonoBehaviourPunCallbacks
@@ -25,6 +26,25 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     private void Awake(){
         instance = this;
         gameSettings = GetComponent<TdGameSettings>();
+
+        PhotonView[] photonViews = Resources.FindObjectsOfTypeAll(typeof(PhotonView)) as PhotonView[];
+
+        int nextInstanceId = 0;
+        foreach(PhotonView photonView in photonViews){
+            if (photonView.IsSceneView && photonView.ViewID != 0){
+                nextInstanceId += 1;
+                print(photonView);
+            }
+        }
+
+        // Note that we modified the property of lastUsedViewSubIdStatic from private to public.
+        PhotonNetwork.lastUsedViewSubIdStatic = nextInstanceId;
+
+        int spawnerStaticId = 0;
+        foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+            spawnerStaticId += 1;
+            spawner.spawnerId = spawnerStaticId;
+        }
     }
 
     private void Start(){
@@ -35,10 +55,11 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         };
 
         if (PhotonPeer.RegisterType(typeof(CollectablePun), (byte)'Z', CollectablePun.Serialize, CollectablePun.Deserialize)){
-            print("he");
+            print("Registered type CollectablePun.");
         } else {
-            print("hez");
+            print("Failed to register type CollectablePun.");
         }
+
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
 
@@ -55,7 +76,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         CollectablePun data = (CollectablePun) CollectablePun.Deserialize(customType);
 
         string resourceName = data.resourceName;
-        print(resourceName);
+        // print(resourceName);
 
         GameObject spawnedObject = PhotonNetwork.InstantiateSceneObject(resourceName,
                 Vector3.zero, Quaternion.identity);
@@ -68,21 +89,19 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     private IEnumerator SpawnEnemies(){
-        for(int i = 0; i < 100; i++){
-            if (!PhotonNetwork.IsMasterClient){
-                yield break;
-            }
-
-            float longestWaveDuration = 0f;
-            float waveFade = 5f;
+        while(true){
+            int longestWaveDuration = 0;
+            int waveFade = 5000;
 
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
                 if (spawner.currentWaveId + 1 >= spawner.waves.Length){
+                    print("Reset wave");
                     spawner.currentWaveId = -1;
                 }
+                
                 spawner.SpawnNextWave();
 
-                float waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
+                int waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
                 if (waveDuration > longestWaveDuration){
                     longestWaveDuration = waveDuration;
                 }
@@ -90,14 +109,31 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
             longestWaveDuration += waveFade;
 
-            yield return new WaitForSeconds(longestWaveDuration);
+            yield return new WaitForSeconds(longestWaveDuration/1000f);
+        }
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient){
+        if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber){
+
+            // Sync the wave id.
+            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+                WaveSpawnInfo waveInfo = WaveSpawnInfo.Deserialize((byte[]) PhotonNetwork.CurrentRoom.CustomProperties[TdGame.WAVE_INFO + spawner.spawnerId]);
+                
+                print($"Setting wave of {spawner.spawnerId} to {waveInfo.waveId}");
+                print($"Setting waveLastSpawn of {spawner.spawnerId} to {waveInfo.waveLastSpawnId}");
+                print($"Setting waveDelayMs of {spawner.spawnerId} to {waveInfo.waveDelayToSpawnNext}");
+
+                spawner.currentWaveId = waveInfo.waveId;
+                spawner.currentSpawnId = waveInfo.waveLastSpawnId;
+                spawner.currentDelayMs = waveInfo.waveDelayToSpawnNext;
+            }
+            StartCoroutine(SpawnEnemies());
         }
     }
 
     private void StartGame(){
         int localPlayerId = PhotonNetwork.LocalPlayer.GetPlayerNumber();
-
-        print(localPlayerId);
 
         Vector3 position = gameSettings.playerStartPositions[localPlayerId].position;
         Quaternion rotation = Quaternion.identity;
@@ -140,6 +176,13 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             if (playersLoaded == PhotonNetwork.CurrentRoom.PlayerCount){
                 StartGame();
             }
+        }
+    }
+
+    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged){
+
+        foreach(object key in PhotonNetwork.CurrentRoom.CustomProperties.Keys){
+            print(key);
         }
     }
 }

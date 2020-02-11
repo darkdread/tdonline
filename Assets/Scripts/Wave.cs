@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct WaveStruct {
     public Enemy waveEnemy;
-    public float waveDelay;
+    public int waveDelayMs;
 }
 
 [CreateAssetMenu(fileName = "Wave", menuName = "Wave")]

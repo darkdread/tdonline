@@ -158,8 +158,7 @@ MonoBehaviour:
   controllingPlayer: {fileID: 0}
   turretExtensions:
   - {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
-  - {fileID: 11400000, guid: b409904cb87a8914f804aa425d97a420, type: 2}
-  turretExtensionDatas: []
+  - {fileID: 11400000, guid: d70a048fba576084ba792dfbeb5025eb, type: 2}
   turretState: 0
 --- !u!114 &-4010354754505178820
 MonoBehaviour:

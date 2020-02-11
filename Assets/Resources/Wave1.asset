@@ -15,13 +15,10 @@ MonoBehaviour:
   waveStructs:
   - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
       type: 3}
-    waveDelay: 3
+    waveDelayMs: 5000
   - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
       type: 3}
-    waveDelay: 0.5
+    waveDelayMs: 500
   - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
       type: 3}
-    waveDelay: 0.5
-  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
-      type: 3}
-    waveDelay: 3
+    waveDelayMs: 500

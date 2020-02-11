@@ -11,14 +11,17 @@ public enum EnemyType {
 
 public class Enemy : MonoBehaviour {
     public EnemyType enemyType;
-    private Transform targetPosition;
+    public Transform targetPosition;
     private Rigidbody2D rb;
 
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void SetTarget(Transform target){
+    [PunRPC]
+    public void SetTarget(int targetId){
+        Transform target = PhotonNetwork.GetPhotonView(targetId).transform;
+
         targetPosition = target;
         rb.isKinematic = true;
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform);
