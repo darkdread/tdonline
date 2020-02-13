@@ -20,6 +20,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public static int playersLoaded = 0;
     public static TdGameSettings gameSettings;
 
+    private Coroutine spawnEnemiesRoutine;
+
     [Header("Game Interface")]
     public GameObject gameCanvas;
 
@@ -96,10 +98,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
                 if (spawner.currentWaveId + 1 >= spawner.waves.Length){
                     print("Reset wave");
-                    spawner.currentWaveId = -1;
+                    spawner.currentWaveId = 0;
                 }
                 
-                spawner.SpawnNextWave();
+                spawner.SpawnWave();
 
                 int waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
                 if (waveDuration > longestWaveDuration){
@@ -120,13 +122,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
                 WaveSpawnInfo waveInfo = WaveSpawnInfo.Deserialize((byte[]) PhotonNetwork.CurrentRoom.CustomProperties[TdGame.WAVE_INFO + spawner.spawnerId]);
                 
-                print($"Setting wave of {spawner.spawnerId} to {waveInfo.waveId}");
-                print($"Setting waveLastSpawn of {spawner.spawnerId} to {waveInfo.waveLastSpawnId}");
-                print($"Setting waveDelayMs of {spawner.spawnerId} to {waveInfo.waveDelayToSpawnNext}");
-
-                spawner.currentWaveId = waveInfo.waveId;
-                spawner.currentSpawnId = waveInfo.waveLastSpawnId;
-                spawner.currentDelayMs = waveInfo.waveDelayToSpawnNext;
+                spawner.LoadWaveProgress(waveInfo);
             }
             StartCoroutine(SpawnEnemies());
         }
@@ -146,7 +142,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(SpawnEnemies());
+            spawnEnemiesRoutine = StartCoroutine(SpawnEnemies());
         }
     }
 
@@ -181,8 +177,30 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged){
 
-        foreach(object key in PhotonNetwork.CurrentRoom.CustomProperties.Keys){
-            print(key);
+        // foreach(object key in PhotonNetwork.CurrentRoom.CustomProperties.Keys){
+        //     print(key);
+        // }
+    }
+
+    private void Update(){
+
+        if (Input.GetKeyDown(KeyCode.X)){
+
+            // Sync the wave id.
+            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+                WaveSpawnInfo waveInfo = WaveSpawnInfo.Deserialize((byte[]) PhotonNetwork.CurrentRoom.CustomProperties[TdGame.WAVE_INFO + spawner.spawnerId]);
+                
+                spawner.LoadWaveProgress(waveInfo);
+            }
+
+            if (spawnEnemiesRoutine != null){
+                StopCoroutine(spawnEnemiesRoutine);
+            }
+            spawnEnemiesRoutine = StartCoroutine(SpawnEnemies());
+        } else if (Input.GetKeyDown(KeyCode.Z)) {
+            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+                spawner.SaveWaveProgress();
+            }
         }
     }
 }

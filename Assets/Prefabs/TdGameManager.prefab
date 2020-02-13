@@ -154,7 +154,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
-  currentWaveId: -1
+  spawnerId: 0
+  currentWaveId: 0
+  currentSpawnId: 0
+  currentDelayMs: 0
 --- !u!1 &1373292524
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,7 +1785,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
   - {fileID: 11400000, guid: c8b443e01e9c5124c95beb92803b47f6, type: 2}
-  currentWaveId: -1
+  spawnerId: 0
+  currentWaveId: 0
+  currentSpawnId: 0
+  currentDelayMs: 0
 --- !u!1 &9111399764213650536
 GameObject:
   m_ObjectHideFlags: 0

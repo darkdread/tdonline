@@ -50,13 +50,11 @@ public class EnemySpawner : MonoBehaviour {
     public EnemyTypeObjective[] enemyTypeObjectives;
     public Wave[] waves;
     public int spawnerId = 0;
-    public int currentWaveId = -1;
+    public int currentWaveId = 0;
     public int currentSpawnId = 0;
     public int currentDelayMs = 0;
-
-    private void Awake(){
-        
-    }
+    
+    private Coroutine spawnWaveRoutine;
 
     public void SpawnEnemy(string resourceName){
         GameObject go = PhotonNetwork.InstantiateSceneObject(resourceName, transform.position, Quaternion.identity);
@@ -75,35 +73,57 @@ public class EnemySpawner : MonoBehaviour {
         }
     }
 
+    public void LoadWaveProgress(WaveSpawnInfo info){
+        print($"Setting wave of {spawnerId} to {info.waveId}");
+        print($"Setting waveLastSpawn of {spawnerId} to {info.waveLastSpawnId}");
+        print($"Setting waveDelayMs of {spawnerId} to {info.waveDelayToSpawnNext}");
+
+        currentWaveId = info.waveId;
+        currentSpawnId = info.waveLastSpawnId;
+        currentDelayMs = info.waveDelayToSpawnNext;
+    }
+
+    public void SaveWaveProgress(){
+        // Set the current wave progress in this struct.
+        WaveSpawnInfo info = new WaveSpawnInfo(){
+            waveId = currentWaveId,
+            waveLastSpawnId = currentSpawnId,
+            waveDelayToSpawnNext = currentDelayMs
+        };
+
+        // Create a key with unique id of the spawner's id, with
+        // value of the current wave progress.
+        Hashtable props = new Hashtable {
+            {TdGame.WAVE_INFO + spawnerId, WaveSpawnInfo.Serialize(info)}
+        };
+
+        // Send current wave progress to the room property.
+        PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+    }
+
     public IEnumerator SpawnWave(int waveId){
-        if (currentDelayMs > 0){
-            yield return new WaitForSeconds(currentDelayMs/1000f);
-        }
         
+        // Go through current wave, spawn all enemies.
         while(currentSpawnId < waves[waveId].waveStructs.Length){
 
+            // Get wave struct, which contains enemy and delay.
             WaveStruct waveStruct = waves[waveId].waveStructs[currentSpawnId];
             currentDelayMs = waveStruct.waveDelayMs;
+            SaveWaveProgress();
 
-            WaveSpawnInfo info = new WaveSpawnInfo(){
-                waveId = waveId,
-                waveLastSpawnId = currentSpawnId,
-                waveDelayToSpawnNext = currentDelayMs
-            };
-
-            Hashtable props = new Hashtable {
-                {TdGame.WAVE_INFO + spawnerId, WaveSpawnInfo.Serialize(info)}
-            };
-            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
+            // Delay > spawn. If wave contains 2 enemy, order goes as such:
+            // D1 > S1 > D2 > S2.
+            yield return new WaitForSeconds(currentDelayMs/1000f);
 
             SpawnEnemy(waveStruct.waveEnemy.name);
-            
-            yield return new WaitForSeconds(waveStruct.waveDelayMs/1000f);
             currentSpawnId += 1;
         }
 
+        currentWaveId += 1;
         currentSpawnId = 0;
         currentDelayMs = 0;
+
+        SaveWaveProgress();
     }
 
     public int GetWaveSpawnDuration(int waveId){
@@ -116,13 +136,14 @@ public class EnemySpawner : MonoBehaviour {
         return duration;
     }
 
-    public void SpawnNextWave(){
-        currentWaveId += 1;
-
+    public void SpawnWave(){
         if (currentWaveId >= waves.Length){
             return;
         }
 
-        StartCoroutine(SpawnWave(currentWaveId));
+        if (spawnWaveRoutine != null){
+            StopCoroutine(spawnWaveRoutine);
+        }
+        spawnWaveRoutine = StartCoroutine(SpawnWave(currentWaveId));
     }
 }
