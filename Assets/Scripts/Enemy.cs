@@ -34,11 +34,10 @@ public class Enemy : MonoBehaviour {
     [PunRPC]
     public void SetHealth(int viewId, int health){
         Enemy enemy = PhotonNetwork.GetPhotonView(viewId).GetComponent<Enemy>();
-
         enemy.health = health;
 
         if (PhotonNetwork.IsMasterClient && enemy.health <= 0){
-            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.All, viewId);
+            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, viewId);
         }
     }
 

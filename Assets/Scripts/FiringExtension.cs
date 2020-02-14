@@ -28,12 +28,15 @@ public class FiringExtension : TurretExtension {
         }
     }
 
-    private void ShootProjectile(FiringExtensionData data, GameObject turret, Projectile projectile, float speed){
+    private void ShootProjectile(FiringExtensionData data, Turret turret, GameObject projectile, float speed){
         Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
         Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
 
-        projectile.transform.position = turret.transform.position + angleVec;
-        projectile.GetComponent<Rigidbody2D>().velocity = angleVec * speed;
+        // Add Projectile component.
+        TdGameManager.instance.photonView.RPC("AddProjectileComponent", RpcTarget.All, projectile.GetComponent<PhotonView>().ViewID);
+
+        // Shoot projectile.
+        projectile.GetComponent<PhotonView>().RPC("ShootProjectile", RpcTarget.All, turret.photonView.ViewID, angleVec, speed);
     }
 
     override public void UpdateTurretExtension(Turret turret){
@@ -72,17 +75,9 @@ public class FiringExtension : TurretExtension {
                 data.arc.projectileData = collectable.projectileData;
 
                 if (Input.GetButtonDown("Shoot")){
+                    GameObject projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded();
 
-                    if (reloadableExtensionData.ammunition.Count <= 0){
-                        Debug.Log("No ammunition!");
-                        return;
-                    }
-                    
-                    Projectile projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded().AddComponent<Projectile>();
-                    projectile.gameObject.layer = 12;
-                    projectile.projectileData = collectable.projectileData;
-
-                    ShootProjectile(data, turret.gameObject, projectile, launchSpeed);
+                    ShootProjectile(data, turret, projectile, launchSpeed);
                 }
             }
         }

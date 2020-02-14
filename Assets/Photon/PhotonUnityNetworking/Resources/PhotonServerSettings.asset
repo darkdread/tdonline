@@ -43,11 +43,14 @@ MonoBehaviour:
   - OnUsingTurret
   - RemoveAmmunition
   - RespawnSpaceship
+  - SetHealth
+  - SetTarget
   - SetTurretState
   - SetTurretUser
+  - ShootProjectile
   - SpawnCollectableObject
-  - SpawnEnemy
-  - SetTarget
-  - SetHealth
+  - AddProjectileComponent
+  - SetAsProjectile
+  - ShowGameObject
   DisableAutoOpenWizard: 1
   ShowSettings: 1

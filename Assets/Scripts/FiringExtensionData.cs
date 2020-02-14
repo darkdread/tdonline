@@ -14,6 +14,13 @@ public class FiringExtensionData : TurretExtensionData {
         gameObject.SetActive(false);
     }
 
+    [PunRPC]
+    public void SetAsProjectile(int viewId){
+        PhotonView view = PhotonNetwork.GetPhotonView(viewId);
+        
+        view.gameObject.AddComponent(typeof(Projectile));
+    }
+
     public void SetProjectileIterations(int iterations){
         arc.iterations = iterations;
     }

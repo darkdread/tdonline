@@ -66,6 +66,22 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    public void ShowGameObject(int viewId, bool show){
+        PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
+        obj.gameObject.SetActive(show);
+    }
+
+    [PunRPC]
+    public void AddProjectileComponent(int viewId){
+        PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
+        Projectile projectile = obj.gameObject.AddComponent<Projectile>();
+
+        projectile.projectileData = projectile.GetComponent<Collectable>().projectileData;
+        projectile.gameObject.layer = 12;
+        projectile.transform.position = Vector3.up;
+    }
+
+    [PunRPC]
     public void DestroySceneObject(int viewId){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         PhotonNetwork.Destroy(obj);
