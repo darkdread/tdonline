@@ -27,6 +27,11 @@ public class ReloadableExtensionData : TurretExtensionData {
         ammunition.Remove(view.gameObject);
     }
 
+    public GameObject GetLastAmmunitionLoaded(){
+        GameObject lastAmmunitionLoaded = ammunition[ammunition.Count - 1];
+        return lastAmmunitionLoaded;
+    }
+
     public GameObject RemoveLastAmmunitionLoaded(){
         GameObject lastAmmunitionLoaded = ammunition[ammunition.Count - 1];
         photonView.RPC("RemoveAmmunition", RpcTarget.All, lastAmmunitionLoaded.GetComponent<PhotonView>().ViewID);

@@ -12,10 +12,14 @@ public enum EnemyType {
 public class Enemy : MonoBehaviour {
     public EnemyType enemyType;
     public Transform targetPosition;
+    public int health;
+    public PhotonView photonView;
+
     private Rigidbody2D rb;
 
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
+        photonView = GetComponent<PhotonView>();
     }
 
     [PunRPC]
@@ -25,6 +29,17 @@ public class Enemy : MonoBehaviour {
         targetPosition = target;
         rb.isKinematic = true;
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform);
+    }
+
+    [PunRPC]
+    public void SetHealth(int viewId, int health){
+        Enemy enemy = PhotonNetwork.GetPhotonView(viewId).GetComponent<Enemy>();
+
+        enemy.health = health;
+
+        if (PhotonNetwork.IsMasterClient && enemy.health <= 0){
+            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.All, viewId);
+        }
     }
 
     private bool IsNearObjective(float distance){

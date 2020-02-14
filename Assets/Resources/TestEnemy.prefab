@@ -184,3 +184,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 0
   targetPosition: {fileID: 0}
+  health: 2
+  photonView: {fileID: 0}

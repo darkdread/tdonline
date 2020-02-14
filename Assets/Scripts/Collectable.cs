@@ -12,6 +12,7 @@ public class Collectable : Interactable {
 
     [Header("One Time Loot")]
     public PhotonView photonView;
+    public ProjectileData projectileData;
 
     private void Awake() {
         PhotonView photonView = GetComponent<PhotonView>();

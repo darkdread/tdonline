@@ -146,6 +146,17 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public static Enemy[] GetEnemiesOverlapSphere(Vector2 position, float radius){
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position, radius, 1 << 10);
+
+        List<Enemy> enemies = new List<Enemy>();
+        foreach(Collider2D c in colliders){
+            enemies.Add(c.GetComponent<Enemy>());
+        }
+
+        return enemies.ToArray();
+    }
+
     public static TdPlayerController[] GetTdPlayerControllersNearPosition(Vector2 position, float radius){
         Collider2D[] colliders = Physics2D.OverlapCircleAll(position, radius, 1 << 8);
 

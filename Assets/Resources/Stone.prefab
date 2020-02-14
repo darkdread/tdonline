@@ -171,6 +171,7 @@ MonoBehaviour:
   infinite: 0
   collectablePrefab: {fileID: 0}
   photonView: {fileID: 57118556139921571}
+  projectileData: {fileID: 11400000, guid: 68f116afd902643458e7ca1c775789cb, type: 2}
 --- !u!114 &-115600968517961648
 MonoBehaviour:
   m_ObjectHideFlags: 0

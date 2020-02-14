@@ -28,13 +28,12 @@ public class FiringExtension : TurretExtension {
         }
     }
 
-    private void ShootProjectile(FiringExtensionData data, GameObject turret, GameObject projectile, float speed){
-        GameObject go = projectile;
+    private void ShootProjectile(FiringExtensionData data, GameObject turret, Projectile projectile, float speed){
         Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
         Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
 
-        go.transform.position = turret.transform.position + angleVec;
-        go.GetComponent<Rigidbody2D>().velocity = angleVec * speed;
+        projectile.transform.position = turret.transform.position + angleVec;
+        projectile.GetComponent<Rigidbody2D>().velocity = angleVec * speed;
     }
 
     override public void UpdateTurretExtension(Turret turret){
@@ -59,23 +58,34 @@ public class FiringExtension : TurretExtension {
             data.SetProjectileIterations(arcIterations);
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
-            if (Input.GetButtonDown("Shoot")){
-                ReloadableExtensionData reloadableExtensionData = (ReloadableExtensionData) turret.GetTurretExtensionData(typeof(ReloadableExtensionData));
+            ReloadableExtensionData reloadableExtensionData = (ReloadableExtensionData) turret.GetTurretExtensionData(typeof(ReloadableExtensionData));
+            if (reloadableExtensionData){
 
-                if (!reloadableExtensionData){
-                    Debug.Log("AimingExtension requires ReloadableExtension!");
+                // The following code below requires at least an ammunition.
+                if (reloadableExtensionData.ammunition.Count <= 0){
                     return;
                 }
 
-                if (reloadableExtensionData && reloadableExtensionData.ammunition.Count <= 0){
-                    Debug.Log("No ammunition!");
-                    return;
+                Collectable collectable = reloadableExtensionData.GetLastAmmunitionLoaded().GetComponent<Collectable>();
+
+                // Update arc to show aoe radius.
+                data.arc.projectileData = collectable.projectileData;
+
+                if (Input.GetButtonDown("Shoot")){
+
+                    if (reloadableExtensionData.ammunition.Count <= 0){
+                        Debug.Log("No ammunition!");
+                        return;
+                    }
+                    
+                    Projectile projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded().AddComponent<Projectile>();
+                    projectile.gameObject.layer = 12;
+                    projectile.projectileData = collectable.projectileData;
+
+                    ShootProjectile(data, turret.gameObject, projectile, launchSpeed);
                 }
-
-                GameObject projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded();
-
-                ShootProjectile(data, turret.gameObject, projectile, launchSpeed);
             }
         }
     }
+
 }
