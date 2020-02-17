@@ -13,6 +13,8 @@ public class TdGameSettings : MonoBehaviour
         Color.green
     };
     public TdPlayerUi playerUiPrefab;
+    public string collectableResourceDirectory = "Collectable";
 
     public EnemySpawner[] enemySpawners;
+    public string enemyResourceDirectory = "Enemy";
 }

@@ -127,9 +127,6 @@ public class Turret : Interactable {
     }
 
     protected override void OnInteract(TdPlayerController playerController){
-        if (controllingPlayer != null && controllingPlayer != playerController) {
-            return;
-        }
 
         foreach(TurretExtension turretExtension in turretExtensions){
             if (IsExtensionBlocked(turretExtension.GetType())){
@@ -137,6 +134,10 @@ public class Turret : Interactable {
             }
 
             turretExtension.OnInteract(this, playerController);
+        }
+
+        if (controllingPlayer != null && controllingPlayer != playerController) {
+            return;
         }
 
         if (playerController.IsInteracting()){
@@ -165,8 +166,8 @@ public class Turret : Interactable {
         base.OnInteractRadiusStay(playerController);
 
         // Update interactivity button when state is in use.
-        if (IsInUse()) {
-            OnExitInteractRadius(playerController);
+        if (IsInUse() && !playerController.IsCarryingObject()) {
+            playerController.playerUi.ShowUseButton(false);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 using Photon.Pun;
@@ -24,7 +25,7 @@ public class Collectable : Interactable {
 
     private IEnumerator SpawnAndCarry(TdPlayerController playerController) {
         CollectablePun data = new CollectablePun(){
-            resourceName = collectablePrefab.name,
+            resourceName = Path.Combine(TdGameManager.gameSettings.collectableResourceDirectory, collectablePrefab.name),
             playerViewId = playerController.photonView.ViewID
         };
 
@@ -39,8 +40,8 @@ public class Collectable : Interactable {
     }
 
     protected override void OnInteractRadiusStay(TdPlayerController playerController){
-        // Don't allow a player who's carrying an object to interact.
-        if (playerController.IsCarryingObject()){
+        // Only allow a player who can carry object to interact.
+        if (!playerController.CanCarryObject()){
             return;
         }
         

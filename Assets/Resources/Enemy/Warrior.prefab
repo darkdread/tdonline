@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -115600968517961648}
   - component: {fileID: 1056586894354208505}
   m_Layer: 10
-  m_Name: TestEnemy
+  m_Name: Warrior
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a4dec3662527d44950c90962b5dd8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyData: {fileID: 11400000, guid: 3630c0440e1d1c64281139883d323ea8, type: 2}
   enemyType: 0
+  health: 0
   targetPosition: {fileID: 0}
-  health: 2
   photonView: {fileID: 0}

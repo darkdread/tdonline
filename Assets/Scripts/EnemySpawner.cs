@@ -57,7 +57,9 @@ public class EnemySpawner : MonoBehaviour {
     private Coroutine spawnWaveRoutine;
 
     public void SpawnEnemy(string resourceName){
-        GameObject go = PhotonNetwork.InstantiateSceneObject(resourceName, transform.position, Quaternion.identity);
+        GameObject go = PhotonNetwork.InstantiateSceneObject(
+            Path.Combine(TdGameManager.gameSettings.enemyResourceDirectory, resourceName),
+            transform.position, Quaternion.identity);
         Enemy enemy = go.GetComponent<Enemy>();
 
         foreach(EnemyTypeObjective eto in enemyTypeObjectives){

@@ -9,6 +9,8 @@ public enum PlayerState {
     UsingTurret = 2,
     CarryingObject = 4,
     Interacting = 8,
+
+    CarryingOrUsingTurret = UsingTurret | CarryingObject
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -139,6 +141,10 @@ public class TdPlayerController : MonoBehaviour
 
     public bool IsCarryingObject(){
         return (playerState & PlayerState.CarryingObject) != 0;
+    }
+
+    public bool CanCarryObject(){
+        return (playerState & PlayerState.CarryingOrUsingTurret) == 0;
     }
 
     public void DropObject(bool remove = false){

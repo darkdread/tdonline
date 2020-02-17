@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour
             Enemy[] enemies = TdGameManager.GetEnemiesOverlapSphere(collision.GetContact(0).point, projectileData.areaOfEffect);
 
             foreach(Enemy enemy in enemies){
-                enemy.photonView.RPC("SetHealth", RpcTarget.All, enemy.photonView.ViewID, enemy.health - projectileData.damage);
+                enemy.SetHealth(enemy.health - projectileData.damage);
             }
 
             TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
