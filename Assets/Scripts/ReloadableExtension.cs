@@ -74,9 +74,11 @@ public class ReloadableExtension : TurretExtension {
             return;
         }
 
-        playerController.DropObject();
-
-        LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
+        playerController.SetInteractingDelayFrameInstant(true, false, 1);
+        playerController.StartProgressBar(1f, delegate{
+            playerController.DropObject();
+            LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
+        });
     }
 
     override public void UpdateTurretExtension(Turret turret){

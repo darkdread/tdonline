@@ -23,6 +23,17 @@ public class Collectable : Interactable {
         }
     }
 
+    private void CollectingFromStack(TdPlayerController playerController) {
+        if (playerController.IsDoingSomething()){
+            print("Already doing something!");
+            return;
+        }
+
+        playerController.StartProgressBar(2f, delegate{
+            StartCoroutine(SpawnAndCarry(playerController));
+        });
+    }
+
     private IEnumerator SpawnAndCarry(TdPlayerController playerController) {
         CollectablePun data = new CollectablePun(){
             resourceName = Path.Combine(TdGameManager.gameSettings.collectableResourceDirectory, collectablePrefab.name),
@@ -52,7 +63,8 @@ public class Collectable : Interactable {
 
         // If it's a stack, spawn the object and force player to carry it.
         if (infinite) {
-            StartCoroutine(SpawnAndCarry(playerController));
+            CollectingFromStack(playerController);
+            // StartCoroutine(SpawnAndCarry(playerController));
         } else {
             // Carry collectable object.
             StartCoroutine(Carry(playerController));

@@ -9,6 +9,7 @@ public enum PlayerState {
     UsingTurret = 2,
     CarryingObject = 4,
     Interacting = 8,
+    IsDoingSomething = 16,
 
     CarryingOrUsingTurret = UsingTurret | CarryingObject
 }
@@ -39,7 +40,11 @@ public class TdPlayerController : MonoBehaviour
     [HideInInspector]
     public TdPlayerUi playerUi;
 
+    [Header("Runtime Variables")]
     public PlayerState playerState;
+    public float progressMax;
+    public float progressCurrent;
+    public System.Action progressCallback;
 
     public float moveSpeed = 1f;
 
@@ -51,6 +56,31 @@ public class TdPlayerController : MonoBehaviour
         playerUi = Instantiate<TdPlayerUi>(TdGameManager.gameSettings.playerUiPrefab,
                             TdGameManager.instance.gameCanvas.transform);
         playerUi.SetTarget(this);
+    }
+
+    [PunRPC]
+    private void StartProgressBarRpc(float duration){
+        playerState = playerState | PlayerState.IsDoingSomething;
+
+        progressCurrent = 0f;
+        progressMax = duration;
+        playerUi.SetProgressBar(progressCurrent);
+        playerUi.ShowProgressBar(true);
+    }
+
+    public void StartProgressBar(float duration, System.Action callback){
+        progressCallback = callback;
+        photonView.RPC("StartProgressBarRpc", RpcTarget.All, duration);
+    }
+
+    [PunRPC]
+    private void StopProgressBarRpc(){
+        playerState = playerState & ~PlayerState.IsDoingSomething;
+        playerUi.ShowProgressBar(false);
+    }
+
+    public void StopProgressBar(){
+        photonView.RPC("StopProgressBarRpc", RpcTarget.All);
     }
 
     [PunRPC]
@@ -141,6 +171,10 @@ public class TdPlayerController : MonoBehaviour
         return (playerState & PlayerState.Interacting) != 0;
     }
 
+    public bool IsDoingSomething(){
+        return (playerState & PlayerState.IsDoingSomething) != 0;
+    }
+
     public bool IsCarryingObject(){
         return (playerState & PlayerState.CarryingObject) != 0;
     }
@@ -171,13 +205,30 @@ public class TdPlayerController : MonoBehaviour
     }
 
     private void UpdateView() {
+        if (IsDoingSomething()){
+            playerUi.SetProgressBar(progressCurrent / progressMax);
+        }
+
         if (IsCarryingObject()) {
             playerCarriedObject.transform.position = playerCarryTransform.transform.position;
         }
     }
 
+    public void CompleteProgressBar(){
+        StopProgressBar();
+        progressCallback.Invoke();
+    }
+
     private void Update(){
         UpdateView();
+
+        // Update progress bar for player.
+        if (IsDoingSomething()){
+            progressCurrent += Time.deltaTime;
+            if (progressCurrent > progressMax){
+                CompleteProgressBar();
+            }
+        }
 
         if (!photonView.IsMine){
             return;
@@ -250,6 +301,16 @@ public class TdPlayerController : MonoBehaviour
         int playerFacingDir = System.Math.Sign(velocityDelta.x);
         if (playerFacingDir != 0){
             transform.localScale = new Vector3(playerFacingDir, transform.localScale.y, transform.localScale.z);
+        }
+
+        // Stop progress bar logic.
+        if (IsDoingSomething()){
+
+            // If player is moving while doing something, stop progress.
+            if (playerFacingDir != 0){
+                StopProgressBar();
+                return;
+            }
         }
 
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;

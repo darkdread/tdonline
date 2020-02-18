@@ -30,6 +30,7 @@ MonoBehaviour:
   StartInOfflineMode: 0
   RpcList:
   - AddAmmunition
+  - AddProjectileComponent
   - ClickRpc
   - DestroyRpc
   - DestroySceneObject
@@ -43,15 +44,16 @@ MonoBehaviour:
   - OnUsingTurret
   - RemoveAmmunition
   - RespawnSpaceship
+  - SetAsProjectile
   - SetHealth
+  - SetHealthRpc
   - SetTarget
   - SetTurretState
   - SetTurretUser
   - ShootProjectile
-  - SpawnCollectableObject
-  - AddProjectileComponent
-  - SetAsProjectile
   - ShowGameObject
-  - SetHealthRpc
+  - SpawnCollectableObject
+  - StartProgressBarRpc
+  - StopProgressBarRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

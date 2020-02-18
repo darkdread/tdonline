@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using TMPro;
 using Photon.Realtime;
@@ -9,7 +10,9 @@ using Photon.Pun;
 public class TdPlayerUi : MonoBehaviour
 {
     private TdPlayerController _playerController;
+    
     public TextMeshProUGUI playerNameText;
+    public Slider playerProgressBar;
     public GameObject playerUseButton;
 
     public void SetTarget(TdPlayerController playerController){
@@ -20,6 +23,14 @@ public class TdPlayerUi : MonoBehaviour
 
     public void ShowUseButton(bool show){
         playerUseButton.SetActive(show);
+    }
+
+    public void SetProgressBar(float value){
+        playerProgressBar.value = value;
+    }
+
+    public void ShowProgressBar(bool show){
+        playerProgressBar.gameObject.SetActive(show);
     }
 
     private void Update(){

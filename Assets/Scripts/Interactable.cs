@@ -56,7 +56,9 @@ public class Interactable : MonoBehaviour {
             return;
         }
 
-        playerController.playerUi.ShowUseButton(true);
+        // Only show interact button if player is not doing something.
+        bool isDoingSomething = playerController.IsDoingSomething();
+        playerController.playerUi.ShowUseButton(!isDoingSomething);
 
         if (Input.GetButtonDown("Use") && !playerController.IsInteracting()) {
             OnInteract(playerController);
