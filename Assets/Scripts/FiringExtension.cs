@@ -77,6 +77,9 @@ public class FiringExtension : TurretExtension {
                 if (Input.GetButtonDown("Shoot")){
                     GameObject projectile = reloadableExtensionData.RemoveLastAmmunitionLoaded();
 
+                    // Hide aoe radius.
+                    data.arc.projectileData = null;
+
                     ShootProjectile(data, turret, projectile, launchSpeed);
                 }
             }

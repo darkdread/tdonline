@@ -236,8 +236,7 @@ public class TdPlayerController : MonoBehaviour
             // with offset.
 
             // To prevent player from clipping through bottom of ladder.
-            if (!IsCollidingLadder() 
-            || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.1f){
+            if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.1f){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
                 // OnStopClimb();
@@ -245,6 +244,12 @@ public class TdPlayerController : MonoBehaviour
         }
 
         playerRigidbody.velocity = velocityDelta * moveSpeed;
+
+        int playerFacingDir = System.Math.Sign(velocityDelta.x);
+        if (playerFacingDir != 0){
+            transform.localScale = new Vector3(playerFacingDir, transform.localScale.y, transform.localScale.z);
+        }
+
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;
     }
 
