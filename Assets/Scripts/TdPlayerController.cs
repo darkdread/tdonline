@@ -58,6 +58,7 @@ public class TdPlayerController : MonoBehaviour
         playerState = playerState | PlayerState.Climbing;
 
         playerCollider.isTrigger = true;
+        playerFeetCollider.isTrigger = true;
         playerRigidbody.gravityScale = 0f;
     }
 
@@ -66,6 +67,7 @@ public class TdPlayerController : MonoBehaviour
         playerState = playerState & ~PlayerState.Climbing;
 
         playerCollider.isTrigger = false;
+        playerFeetCollider.isTrigger = false;
         playerRigidbody.gravityScale = 1f;
     }
 
@@ -236,7 +238,7 @@ public class TdPlayerController : MonoBehaviour
             // with offset.
 
             // To prevent player from clipping through bottom of ladder.
-            if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.1f){
+            if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
                 // OnStopClimb();

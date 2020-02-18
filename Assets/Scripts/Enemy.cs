@@ -62,6 +62,9 @@ public class Enemy : MonoBehaviour {
         if (IsNearObjective(0.1f)){
             rb.isKinematic = false;
             rb.velocity = Vector3.zero;
+
+            TdGameManager.castle.SetHealth(TdGameManager.castle.health - 1);
+            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
         }
     }
 }

@@ -19,6 +19,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public static TdGameManager instance = null;
     public static int playersLoaded = 0;
     public static TdGameSettings gameSettings;
+    public static Castle castle;
 
     private Coroutine spawnEnemiesRoutine;
 
@@ -28,6 +29,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     private void Awake(){
         instance = this;
         gameSettings = GetComponent<TdGameSettings>();
+        castle = GetComponentInChildren<Castle>();
 
         PhotonView[] photonViews = Resources.FindObjectsOfTypeAll(typeof(PhotonView)) as PhotonView[];
 

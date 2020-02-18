@@ -61,6 +61,9 @@ namespace Photon.Pun.Demo.Asteroids
                         FindObjectOfType<LobbyMainPanel>().LocalPlayerPropertiesUpdated();
                     }
                 });
+
+                // Auto ready.
+                PlayerReadyButton.onClick.Invoke();
             }
         }
 
