@@ -156,6 +156,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 3377848412693205544, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: m_Name
+      value: RightGate
+      objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199431, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -220,6 +225,11 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5004701011384378843, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: m_Name
+      value: LeftGate
       objectReference: {fileID: 0}
     - target: {fileID: 7798180069415820520, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}

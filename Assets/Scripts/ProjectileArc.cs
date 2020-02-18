@@ -11,7 +11,9 @@ public class ProjectileArc : MonoBehaviour
 
     private Color initialColor;
     private LineRenderer lineRenderer;
+
     private RaycastHit2D collisionHit;
+    private int hitId;
 
     void Awake()
     {
@@ -24,7 +26,7 @@ public class ProjectileArc : MonoBehaviour
         Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, distance, gravity, angle);
         Vector3[] points3d = new Vector3[arcPoints.Length];
 
-        int hitId = 0;
+        hitId = 0;
         for (int i = 0; i < arcPoints.Length; i++)
         {
             if (hitId != 0){
@@ -51,7 +53,7 @@ public class ProjectileArc : MonoBehaviour
     }
 
     private void OnDrawGizmos(){
-        if (!collisionHit || projectileData == null) {
+        if (hitId == 0 || projectileData == null) {
             return;
         }
 
