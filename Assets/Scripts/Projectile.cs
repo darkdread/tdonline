@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class Projectile : MonoBehaviour
 {
+    public TdPlayerController owningPlayer;
     public Rigidbody2D rb;
     public ProjectileData projectileData;
     public PhotonView photonView;
@@ -19,6 +20,8 @@ public class Projectile : MonoBehaviour
     public void ShootProjectile(int turretId, Vector3 angleVec, float speed){
         GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
 
+        owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
+        owningPlayer.playerEndGameData.UpdateShotCount(gameObject.name);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
     }
@@ -34,7 +37,7 @@ public class Projectile : MonoBehaviour
             Enemy[] enemies = TdGameManager.GetEnemiesOverlapSphere(collision.GetContact(0).point, projectileData.areaOfEffect);
 
             foreach(Enemy enemy in enemies){
-                enemy.SetHealth(enemy.health - projectileData.damage);
+                enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
             }
 
             TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);

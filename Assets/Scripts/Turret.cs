@@ -51,6 +51,12 @@ public class Turret : Interactable {
     }
 
     public TurretExtensionData GetTurretExtensionData(TurretExtension turretExtension){
+        // Turret extension datas have not been initialized yet.
+        // We have to wait for OnLoadExtension -> CreatePhotonData.
+        if (turretExtensionDatas.Count == 0){
+            return null;
+        }
+
         return turretExtensionDatas[turretExtensions.IndexOf(turretExtension)];
     }
 

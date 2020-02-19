@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Newtonsoft.Json;
 using TMPro;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
@@ -14,12 +15,59 @@ public class TdGame {
     public static string WAVE_INFO = "CurrentWaveInfo_";
 }
 
+[System.Serializable]
+public struct EndGameData {
+    public Dictionary<string, int> takenResource;
+    public Dictionary<string, int> shotResource;
+    public Dictionary<string, int> killedEnemy;
+
+    public void UpdateTakenCount(string resourceName){
+		Debug.Log(JsonConvert.SerializeObject(this));
+
+        if (takenResource.ContainsKey(resourceName)){
+            takenResource[resourceName] += 1;
+            return;
+        }
+
+        takenResource.Add(resourceName, 1);
+    }
+
+    public void UpdateShotCount(string resourceName){
+        // Debug.Log(JsonConvert.SerializeObject(this));
+
+        if (shotResource.ContainsKey(resourceName)){
+            shotResource[resourceName] += 1;
+            return;
+        }
+
+        shotResource.Add(resourceName, 1);
+    }
+
+    public void UpdateKillCount(string enemyName){
+        if (killedEnemy.ContainsKey(enemyName)){
+            killedEnemy[enemyName] += 1;
+            return;
+        }
+
+        killedEnemy.Add(enemyName, 1);
+    }
+
+    public static implicit operator EndGameData(string defaults) {
+        return new EndGameData() {
+            takenResource = new Dictionary<string, int>(),
+            shotResource = new Dictionary<string, int>(),
+            killedEnemy = new Dictionary<string, int>()
+        };
+    }
+}
+
 public class TdGameManager : MonoBehaviourPunCallbacks
 {
     public static TdGameManager instance = null;
     public static int playersLoaded = 0;
     public static TdGameSettings gameSettings;
     public static Castle castle;
+    public static List<TdPlayerController> players = new List<TdPlayerController>();
 
     private Coroutine spawnEnemiesRoutine;
 
@@ -104,6 +152,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (data.playerViewId != 0){
             TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
+            playerController.playerEndGameData.UpdateTakenCount(spawnedObject.name);
             playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, objectPhotonView.ViewID);
         }
     }
@@ -146,6 +195,12 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    private void AddPlayerToList(int viewId){
+        TdPlayerController playerController = PhotonNetwork.GetPhotonView(viewId).GetComponent<TdPlayerController>();
+        players.Add(playerController);
+    }
+
     private void StartGame(){
         int localPlayerId = PhotonNetwork.LocalPlayer.GetPlayerNumber();
 
@@ -155,6 +210,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         // Instantiate the player, player name, and set custom property of player controller for local player.
         GameObject playerObject = PhotonNetwork.Instantiate("Player", position, rotation, 0);
         TdPlayerController playerController = playerObject.GetComponent<TdPlayerController>();
+        photonView.RPC("AddPlayerToList", RpcTarget.All, playerController.photonView.ViewID);
 
         playerObject.name = playerObject.name + localPlayerId;
 
@@ -229,6 +285,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         } else if (Input.GetKeyDown(KeyCode.Z)) {
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
                 spawner.SaveWaveProgress();
+            }
+        } else if (Input.GetKeyDown(KeyCode.Q)){
+            foreach(TdPlayerController playerController in players){
+                print(JsonConvert.SerializeObject(playerController.playerEndGameData));
             }
         }
     }

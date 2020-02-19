@@ -42,6 +42,10 @@ public class FiringExtension : TurretExtension {
     override public void UpdateTurretExtension(Turret turret){
         FiringExtensionData data = (FiringExtensionData) turret.GetTurretExtensionData(this);
 
+        if (!data){
+            return;
+        }
+
         if (data.gameObject.activeSelf){
             int yAxis = (int) Input.GetAxisRaw("Vertical");
 

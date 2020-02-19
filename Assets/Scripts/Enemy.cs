@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour {
     }
 
     [PunRPC]
-    public void SetTarget(int targetId){
+    private void SetTarget(int targetId){
         Transform target = PhotonNetwork.GetPhotonView(targetId).transform;
 
         targetPosition = target;
@@ -37,17 +37,22 @@ public class Enemy : MonoBehaviour {
     }
 
     [PunRPC]
-    public void SetHealth(int viewId, int health){
+    private void SetHealth(int viewId, int health, int playerViewId){
         Enemy enemy = PhotonNetwork.GetPhotonView(viewId).GetComponent<Enemy>();
         enemy.health = health;
 
         if (PhotonNetwork.IsMasterClient && enemy.health <= 0){
             TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, viewId);
         }
+
+        if (playerViewId != 0 && enemy.health <= 0){
+            TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
+            hittingPlayer.playerEndGameData.UpdateKillCount(enemy.name);
+        }
     }
 
-    public void SetHealth(int health){
-        photonView.RPC("SetHealth", RpcTarget.All, photonView.ViewID, health);
+    public void SetHealth(int health, int playerViewId = 0){
+        photonView.RPC("SetHealth", RpcTarget.All, photonView.ViewID, health, playerViewId);
     }
 
     private bool IsNearObjective(float distance){

@@ -55,5 +55,6 @@ MonoBehaviour:
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
+  - AddPlayerToList
   DisableAutoOpenWizard: 1
   ShowSettings: 1

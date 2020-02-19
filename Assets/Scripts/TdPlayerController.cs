@@ -46,9 +46,11 @@ public class TdPlayerController : MonoBehaviour
     public float progressCurrent;
     public System.Action progressCallback;
 
+    public EndGameData playerEndGameData;
+
     public float moveSpeed = 1f;
 
-    private void Start(){
+    private void Awake(){
         photonView = GetComponent<PhotonView>();
         playerCollider = GetComponent<Collider2D>();
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -56,6 +58,8 @@ public class TdPlayerController : MonoBehaviour
         playerUi = Instantiate<TdPlayerUi>(TdGameManager.gameSettings.playerUiPrefab,
                             TdGameManager.instance.gameCanvas.transform);
         playerUi.SetTarget(this);
+
+        playerEndGameData = "Defaults";
     }
 
     [PunRPC]
@@ -216,7 +220,12 @@ public class TdPlayerController : MonoBehaviour
 
     public void CompleteProgressBar(){
         StopProgressBar();
-        progressCallback.Invoke();
+
+        if (photonView.IsMine){
+            print("TEST");
+            print(progressCallback.Method.Name);
+            progressCallback.Invoke();
+        }
     }
 
     private void Update(){

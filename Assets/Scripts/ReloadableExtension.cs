@@ -31,6 +31,11 @@ public class ReloadableExtension : TurretExtension {
 
     private void UpdateUi(Turret turret){
         ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
+
+        if (!data){
+            return;
+        }
+
         data.transform.position = Camera.main.WorldToScreenPoint(turret.transform.position);
 
         // Logic for item to show up in ui here.
