@@ -22,8 +22,6 @@ public struct EndGameData {
     public Dictionary<string, int> killedEnemy;
 
     public void UpdateTakenCount(string resourceName){
-		Debug.Log(JsonConvert.SerializeObject(this));
-
         if (takenResource.ContainsKey(resourceName)){
             takenResource[resourceName] += 1;
             return;
@@ -33,8 +31,6 @@ public struct EndGameData {
     }
 
     public void UpdateShotCount(string resourceName){
-        // Debug.Log(JsonConvert.SerializeObject(this));
-
         if (shotResource.ContainsKey(resourceName)){
             shotResource[resourceName] += 1;
             return;
@@ -65,6 +61,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 {
     public static TdGameManager instance = null;
     public static int playersLoaded = 0;
+    public static bool isPaused;
     public static TdGameSettings gameSettings;
     public static Castle castle;
     public static List<TdPlayerController> players = new List<TdPlayerController>();
@@ -139,22 +136,30 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void SpawnCollectableObject(byte[] customType){
-        print("SpawnCollectableObject");
-
         CollectablePun data = (CollectablePun) CollectablePun.Deserialize(customType);
 
         string resourceName = data.resourceName;
-        // print(resourceName);
 
-        GameObject spawnedObject = PhotonNetwork.InstantiateSceneObject(resourceName,
-                Vector3.zero, Quaternion.identity);
-        PhotonView objectPhotonView = spawnedObject.GetComponent<PhotonView>();
+        if (PhotonNetwork.IsMasterClient){
+            GameObject spawnedObject = PhotonNetwork.InstantiateSceneObject(resourceName,
+                    Vector3.zero, Quaternion.identity);
+            PhotonView objectPhotonView = spawnedObject.GetComponent<PhotonView>();
+
+            if (data.playerViewId != 0){
+                TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
+                playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, objectPhotonView.ViewID);
+            }
+        }
 
         if (data.playerViewId != 0){
             TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
-            playerController.playerEndGameData.UpdateTakenCount(spawnedObject.name);
-            playerController.photonView.RPC("OnCarryGameObject", RpcTarget.All, objectPhotonView.ViewID);
+            string collectableName = GetPrefabFromResource(resourceName).GetComponent<Collectable>().projectileData.name;
+            playerController.playerEndGameData.UpdateTakenCount(collectableName);
         }
+    }
+
+    public static GameObject GetPrefabFromResource(string resourcePath){
+        return Resources.Load<GameObject>(resourcePath);
     }
 
     private IEnumerator SpawnEnemies(){
@@ -267,6 +272,16 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         // }
     }
 
+    [PunRPC]
+    private void PauseGameRpc(bool pause){
+        isPaused = pause;
+        Time.timeScale = isPaused ? 0 : 1;
+    }
+
+    public void PauseGame(bool pause){
+        photonView.RPC("PauseGameRpc", RpcTarget.All, pause);
+    }
+
     private void Update(){
 
         if (Input.GetKeyDown(KeyCode.X)){
@@ -290,6 +305,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             foreach(TdPlayerController playerController in players){
                 print(JsonConvert.SerializeObject(playerController.playerEndGameData));
             }
+        } else if (Input.GetKeyDown(KeyCode.Escape)){
+            PauseGame(!isPaused);
         }
     }
 }

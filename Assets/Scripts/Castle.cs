@@ -9,6 +9,10 @@ public class Castle : MonoBehaviourPunCallbacks {
     public int maxHealth;
     public int health;
 
+    private void Awake(){
+        SetHealth(maxHealth);
+    }
+
     [PunRPC]
     private void SetHealthRpc(int value){
         health = value;

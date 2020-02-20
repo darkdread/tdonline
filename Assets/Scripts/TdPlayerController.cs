@@ -14,6 +14,12 @@ public enum PlayerState {
     CarryingOrUsingTurret = UsingTurret | CarryingObject
 }
 
+public enum PlayerEmote {
+    NeedAmmo,
+    Smile,
+    Death
+}
+
 public class TdPlayerController : MonoBehaviour
 {
     [HideInInspector]
@@ -60,6 +66,15 @@ public class TdPlayerController : MonoBehaviour
         playerUi.SetTarget(this);
 
         playerEndGameData = "Defaults";
+    }
+
+    [PunRPC]
+    private void ShowEmoteRpc(PlayerEmote emote, float duration){
+        playerUi.SetEmote(TdGameManager.gameSettings.GetSpriteFromEmote(emote), duration);
+    }
+
+    public void ShowEmote(PlayerEmote emote, float duration){
+        photonView.RPC("ShowEmoteRpc", RpcTarget.All, emote, duration);
     }
 
     [PunRPC]
@@ -229,6 +244,10 @@ public class TdPlayerController : MonoBehaviour
     }
 
     private void Update(){
+        if (TdGameManager.isPaused){
+            return;
+        }
+
         UpdateView();
 
         // Update progress bar for player.
@@ -320,6 +339,10 @@ public class TdPlayerController : MonoBehaviour
                 StopProgressBar();
                 return;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.H)){
+            ShowEmote(PlayerEmote.Smile, 2f);
         }
 
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;

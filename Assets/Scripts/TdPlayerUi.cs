@@ -14,6 +14,9 @@ public class TdPlayerUi : MonoBehaviour
     public TextMeshProUGUI playerNameText;
     public Slider playerProgressBar;
     public GameObject playerUseButton;
+    public Image playerEmote;
+
+    private float emoteTimeout;
 
     public void SetTarget(TdPlayerController playerController){
         _playerController = playerController;
@@ -23,6 +26,12 @@ public class TdPlayerUi : MonoBehaviour
 
     public void ShowUseButton(bool show){
         playerUseButton.SetActive(show);
+    }
+
+    public void SetEmote(Sprite sprite, float duration){
+        emoteTimeout = duration;
+        playerEmote.sprite = sprite;
+        playerEmote.gameObject.SetActive(sprite != null);
     }
 
     public void SetProgressBar(float value){
@@ -40,6 +49,14 @@ public class TdPlayerUi : MonoBehaviour
             return;
         }
 
+        if (TdGameManager.isPaused){
+            return;
+        }
+        
+        emoteTimeout -= Time.deltaTime;
+        if (emoteTimeout <= 0 && playerEmote.gameObject.activeSelf){
+            SetEmote(null, 0f);
+        }
         transform.position = Camera.main.WorldToScreenPoint(_playerController.transform.position);
         // playerNameText.transform.position = Camera.main.WorldToScreenPoint(_playerController.transform.position);
     }

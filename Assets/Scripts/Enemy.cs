@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour {
 
         if (playerViewId != 0 && enemy.health <= 0){
             TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
-            hittingPlayer.playerEndGameData.UpdateKillCount(enemy.name);
+            hittingPlayer.playerEndGameData.UpdateKillCount(enemyData.name);
         }
     }
 
@@ -61,6 +61,10 @@ public class Enemy : MonoBehaviour {
 
     private void Update(){
         if (!PhotonNetwork.IsMasterClient){
+            return;
+        }
+
+        if (TdGameManager.isPaused){
             return;
         }
 

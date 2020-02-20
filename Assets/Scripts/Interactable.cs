@@ -124,6 +124,10 @@ public class Interactable : MonoBehaviour {
             return;
         }
 
+        if (TdGameManager.isPaused){
+            return;
+        }
+
         // TdPlayerController[] playerControllers = TdGameManager.GetTdPlayerControllersNearPosition(transform.position, 2f);
         UpdateInteractivity();
     }
