@@ -129,9 +129,13 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DestroySceneObject(int viewId){
+    private void DestroySceneObjectRpc(int viewId){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         PhotonNetwork.Destroy(obj);
+    }
+
+    public void DestroySceneObject(int viewId){
+        photonView.RPC("DestroySceneObjectRpc", RpcTarget.MasterClient, viewId);
     }
 
     [PunRPC]

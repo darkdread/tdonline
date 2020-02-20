@@ -140,6 +140,9 @@ MonoBehaviour:
   health: 0
   targetPosition: {fileID: 0}
   photonView: {fileID: 0}
+  attackActualHit: 0
+  attackCooldown: 0
+  deathCooldown: 0
 --- !u!114 &8188651191047624640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,12 +274,12 @@ MonoBehaviour:
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
   m_SynchronizeParameters:
-  - Type: 4
+  - Type: 9
     SynchronizeType: 1
-    Name: IsNearObjective
-  - Type: 3
+    Name: Death
+  - Type: 9
     SynchronizeType: 1
-    Name: health
+    Name: Attack
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

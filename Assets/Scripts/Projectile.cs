@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
                 enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
             }
 
-            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
+            TdGameManager.instance.DestroySceneObject(photonView.ViewID);
         }
         
         // // Enemy layermask

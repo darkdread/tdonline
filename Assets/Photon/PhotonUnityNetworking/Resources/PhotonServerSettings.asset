@@ -34,7 +34,7 @@ MonoBehaviour:
   - AddProjectileComponent
   - ClickRpc
   - DestroyRpc
-  - DestroySceneObject
+  - DestroySceneObjectRpc
   - DestroySpaceship
   - Fire
   - OnCarryGameObject
@@ -43,6 +43,7 @@ MonoBehaviour:
   - OnStopClimb
   - OnStopUsingTurret
   - OnUsingTurret
+  - PauseGameRpc
   - RemoveAmmunition
   - RespawnSpaceship
   - SetAsProjectile
@@ -52,11 +53,10 @@ MonoBehaviour:
   - SetTurretState
   - SetTurretUser
   - ShootProjectile
+  - ShowEmoteRpc
   - ShowGameObject
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
-  - ShowEmoteRpc
-  - PauseGameRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

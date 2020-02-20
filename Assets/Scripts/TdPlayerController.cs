@@ -208,11 +208,7 @@ public class TdPlayerController : MonoBehaviour
         if (remove){
             // It is a scene object, run rpc to destroy.
             if (objectPhotonView.IsSceneView){
-                if (PhotonNetwork.IsMasterClient){
-                    PhotonNetwork.Destroy(objectPhotonView);
-                } else {
-                    TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, objectPhotonView.ViewID);
-                }
+                TdGameManager.instance.DestroySceneObject(objectPhotonView.ViewID);
             } else {
                 PhotonNetwork.Destroy(objectPhotonView);
             }

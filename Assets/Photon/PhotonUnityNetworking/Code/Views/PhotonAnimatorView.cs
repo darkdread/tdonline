@@ -121,7 +121,7 @@ namespace Photon.Pun
 
         private void Awake()
         {
-            this.m_PhotonView = GetComponent<PhotonView>();
+            this.m_PhotonView = GetComponentInParent<PhotonView>();
             this.m_Animator = GetComponent<Animator>();
         }
 

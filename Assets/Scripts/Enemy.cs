@@ -21,6 +21,10 @@ public class Enemy : MonoBehaviour {
     private Animator animator;
     private Rigidbody2D rb;
 
+    public float attackActualHit;
+    public float attackCooldown;
+    public float deathCooldown;
+
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
         photonView = GetComponent<PhotonView>();
@@ -28,7 +32,13 @@ public class Enemy : MonoBehaviour {
         health = enemyData.health;
         enemyType = enemyData.enemyType;
 
-        animator.SetInteger("health", health);
+        deathCooldown = Mathf.Infinity;
+    }
+
+    private void Die(){
+        StopMovement();
+        deathCooldown = GetAnimationDuration("Death");
+        animator.SetTrigger("Death");
     }
 
     [PunRPC]
@@ -45,8 +55,8 @@ public class Enemy : MonoBehaviour {
         Enemy enemy = PhotonNetwork.GetPhotonView(viewId).GetComponent<Enemy>();
         enemy.health = health;
 
-        if (PhotonNetwork.IsMasterClient && enemy.health <= 0){
-            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, viewId);
+        if (enemy.health <= 0){
+            Die();
         }
 
         if (playerViewId != 0 && enemy.health <= 0){
@@ -63,6 +73,23 @@ public class Enemy : MonoBehaviour {
         return Vector3.Distance(transform.position, targetPosition.position) < distance;
     }
 
+    private float GetAnimationDuration(string clipName){
+        AnimationClip[] animationClips = animator.runtimeAnimatorController.animationClips;
+
+        foreach(AnimationClip animationClip in animationClips){
+            if (animationClip.name == clipName){
+                return animationClip.length;
+            }
+        }
+
+        return 0;
+    }
+
+    private void StopMovement(){
+        rb.isKinematic = false;
+        rb.velocity = Vector3.zero;
+    }
+
     private void Update(){
         if (!PhotonNetwork.IsMasterClient){
             return;
@@ -72,11 +99,36 @@ public class Enemy : MonoBehaviour {
             return;
         }
 
-        if (IsNearObjective(0.1f)){
-            rb.isKinematic = false;
-            rb.velocity = Vector3.zero;
+        deathCooldown -= Time.deltaTime;
+        if (deathCooldown <= 0f){
+            TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+        }
 
-            animator.SetBool("IsNearObjective", true);
+        if (IsNearObjective(0.1f)){
+
+            // Just reached gate.
+            if (rb.isKinematic){
+                StopMovement();
+            }
+
+            attackCooldown -= Time.deltaTime;
+            if (attackCooldown <= 0f){
+                attackCooldown = enemyData.enemyAttackTime;
+                animator.SetTrigger("Attack");
+                attackActualHit = GetAnimationDuration("Attack");
+            }
+
+            attackActualHit -= Time.deltaTime;
+            if (attackActualHit <= 0f){
+                attackActualHit = Mathf.Infinity;
+
+                if (enemyType == EnemyType.Melee){
+                    TdGameManager.castle.SetHealth(TdGameManager.castle.health - enemyData.damage);
+                } else {
+                    // Spawn projectile
+                }
+            }
+
             // TdGameManager.castle.SetHealth(TdGameManager.castle.health - 1);
             // TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
         }
