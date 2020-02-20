@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4024368601019731371}
   - component: {fileID: -115600968517961648}
   - component: {fileID: 1056586894354208505}
+  - component: {fileID: 8188651191047624640}
   m_Layer: 10
   m_Name: Warrior
   m_TagString: Enemy
@@ -55,6 +56,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: -115600968517961648}
+  - {fileID: 310646492426415871}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -138,6 +140,21 @@ MonoBehaviour:
   health: 0
   targetPosition: {fileID: 0}
   photonView: {fileID: 0}
+--- !u!114 &8188651191047624640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57118556139921570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &8629811452292075345
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +165,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6666649339315176116}
   - component: {fileID: 4731609646192074628}
+  - component: {fileID: 5661327424906733547}
+  - component: {fileID: 310646492426415871}
   m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
@@ -218,3 +237,46 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5661327424906733547
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8629811452292075345}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7a76d563140713f4e81bba0b124c3804, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &310646492426415871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8629811452292075345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: IsNearObjective
+  - Type: 3
+    SynchronizeType: 1
+    Name: health
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0

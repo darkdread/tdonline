@@ -18,13 +18,17 @@ public class Enemy : MonoBehaviour {
     public Transform targetPosition;
     public PhotonView photonView;
 
+    private Animator animator;
     private Rigidbody2D rb;
 
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
         photonView = GetComponent<PhotonView>();
+        animator = GetComponentInChildren<Animator>();
         health = enemyData.health;
         enemyType = enemyData.enemyType;
+
+        animator.SetInteger("health", health);
     }
 
     [PunRPC]
@@ -72,8 +76,9 @@ public class Enemy : MonoBehaviour {
             rb.isKinematic = false;
             rb.velocity = Vector3.zero;
 
-            TdGameManager.castle.SetHealth(TdGameManager.castle.health - 1);
-            TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
+            animator.SetBool("IsNearObjective", true);
+            // TdGameManager.castle.SetHealth(TdGameManager.castle.health - 1);
+            // TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
         }
     }
 }
