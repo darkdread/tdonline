@@ -10,6 +10,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public struct EnemyTypeObjective {
     public EnemyType enemyType;
     public Transform objective;
+    public Transform gate;
 }
 
 public struct WaveSpawnInfo {
@@ -58,7 +59,7 @@ public class EnemySpawner : MonoBehaviour {
 
     public void SpawnEnemy(string resourceName){
         GameObject go = PhotonNetwork.InstantiateSceneObject(
-            Path.Combine(TdGameManager.gameSettings.enemyResourceDirectory, resourceName),
+            Path.Combine(TdGameManager.gameSettings.enemyResourceDirectory, resourceName, resourceName),
             transform.position, Quaternion.identity);
         Enemy enemy = go.GetComponent<Enemy>();
 
@@ -69,7 +70,7 @@ public class EnemySpawner : MonoBehaviour {
                     go.transform.localScale.y, go.transform.localScale.z);
 
                 enemy.GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.AllBuffered, 
-                    eto.objective.GetComponent<PhotonView>().ViewID);
+                    eto.objective.GetComponent<PhotonView>().ViewID, eto.gate.GetComponent<PhotonView>().ViewID);
                 break;
             }
         }

@@ -162,6 +162,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public static string StripCloneFromString(string input){
+        return input.Replace("(Clone)", "");
+    }
+
     public static GameObject GetPrefabFromResource(string resourcePath){
         return Resources.Load<GameObject>(resourcePath);
     }

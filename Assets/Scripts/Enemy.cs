@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 using Photon.Pun;
+using Photon;
 
 public enum EnemyType {
     Melee,
@@ -12,16 +14,18 @@ public enum EnemyType {
 public class Enemy : MonoBehaviour {
     public EnemyData enemyData;
     
+    [Header("Runtime Variables")]
     public EnemyType enemyType;
     public int health;
 
-    public Transform targetPosition;
+    public Transform hitPositionTransform;
+    public Transform targetGateTransform;
     public PhotonView photonView;
 
     private Animator animator;
     private Rigidbody2D rb;
 
-    public float attackActualHit;
+    public float attackAnimationTime;
     public float attackCooldown;
     public float deathCooldown;
 
@@ -42,12 +46,37 @@ public class Enemy : MonoBehaviour {
     }
 
     [PunRPC]
-    private void SetTarget(int targetId){
-        Transform target = PhotonNetwork.GetPhotonView(targetId).transform;
+    private void ShootProjectileRpc(string resourceName){
+        string resourcePath = Path.Combine(TdGameManager.gameSettings.enemyResourceDirectory, TdGameManager.StripCloneFromString(name), resourceName);
+        Projectile p = PhotonNetwork.InstantiateSceneObject(resourcePath, transform.position, Quaternion.identity).GetComponent<Projectile>();
 
-        targetPosition = target;
+        // Velocity logic.
+        float distance = Vector2.Distance(p.transform.position, targetGateTransform.position);
+        float angle = 45;
+        float speed = ProjectileMath.LaunchSpeed(distance, 0, Physics.gravity.magnitude, angle * Mathf.Deg2Rad);
+        // speed = Mathf.Sqrt(Physics2D.gravity.magnitude * distance / (2 * Mathf.Cos(angle) * Mathf.Sin(angle)));
+
+        Vector3 direction = TdGameManager.GetDirectionOfTransform2D(transform);
+        Vector3 angleVec = Quaternion.AngleAxis(direction.x * angle, Vector3.forward) * direction;
+        p.transform.rotation = Quaternion.AngleAxis(direction.x * angle, Vector3.forward);
+
+        p.rb.velocity = angleVec * speed;
+    }
+
+    public void ShootProjectile(Projectile projectile, Transform target){
+        photonView.RPC("ShootProjectileRpc", RpcTarget.MasterClient, projectile.name);
+    }
+
+    [PunRPC]
+    private void SetTarget(int hitTransformId, int gateTransformId){
+        Transform target = PhotonNetwork.GetPhotonView(hitTransformId).transform;
+        hitPositionTransform = target;
+
+        Transform gate = PhotonNetwork.GetPhotonView(gateTransformId).transform;
+        targetGateTransform = gate;
+
         rb.isKinematic = true;
-        rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform);
+        rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
     }
 
     [PunRPC]
@@ -70,7 +99,7 @@ public class Enemy : MonoBehaviour {
     }
 
     private bool IsNearObjective(float distance){
-        return Vector3.Distance(transform.position, targetPosition.position) < distance;
+        return Vector3.Distance(transform.position, hitPositionTransform.position) < distance;
     }
 
     private float GetAnimationDuration(string clipName){
@@ -113,19 +142,28 @@ public class Enemy : MonoBehaviour {
 
             attackCooldown -= Time.deltaTime;
             if (attackCooldown <= 0f){
-                attackCooldown = enemyData.enemyAttackTime;
+                attackCooldown = enemyData.attackTime;
                 animator.SetTrigger("Attack");
-                attackActualHit = GetAnimationDuration("Attack");
+                attackAnimationTime = GetAnimationDuration("Attack");
+
+                // If attack animation time is faster than next attack.
+                // We have to speed up the animation.
+                if (attackAnimationTime > attackCooldown){
+                    animator.speed = attackAnimationTime / attackCooldown;
+                    attackAnimationTime = attackCooldown;
+                }
             }
 
-            attackActualHit -= Time.deltaTime;
-            if (attackActualHit <= 0f){
-                attackActualHit = Mathf.Infinity;
+            attackAnimationTime -= Time.deltaTime;
+            if (attackAnimationTime <= 0f){
+                animator.speed = 1f;
+                attackAnimationTime = Mathf.Infinity;
 
                 if (enemyType == EnemyType.Melee){
                     TdGameManager.castle.SetHealth(TdGameManager.castle.health - enemyData.damage);
                 } else {
                     // Spawn projectile
+                    ShootProjectile(enemyData.projectile, hitPositionTransform);
                 }
             }
 

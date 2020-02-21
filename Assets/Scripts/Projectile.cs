@@ -17,7 +17,8 @@ public class Projectile : MonoBehaviour
     }
 
     [PunRPC]
-    public void ShootProjectile(int turretId, Vector3 angleVec, float speed){
+    // For turrets
+    private void ShootProjectile(int turretId, Vector3 angleVec, float speed){
         GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
 
         owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
@@ -26,21 +27,38 @@ public class Projectile : MonoBehaviour
         rb.velocity = angleVec * speed;
     }
 
+    private void Update(){
+        // Face forward direction.
+        transform.right = rb.velocity.normalized;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision){
 
         if (!PhotonNetwork.IsMasterClient){
-            return;
+            // return;
         }
 
-        // Ground layermask
-        if (collision.gameObject.layer == 11){
-            Enemy[] enemies = TdGameManager.GetEnemiesOverlapSphere(collision.GetContact(0).point, projectileData.areaOfEffect);
+        // If projectile is player-owned.
+        if (owningPlayer != null){
 
-            foreach(Enemy enemy in enemies){
-                enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
+            // Ground layermask
+            if (collision.gameObject.layer == 11){
+                Enemy[] enemies = TdGameManager.GetEnemiesOverlapSphere(collision.GetContact(0).point, projectileData.areaOfEffect);
+
+                foreach(Enemy enemy in enemies){
+                    enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
+                }
+
+                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
             }
+        } else {
+            // If projectile is enemy-owned.
 
-            TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+            // Gate layermask
+            if (collision.gameObject.layer == 13){
+                TdGameManager.castle.SetHealth(TdGameManager.castle.health - projectileData.damage);
+                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+            }
         }
         
         // // Enemy layermask

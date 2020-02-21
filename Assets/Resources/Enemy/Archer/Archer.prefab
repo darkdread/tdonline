@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1056586894354208505}
   - component: {fileID: 8188651191047624640}
   m_Layer: 10
-  m_Name: Warrior
+  m_Name: Archer
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,12 +135,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a4dec3662527d44950c90962b5dd8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 3630c0440e1d1c64281139883d323ea8, type: 2}
+  enemyData: {fileID: 11400000, guid: 948d6d83c4f58d44981c176fb49c0e57, type: 2}
   enemyType: 0
   health: 0
-  targetPosition: {fileID: 0}
+  hitPositionTransform: {fileID: 0}
+  targetGateTransform: {fileID: 0}
   photonView: {fileID: 0}
-  attackActualHit: 0
+  attackAnimationTime: 0
   attackCooldown: 0
   deathCooldown: 0
 --- !u!114 &8188651191047624640
@@ -250,7 +251,7 @@ Animator:
   m_GameObject: {fileID: 8629811452292075345}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7a76d563140713f4e81bba0b124c3804, type: 2}
+  m_Controller: {fileID: 9100000, guid: 85f702862d86ee74a90f1de2b875e33d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

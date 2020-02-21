@@ -27,7 +27,7 @@ MonoBehaviour:
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
-  StartInOfflineMode: 0
+  StartInOfflineMode: 1
   RpcList:
   - AddAmmunition
   - AddPlayerToList
@@ -58,5 +58,6 @@ MonoBehaviour:
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
+  - ShootProjectileRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
