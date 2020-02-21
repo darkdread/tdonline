@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b687bcc6dc2f01c4d8c1537b1629a751, type: 3}
   m_Name: ArrowProjectile
   m_EditorClassIdentifier: 
-  damage: 5
+  damage: 1
   areaOfEffect: 0

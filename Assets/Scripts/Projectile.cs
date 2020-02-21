@@ -35,7 +35,7 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision){
 
         if (!PhotonNetwork.IsMasterClient){
-            // return;
+            return;
         }
 
         // If projectile is player-owned.

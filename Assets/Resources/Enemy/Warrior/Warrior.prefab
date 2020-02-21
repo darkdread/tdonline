@@ -141,7 +141,7 @@ MonoBehaviour:
   hitPositionTransform: {fileID: 0}
   targetGateTransform: {fileID: 0}
   photonView: {fileID: 0}
-  attackActualHit: 0
+  attackAnimationTime: 0
   attackCooldown: 0
   deathCooldown: 0
 --- !u!114 &8188651191047624640

@@ -148,6 +148,11 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1016428514441345200, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: maxHealth
+      value: 5000
+      objectReference: {fileID: 0}
     - target: {fileID: 1852593932482485200, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField

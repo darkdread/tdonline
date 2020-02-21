@@ -27,7 +27,7 @@ MonoBehaviour:
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
-  StartInOfflineMode: 1
+  StartInOfflineMode: 0
   RpcList:
   - AddAmmunition
   - AddPlayerToList
@@ -53,11 +53,11 @@ MonoBehaviour:
   - SetTurretState
   - SetTurretUser
   - ShootProjectile
+  - ShootProjectileRpc
   - ShowEmoteRpc
   - ShowGameObject
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
-  - ShootProjectileRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
