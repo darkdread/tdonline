@@ -148,15 +148,10 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1016428514441345200, guid: d6a9f417451b376499e92eebde20d0f2,
-        type: 3}
-      propertyPath: maxHealth
-      value: 5000
-      objectReference: {fileID: 0}
     - target: {fileID: 1852593932482485200, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField
-      value: 1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199431, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
@@ -221,12 +216,12 @@ PrefabInstance:
     - target: {fileID: 4432616283320368124, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7260244227618029433, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7444527756705291207, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
@@ -241,7 +236,12 @@ PrefabInstance:
     - target: {fileID: 8223993398680431651, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: viewIdField
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8330922999490096390, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6a9f417451b376499e92eebde20d0f2, type: 3}

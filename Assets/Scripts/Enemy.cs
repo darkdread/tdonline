@@ -13,6 +13,7 @@ public enum EnemyType {
 
 public class Enemy : MonoBehaviour {
     public EnemyData enemyData;
+    public static List<Enemy> enemyList;
     
     [Header("Runtime Variables")]
     public EnemyType enemyType;
@@ -25,7 +26,10 @@ public class Enemy : MonoBehaviour {
     private Animator animator;
     private Rigidbody2D rb;
 
-    public float attackAnimationTime;
+    private float attackAnimationCompleteTime;
+    private bool isDying;
+
+    public float attackAnimationFinishHitTime;
     public float attackCooldown;
     public float deathCooldown;
 
@@ -37,12 +41,18 @@ public class Enemy : MonoBehaviour {
         enemyType = enemyData.enemyType;
 
         deathCooldown = Mathf.Infinity;
+        enemyList.Add(this);
+
+        attackAnimationCompleteTime = GetAnimationDuration("Attack");
     }
 
     private void Die(){
-        StopMovement();
+        isDying = true;
+
+        StopMovement(true);
         deathCooldown = GetAnimationDuration("Death");
         animator.SetTrigger("Death");
+        animator.speed = 1f;
     }
 
     [PunRPC]
@@ -74,6 +84,10 @@ public class Enemy : MonoBehaviour {
 
         Transform gate = PhotonNetwork.GetPhotonView(gateTransformId).transform;
         targetGateTransform = gate;
+
+        Vector3 direction = (target.position - transform.position).normalized;
+        transform.localScale = new Vector3(direction.x * transform.localScale.x,
+            transform.localScale.y, transform.localScale.z);
 
         rb.isKinematic = true;
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
@@ -114,50 +128,65 @@ public class Enemy : MonoBehaviour {
         return 0;
     }
 
-    private void StopMovement(){
-        rb.isKinematic = false;
-        rb.velocity = Vector3.zero;
+    public void StopMovement(bool stop){
+        rb.isKinematic = !stop;
+
+        if (stop){
+            rb.velocity = Vector3.zero;
+        } else {
+            rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
+        }
+    }
+
+    private void UpdateAnimationSpeed(){
+        // If enemy's attack time is faster than animation time.
+        // We have to speed up the animation.
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")){
+            if (enemyData.attackTime < attackAnimationCompleteTime){
+                animator.speed = attackAnimationCompleteTime / enemyData.attackTime;
+            }
+        }
     }
 
     private void Update(){
-        if (!PhotonNetwork.IsMasterClient){
-            return;
-        }
-
         if (TdGameManager.isPaused){
             return;
         }
 
-        deathCooldown -= Time.deltaTime;
-        if (deathCooldown <= 0f){
-            TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+        if (!isDying){
+            UpdateAnimationSpeed();
+        }
+
+        if (!PhotonNetwork.IsMasterClient){
+            return;
+        }
+
+        if (isDying){
+            deathCooldown -= Time.deltaTime;
+            if (deathCooldown <= 0f){
+                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+            }
+
+            return;
         }
 
         if (IsNearObjective(0.1f)){
 
-            // Just reached gate.
+            // Just reached objective.
             if (rb.isKinematic){
-                StopMovement();
+                StopMovement(true);
             }
 
             attackCooldown -= Time.deltaTime;
             if (attackCooldown <= 0f){
                 attackCooldown = enemyData.attackTime;
                 animator.SetTrigger("Attack");
-                attackAnimationTime = GetAnimationDuration("Attack");
-
-                // If attack animation time is faster than next attack.
-                // We have to speed up the animation.
-                if (attackAnimationTime > attackCooldown){
-                    animator.speed = attackAnimationTime / attackCooldown;
-                    attackAnimationTime = attackCooldown;
-                }
+                attackAnimationFinishHitTime = Mathf.Clamp(attackAnimationCompleteTime, 0, attackCooldown);
             }
 
-            attackAnimationTime -= Time.deltaTime;
-            if (attackAnimationTime <= 0f){
-                animator.speed = 1f;
-                attackAnimationTime = Mathf.Infinity;
+            attackAnimationFinishHitTime -= Time.deltaTime;
+            if (attackAnimationFinishHitTime <= 0f){
+                attackAnimationFinishHitTime = Mathf.Infinity;
 
                 if (enemyType == EnemyType.Melee){
                     TdGameManager.castle.SetHealth(TdGameManager.castle.health - enemyData.damage);

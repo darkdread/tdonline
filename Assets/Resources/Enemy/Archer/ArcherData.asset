@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 1
   health: 1
-  attackTime: 0.2
+  attackTime: 0.8
   movespeed: 5
   damage: 1
   projectile: {fileID: 2546729037515863492, guid: 0c6614fc391bde141bbfd0c921771149,

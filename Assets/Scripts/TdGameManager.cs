@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using Newtonsoft.Json;
-using TMPro;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 using Photon.Pun;
@@ -59,22 +59,24 @@ public struct EndGameData {
 
 public class TdGameManager : MonoBehaviourPunCallbacks
 {
-    public static TdGameManager instance = null;
-    public static int playersLoaded = 0;
+    public static TdGameManager instance;
+    public static int playersLoaded;
     public static bool isPaused;
-    public static TdGameSettings gameSettings;
+    public static volatile TdGameSettings gameSettings;
     public static Castle castle;
     public static List<TdPlayerController> players = new List<TdPlayerController>();
 
-    private Coroutine spawnEnemiesRoutine;
+    private static int globalSpawnTime;
 
     [Header("Game Interface")]
     public GameObject gameCanvas;
+    public GameObject loseUi;
 
     private void Awake(){
         instance = this;
         gameSettings = GetComponent<TdGameSettings>();
         castle = GetComponentInChildren<Castle>();
+        Enemy.enemyList = new List<Enemy>();
 
         PhotonView[] photonViews = Resources.FindObjectsOfTypeAll(typeof(PhotonView)) as PhotonView[];
 
@@ -94,6 +96,9 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             spawnerStaticId += 1;
             spawner.spawnerId = spawnerStaticId;
         }
+
+        isPaused = false;
+        playersLoaded = 0;
     }
 
     private void Start(){
@@ -103,11 +108,11 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             {TdGame.PLAYER_LOADED_LEVEL, true}
         };
 
-        if (PhotonPeer.RegisterType(typeof(CollectablePun), (byte)'Z', CollectablePun.Serialize, CollectablePun.Deserialize)){
-            print("Registered type CollectablePun.");
-        } else {
-            print("Failed to register type CollectablePun.");
-        }
+        // if (PhotonPeer.RegisterType(typeof(CollectablePun), (byte)'Z', CollectablePun.Serialize, CollectablePun.Deserialize)){
+        //     print("Registered type CollectablePun.");
+        // } else {
+        //     print("Failed to register type CollectablePun.");
+        // }
 
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
@@ -162,6 +167,31 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void Lose(){
+        // Show lose ui.
+        PauseGame(true);
+        loseUi.SetActive(true);
+    }
+
+    public static void PlayerLeaveGame(){
+        if (PhotonNetwork.LocalPlayer.IsLocal){
+            PhotonNetwork.Disconnect();
+            // PhotonNetwork.LoadLevel("LobbyScene");
+        }
+    }
+
+    override public void OnDisconnected(DisconnectCause cause){
+        if (PhotonNetwork.LocalPlayer.IsLocal){
+            print(cause);
+            StartCoroutine(LoadLobby());
+        }
+    }
+
+    private IEnumerator LoadLobby(){
+        yield return new WaitForEndOfFrame();
+        SceneManager.LoadScene("LobbyScene");
+    }
+
     public static string StripCloneFromString(string input){
         return input.Replace("(Clone)", "");
     }
@@ -170,29 +200,26 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         return Resources.Load<GameObject>(resourcePath);
     }
 
-    private IEnumerator SpawnEnemies(){
-        while(true){
-            int longestWaveDuration = 0;
-            int waveFade = 5000;
-
-            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
-                if (spawner.currentWaveId + 1 >= spawner.waves.Length){
-                    print("Reset wave");
-                    spawner.currentWaveId = 0;
-                }
-                
-                spawner.SpawnWave();
-
-                int waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
-                if (waveDuration > longestWaveDuration){
-                    longestWaveDuration = waveDuration;
-                }
+    private void SpawnEnemies(){
+        int longestWaveDuration = 0;
+        int waveFade = 5000;
+        
+        foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+            if (spawner.currentWaveId + 1 >= spawner.waves.Length){
+                print("Reset wave");
+                spawner.currentWaveId = 0;
             }
+            
+            spawner.SpawnWave();
 
-            longestWaveDuration += waveFade;
-
-            yield return new WaitForSeconds(longestWaveDuration/1000f);
+            int waveDuration = spawner.GetWaveSpawnDuration(spawner.currentWaveId);
+            if (waveDuration > longestWaveDuration){
+                longestWaveDuration = waveDuration;
+            }
         }
+
+        longestWaveDuration += waveFade;
+        globalSpawnTime = longestWaveDuration;
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient){
@@ -204,7 +231,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
                 
                 spawner.LoadWaveProgress(waveInfo);
             }
-            StartCoroutine(SpawnEnemies());
+            StartSpawnTimer();
         }
     }
 
@@ -229,8 +256,16 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            spawnEnemiesRoutine = StartCoroutine(SpawnEnemies());
+            StartSpawnTimer();
         }
+    }
+
+    private void StartSpawnTimer(){
+        foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+            print(spawner.name);
+        }
+
+        globalSpawnTime = 0;
     }
 
     public static Enemy[] GetEnemiesOverlapSphere(Vector2 position, float radius){
@@ -283,7 +318,12 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void PauseGameRpc(bool pause){
         isPaused = pause;
-        Time.timeScale = isPaused ? 0 : 1;
+
+        foreach(Enemy enemy in Enemy.enemyList){
+            enemy.StopMovement(pause);
+        }
+
+        // Time.timeScale = isPaused ? 0 : 1;
     }
 
     public void PauseGame(bool pause){
@@ -291,6 +331,14 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     private void Update(){
+
+        if (PhotonNetwork.IsMasterClient && !isPaused){
+            globalSpawnTime -= (int) (Time.deltaTime * 1000);
+
+            if (globalSpawnTime <= 0){
+                SpawnEnemies();
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.X)){
 
@@ -301,10 +349,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
                 spawner.LoadWaveProgress(waveInfo);
             }
 
-            if (spawnEnemiesRoutine != null){
-                StopCoroutine(spawnEnemiesRoutine);
-            }
-            spawnEnemiesRoutine = StartCoroutine(SpawnEnemies());
+            StartSpawnTimer();
         } else if (Input.GetKeyDown(KeyCode.Z)) {
             foreach(EnemySpawner spawner in gameSettings.enemySpawners){
                 spawner.SaveWaveProgress();
@@ -314,7 +359,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
                 print(JsonConvert.SerializeObject(playerController.playerEndGameData));
             }
         } else if (Input.GetKeyDown(KeyCode.Escape)){
-            PauseGame(!isPaused);
+            // PauseGame(!isPaused);
+            Lose();
         }
     }
 }

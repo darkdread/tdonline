@@ -8,6 +8,8 @@ namespace Photon.Pun.Demo.Asteroids
 {
     public class LobbyMainPanel : MonoBehaviourPunCallbacks
     {
+        public static LobbyMainPanel instance;
+
         [Header("Login Panel")]
         public GameObject LoginPanel;
 
@@ -48,6 +50,11 @@ namespace Photon.Pun.Demo.Asteroids
 
         public void Awake()
         {
+            if (instance != null){
+                return;
+            }
+
+            instance = this;
             PhotonNetwork.AutomaticallySyncScene = true;
 
             cachedRoomList = new Dictionary<string, RoomInfo>();

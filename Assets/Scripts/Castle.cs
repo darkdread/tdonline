@@ -17,6 +17,10 @@ public class Castle : MonoBehaviourPunCallbacks {
     private void SetHealthRpc(int value){
         health = value;
         castleUi.healthSlider.value = (float) health / maxHealth;
+
+        if (health <= 0){
+            TdGameManager.instance.Lose();
+        }
     }
 
     public void SetHealth(int value){

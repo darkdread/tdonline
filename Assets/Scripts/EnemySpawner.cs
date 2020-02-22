@@ -54,6 +54,9 @@ public class EnemySpawner : MonoBehaviour {
     public int currentWaveId = 0;
     public int currentSpawnId = 0;
     public int currentDelayMs = 0;
+    public int currentWaveMaxSpawn = 0;
+
+    public int nextSpawn = 0;
     
     private Coroutine spawnWaveRoutine;
 
@@ -65,10 +68,6 @@ public class EnemySpawner : MonoBehaviour {
 
         foreach(EnemyTypeObjective eto in enemyTypeObjectives){
             if (enemy.enemyType == eto.enemyType){
-                Vector3 direction = (eto.objective.transform.position - transform.position).normalized;
-                go.transform.localScale = new Vector3(direction.x * go.transform.localScale.x,
-                    go.transform.localScale.y, go.transform.localScale.z);
-
                 enemy.GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.AllBuffered, 
                     eto.objective.GetComponent<PhotonView>().ViewID, eto.gate.GetComponent<PhotonView>().ViewID);
                 break;
@@ -104,29 +103,10 @@ public class EnemySpawner : MonoBehaviour {
         PhotonNetwork.CurrentRoom.SetCustomProperties(props);
     }
 
-    public IEnumerator SpawnWave(int waveId){
-        
-        // Go through current wave, spawn all enemies.
-        while(currentSpawnId < waves[waveId].waveStructs.Length){
-
-            // Get wave struct, which contains enemy and delay.
-            WaveStruct waveStruct = waves[waveId].waveStructs[currentSpawnId];
-            currentDelayMs = waveStruct.waveDelayMs;
-            SaveWaveProgress();
-
-            // Delay > spawn. If wave contains 2 enemy, order goes as such:
-            // D1 > S1 > D2 > S2.
-            yield return new WaitForSeconds(currentDelayMs/1000f);
-
-            SpawnEnemy(waveStruct.waveEnemy.name);
-            currentSpawnId += 1;
-        }
-
-        currentWaveId += 1;
-        currentSpawnId = 0;
-        currentDelayMs = 0;
-
-        SaveWaveProgress();
+    public void WaveSpawnEnemy(int waveId, int spawnId){
+        // Get wave struct, which contains enemy and delay.
+        WaveStruct waveStruct = waves[waveId].waveStructs[currentSpawnId];
+        SpawnEnemy(waveStruct.waveEnemy.name);
     }
 
     public int GetWaveSpawnDuration(int waveId){
@@ -144,9 +124,37 @@ public class EnemySpawner : MonoBehaviour {
             return;
         }
 
-        if (spawnWaveRoutine != null){
-            StopCoroutine(spawnWaveRoutine);
+        currentSpawnId = 0;
+        nextSpawn = waves[currentWaveId].waveStructs[0].waveDelayMs;
+        currentWaveMaxSpawn = waves[currentWaveId].waveStructs.Length;
+    }
+
+    private void Update(){
+        if (TdGameManager.isPaused || currentSpawnId >= currentWaveMaxSpawn){
+            return;
         }
-        spawnWaveRoutine = StartCoroutine(SpawnWave(currentWaveId));
+
+        // Delay > spawn. If wave contains 2 enemy, order goes as such:
+        // D1 > S1 > D2 > S2.
+        nextSpawn -= (int) (Time.deltaTime * 1000);
+        if (nextSpawn <= 0){
+            WaveSpawnEnemy(currentWaveId, currentSpawnId);
+
+            currentSpawnId += 1;
+            if (currentSpawnId < currentWaveMaxSpawn){
+                WaveStruct waveStruct = waves[currentWaveId].waveStructs[currentSpawnId];
+                currentDelayMs = waveStruct.waveDelayMs;
+                nextSpawn = waveStruct.waveDelayMs;
+
+                SaveWaveProgress();
+            } else {
+                currentWaveId += 1;
+                currentDelayMs = 0;
+                currentSpawnId = 0;
+                SaveWaveProgress();
+                currentSpawnId = currentWaveMaxSpawn;
+            }
+        }
+
     }
 }
