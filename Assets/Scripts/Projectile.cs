@@ -22,7 +22,7 @@ public class Projectile : MonoBehaviour
         GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
 
         owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
-        owningPlayer.playerEndGameData.UpdateShotCount(projectileData.name);
+        owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, gameObject.GetComponent<SpriteRenderer>().sprite);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
     }

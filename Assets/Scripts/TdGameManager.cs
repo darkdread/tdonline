@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 using Newtonsoft.Json;
@@ -15,44 +16,51 @@ public class TdGame {
     public static string WAVE_INFO = "CurrentWaveInfo_";
 }
 
+public struct ResourceData {
+    public Sprite sprite;
+    public int amount;
+}
+
+public enum EndGameEnum {
+    Collected,
+    Shot,
+    Killed,
+}
+
 [System.Serializable]
 public struct EndGameData {
-    public Dictionary<string, int> takenResource;
-    public Dictionary<string, int> shotResource;
-    public Dictionary<string, int> killedEnemy;
 
-    public void UpdateTakenCount(string resourceName){
-        if (takenResource.ContainsKey(resourceName)){
-            takenResource[resourceName] += 1;
-            return;
-        }
+    public Dictionary<EndGameEnum, Dictionary<string, ResourceData>> resourceDict;
 
-        takenResource.Add(resourceName, 1);
+    public Dictionary<string, ResourceData> GetDictionaryEnum(EndGameEnum endGameEnum){
+        return resourceDict[endGameEnum];
     }
 
-    public void UpdateShotCount(string resourceName){
-        if (shotResource.ContainsKey(resourceName)){
-            shotResource[resourceName] += 1;
+    public void UpdateCount(EndGameEnum endGameEnum, Sprite data, int amount = 1){
+
+        System.Diagnostics.Debug.WriteLine(data.name);
+
+        if (resourceDict.ContainsKey(endGameEnum)){
+            ResourceData r = resourceDict[endGameEnum][data.name];
+            r.amount += amount;
+            resourceDict[endGameEnum][data.name] = r;
             return;
         }
 
-        shotResource.Add(resourceName, 1);
-    }
+        Dictionary<string, ResourceData> resources = new Dictionary<string, ResourceData>();
 
-    public void UpdateKillCount(string enemyName){
-        if (killedEnemy.ContainsKey(enemyName)){
-            killedEnemy[enemyName] += 1;
-            return;
-        }
+        ResourceData resourceData = new ResourceData(){
+            amount = amount,
+            sprite = data,
+        };
 
-        killedEnemy.Add(enemyName, 1);
+        resources.Add(data.name, resourceData);
+        resourceDict.Add(endGameEnum, resources);
     }
 
     public static implicit operator EndGameData(string defaults) {
         return new EndGameData() {
-            takenResource = new Dictionary<string, int>(),
-            shotResource = new Dictionary<string, int>(),
-            killedEnemy = new Dictionary<string, int>()
+            resourceDict = new Dictionary<EndGameEnum, Dictionary<string, ResourceData>>()
         };
     }
 }
@@ -70,7 +78,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     [Header("Game Interface")]
     public GameObject gameCanvas;
-    public GameObject loseUi;
+    public LoseUi loseUi;
 
     private void Awake(){
         instance = this;
@@ -162,15 +170,17 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (data.playerViewId != 0){
             TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
-            string collectableName = GetPrefabFromResource(resourceName).GetComponent<Collectable>().projectileData.name;
-            playerController.playerEndGameData.UpdateTakenCount(collectableName);
+            GameObject projectile = GetPrefabFromResource(resourceName);
+            playerController.playerEndGameData.UpdateCount(EndGameEnum.Collected, projectile.GetComponent<SpriteRenderer>().sprite);
         }
     }
 
     public void Lose(){
-        // Show lose ui.
         PauseGame(true);
-        loseUi.SetActive(true);
+
+        // Load lose ui.
+        loseUi.gameObject.SetActive(true);
+        loseUi.LoadEndGameData();
     }
 
     public static void PlayerLeaveGame(){

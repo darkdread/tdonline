@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour {
 
     private void Die(){
         isDying = true;
+        enemyList.Remove(this);
 
         StopMovement(true);
         deathCooldown = GetAnimationDuration("Death");
@@ -104,7 +105,7 @@ public class Enemy : MonoBehaviour {
 
         if (playerViewId != 0 && enemy.health <= 0){
             TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
-            hittingPlayer.playerEndGameData.UpdateKillCount(enemyData.name);
+            hittingPlayer.playerEndGameData.UpdateCount(EndGameEnum.Killed, enemy.gameObject.GetComponentInChildren<SpriteRenderer>().sprite);
         }
     }
 
