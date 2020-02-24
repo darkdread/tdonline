@@ -132,7 +132,7 @@ public class TdPlayerController : MonoBehaviour
 
     [PunRPC]
     public void OnCarryGameObject(int viewId) {
-        print($"Player {photonView.ControllerActorNr} Carrying {viewId}");
+        // print($"Player {photonView.ControllerActorNr} Carrying {viewId}");
 
         // Current carried item of player.
         if (playerCarriedObject != null){
@@ -208,7 +208,7 @@ public class TdPlayerController : MonoBehaviour
         if (remove){
             // It is a scene object, run rpc to destroy.
             if (objectPhotonView.IsSceneView){
-                TdGameManager.instance.DestroySceneObject(objectPhotonView.ViewID);
+                TdGameManager.instance.DestroySceneObject(objectPhotonView);
             } else {
                 PhotonNetwork.Destroy(objectPhotonView);
             }
@@ -233,8 +233,7 @@ public class TdPlayerController : MonoBehaviour
         StopProgressBar();
 
         if (photonView.IsMine){
-            print("TEST");
-            print(progressCallback.Method.Name);
+            // print(progressCallback.Method.Name);
             progressCallback.Invoke();
         }
     }
@@ -258,7 +257,7 @@ public class TdPlayerController : MonoBehaviour
             return;
         }
 
-        print(playerState);
+        // print(playerState);
 
         // Stop movement if using turret.
         if ((playerState & PlayerState.UsingTurret) != 0){
@@ -269,7 +268,6 @@ public class TdPlayerController : MonoBehaviour
         // Drop object if carrying.
         if (IsCarryingObject()) {
             if (Input.GetButtonDown("Use") && !IsInteracting()) {
-                print("Drop");
                 DropObject();
             }
         }

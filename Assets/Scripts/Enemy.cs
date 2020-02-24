@@ -12,6 +12,7 @@ public enum EnemyType {
 }
 
 public class Enemy : MonoBehaviour {
+    public EndData endData;
     public EnemyData enemyData;
     public static List<Enemy> enemyList;
     
@@ -79,7 +80,7 @@ public class Enemy : MonoBehaviour {
     }
 
     [PunRPC]
-    private void SetTarget(int hitTransformId, int gateTransformId){
+    private void SetTargetRpc(int hitTransformId, int gateTransformId){
         Transform target = PhotonNetwork.GetPhotonView(hitTransformId).transform;
         hitPositionTransform = target;
 
@@ -94,8 +95,13 @@ public class Enemy : MonoBehaviour {
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
     }
 
+    public void SetTarget(Transform hitTransform, Transform gateTransform){
+        photonView.RPC("SetTargetRpc", RpcTarget.All, hitTransform.GetComponent<PhotonView>().ViewID,
+            gateTransform.GetComponent<PhotonView>().ViewID);
+    }
+
     [PunRPC]
-    private void SetHealth(int viewId, int health, int playerViewId){
+    private void SetHealthRpc(int viewId, int health, int playerViewId){
         Enemy enemy = PhotonNetwork.GetPhotonView(viewId).GetComponent<Enemy>();
         enemy.health = health;
 
@@ -105,12 +111,12 @@ public class Enemy : MonoBehaviour {
 
         if (playerViewId != 0 && enemy.health <= 0){
             TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
-            hittingPlayer.playerEndGameData.UpdateCount(EndGameEnum.Killed, enemy.gameObject.GetComponentInChildren<SpriteRenderer>().sprite);
+            hittingPlayer.playerEndGameData.UpdateCount(EndGameEnum.Killed, endData);
         }
     }
 
     public void SetHealth(int health, int playerViewId = 0){
-        photonView.RPC("SetHealth", RpcTarget.All, photonView.ViewID, health, playerViewId);
+        photonView.RPC("SetHealthRpc", RpcTarget.All, photonView.ViewID, health, playerViewId);
     }
 
     private bool IsNearObjective(float distance){
@@ -165,7 +171,7 @@ public class Enemy : MonoBehaviour {
         if (isDying){
             deathCooldown -= Time.deltaTime;
             if (deathCooldown <= 0f){
-                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+                TdGameManager.instance.DestroySceneObject(photonView);
             }
 
             return;

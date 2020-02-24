@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a4dec3662527d44950c90962b5dd8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  endData: {fileID: 11400000, guid: 2967df775ee94874fbeaa17845dfa6f8, type: 2}
   enemyData: {fileID: 11400000, guid: 3630c0440e1d1c64281139883d323ea8, type: 2}
   enemyType: 0
   health: 0

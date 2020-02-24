@@ -22,18 +22,19 @@ public class LoseUi : MonoBehaviour
 
         EndGameData overallData = "Defaults";
 
+        // Add up all the player data.
         for(int i = 0; i < TdGameManager.players.Count; i++){
             TdPlayerController player = TdGameManager.players[i];
 
             foreach(KeyValuePair<EndGameEnum, Dictionary<string, ResourceData>> kvp in player.playerEndGameData.resourceDict){
 
                 foreach(KeyValuePair<string, ResourceData> kvp2 in kvp.Value){
-                    print(kvp.Key);
-                    overallData.UpdateCount(kvp.Key, kvp2.Value.sprite, kvp2.Value.amount);
+                    overallData.UpdateCount(kvp.Key, kvp2.Value.data, kvp2.Value.amount);
                 }
             }
         }
 
+        // Display overall data.
         foreach(KeyValuePair<EndGameEnum, Dictionary<string, ResourceData>> kvp in overallData.resourceDict){
 
             Transform parentTransform = collectedResources;
@@ -44,10 +45,9 @@ public class LoseUi : MonoBehaviour
                 parentTransform = shotResources;
             }
 
-            ImageWithText imageWithText = Instantiate<ImageWithText>(imageWithTextPrefab, parentTransform);
-
             foreach(KeyValuePair<string, ResourceData> kvp2 in kvp.Value){
-                Sprite sprite = kvp2.Value.sprite;
+                ImageWithText imageWithText = Instantiate<ImageWithText>(imageWithTextPrefab, parentTransform);
+                Sprite sprite = kvp2.Value.data.sprite;
 
                 imageWithText.SetImageSprite(sprite);
                 imageWithText.SetResourceText($"x{kvp2.Value.amount}");

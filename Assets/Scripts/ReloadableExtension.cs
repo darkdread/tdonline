@@ -80,7 +80,7 @@ public class ReloadableExtension : TurretExtension {
         }
 
         playerController.SetInteractingDelayFrameInstant(true, false, 1);
-        playerController.StartProgressBar(1f, delegate{
+        playerController.StartProgressBar(TdGameManager.gameSettings.progressReloadTime, delegate{
             playerController.DropObject();
             LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
         });

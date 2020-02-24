@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 
 using Newtonsoft.Json;
@@ -17,7 +16,7 @@ public class TdGame {
 }
 
 public struct ResourceData {
-    public Sprite sprite;
+    public EndData data;
     public int amount;
 }
 
@@ -36,22 +35,34 @@ public struct EndGameData {
         return resourceDict[endGameEnum];
     }
 
-    public void UpdateCount(EndGameEnum endGameEnum, Sprite data, int amount = 1){
+    public void UpdateCount(EndGameEnum endGameEnum, EndData data, int amount = 1){
 
-        System.Diagnostics.Debug.WriteLine(data.name);
+        Sprite sprite = data.sprite;
 
         if (resourceDict.ContainsKey(endGameEnum)){
+
+            // Add new resource to resource data.
+            if (!resourceDict[endGameEnum].ContainsKey(data.name)){
+                ResourceData newResourceData = new ResourceData(){
+                    amount = amount,
+                    data = data
+                };
+
+                resourceDict[endGameEnum].Add(data.name, newResourceData);
+                return;
+            }
+
             ResourceData r = resourceDict[endGameEnum][data.name];
             r.amount += amount;
             resourceDict[endGameEnum][data.name] = r;
             return;
         }
 
+        // First entry of EndGameEnum.
         Dictionary<string, ResourceData> resources = new Dictionary<string, ResourceData>();
-
         ResourceData resourceData = new ResourceData(){
             amount = amount,
-            sprite = data,
+            data = data
         };
 
         resources.Add(data.name, resourceData);
@@ -72,7 +83,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public static bool isPaused;
     public static volatile TdGameSettings gameSettings;
     public static Castle castle;
-    public static List<TdPlayerController> players = new List<TdPlayerController>();
+    public static List<TdPlayerController> players;
 
     private static int globalSpawnTime;
 
@@ -84,6 +95,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         instance = this;
         gameSettings = GetComponent<TdGameSettings>();
         castle = GetComponentInChildren<Castle>();
+        players = new List<TdPlayerController>();
         Enemy.enemyList = new List<Enemy>();
 
         PhotonView[] photonViews = Resources.FindObjectsOfTypeAll(typeof(PhotonView)) as PhotonView[];
@@ -107,6 +119,11 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         isPaused = false;
         playersLoaded = 0;
+
+        if (gameSettings.progressInstant){
+            gameSettings.progressCollectTime = 0f;
+            gameSettings.progressReloadTime = 0f;
+        }
     }
 
     private void Start(){
@@ -136,6 +153,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         Projectile projectile = obj.gameObject.AddComponent<Projectile>();
 
+        projectile.endData = projectile.GetComponent<Collectable>().endData;
         projectile.projectileData = projectile.GetComponent<Collectable>().projectileData;
         projectile.gameObject.layer = 12;
         projectile.transform.position = Vector3.up;
@@ -147,8 +165,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Destroy(obj);
     }
 
-    public void DestroySceneObject(int viewId){
-        photonView.RPC("DestroySceneObjectRpc", RpcTarget.MasterClient, viewId);
+    public void DestroySceneObject(PhotonView objectPhotonView){
+        // We disable the game object first, because the RPC call takes time to reach master client.
+        objectPhotonView.gameObject.SetActive(false);
+        photonView.RPC("DestroySceneObjectRpc", RpcTarget.MasterClient, objectPhotonView.ViewID);
     }
 
     [PunRPC]
@@ -170,8 +190,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
         if (data.playerViewId != 0){
             TdPlayerController playerController = PhotonNetwork.GetPhotonView(data.playerViewId).GetComponent<TdPlayerController>();
-            GameObject projectile = GetPrefabFromResource(resourceName);
-            playerController.playerEndGameData.UpdateCount(EndGameEnum.Collected, projectile.GetComponent<SpriteRenderer>().sprite);
+            GameObject spawnedObject = GetPrefabFromResource(resourceName);
+            playerController.playerEndGameData.UpdateCount(EndGameEnum.Collected, spawnedObject.GetComponent<Collectable>().endData);
         }
     }
 
@@ -271,10 +291,6 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     private void StartSpawnTimer(){
-        foreach(EnemySpawner spawner in gameSettings.enemySpawners){
-            print(spawner.name);
-        }
-
         globalSpawnTime = 0;
     }
 

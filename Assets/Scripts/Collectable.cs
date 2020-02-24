@@ -12,6 +12,7 @@ public class Collectable : Interactable {
     public GameObject collectablePrefab;
 
     [Header("One Time Loot")]
+    public EndData endData;
     public PhotonView photonView;
     public ProjectileData projectileData;
 
@@ -29,7 +30,7 @@ public class Collectable : Interactable {
             return;
         }
 
-        playerController.StartProgressBar(2f, delegate{
+        playerController.StartProgressBar(TdGameManager.gameSettings.progressCollectTime, delegate{
             StartCoroutine(SpawnAndCarry(playerController));
         });
     }

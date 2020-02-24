@@ -170,6 +170,7 @@ MonoBehaviour:
   interactableTrigger: {fileID: 633057422647610284}
   infinite: 0
   collectablePrefab: {fileID: 0}
+  endData: {fileID: 11400000, guid: c60c85776ef6f454f8f43b973d25ee50, type: 2}
   photonView: {fileID: 57118556139921571}
   projectileData: {fileID: 11400000, guid: 68f116afd902643458e7ca1c775789cb, type: 2}
 --- !u!114 &-115600968517961648

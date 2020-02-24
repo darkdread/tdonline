@@ -11,6 +11,7 @@ public struct PlayerEmoteSprite {
 public class TdGameSettings : MonoBehaviour
 {
     [Header("Initialization")]
+    public int castleMaxHealth = 5000;
     public Transform[] playerStartPositions;
     public Color[] playerColors = new Color[]{
         Color.red,
@@ -19,6 +20,10 @@ public class TdGameSettings : MonoBehaviour
         Color.green
     };
     public TdPlayerUi playerUiPrefab;
+    public bool progressInstant = false;
+    public float progressReloadTime = 1f;
+    public float progressCollectTime = 2f;
+
     public List<PlayerEmoteSprite> playerEmoteSprites;
     public string collectableResourceDirectory = "Collectable";
 

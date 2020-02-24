@@ -47,9 +47,8 @@ MonoBehaviour:
   - RemoveAmmunition
   - RespawnSpaceship
   - SetAsProjectile
-  - SetHealth
   - SetHealthRpc
-  - SetTarget
+  - SetTargetRpc
   - SetTurretState
   - SetTurretUser
   - ShootProjectile

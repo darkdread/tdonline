@@ -26,13 +26,13 @@ public class Interactable : MonoBehaviour {
     }
 
     protected virtual void OnEnterInteractRadius(TdPlayerController playerController) {
-        print("EnterInteractRadius");
-        print(this);
+        // print("EnterInteractRadius");
+        // print(this);
     }
 
     protected virtual void OnExitInteractRadius(TdPlayerController playerController) {
-        print("ExitInteractRadius");
-        print(this);
+        // print("ExitInteractRadius");
+        // print(this);
         playerController.playerUi.ShowUseButton(false);
     }
 
@@ -47,8 +47,8 @@ public class Interactable : MonoBehaviour {
     protected virtual void OnInteract(TdPlayerController playerController) {
         playerController.SetInteractingInstant(true);
         playerController.SetInteractingDelayFrame(false, 1);
-        print("OnInteract");
-        print(this);
+        // print("OnInteract");
+        // print(this);
     }
 
     protected virtual void OnInteractRadiusStay(TdPlayerController playerController) {
@@ -69,7 +69,7 @@ public class Interactable : MonoBehaviour {
     /// Force all stored player controllers to be removed from the hashset. Also calls OnExit for each of them.
     /// </summary>
     public void RemoveAllInteracted(){
-        print("RemoveAllInteracted");
+        // print("RemoveAllInteracted");
 
         foreach(TdPlayerController playerController in interactedPrevious){
             OnExitInteractRadius(playerController);

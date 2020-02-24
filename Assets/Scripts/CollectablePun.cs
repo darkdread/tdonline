@@ -8,7 +8,6 @@ public class CollectablePun {
 
     public static object Deserialize(byte[] data){
         CollectablePun result = new CollectablePun();
-        UnityEngine.Debug.Log(data[0]);
 
         using (MemoryStream m = new MemoryStream(data)) {
             using (BinaryReader reader = new BinaryReader(m)) {
@@ -21,8 +20,7 @@ public class CollectablePun {
 
   public static byte[] Serialize(object customType){
         CollectablePun c = (CollectablePun)customType;
-        UnityEngine.Debug.Log(c.resourceName);
-        // UnityEngine.Debug.Log(Convert.FromBase64String(c.resourceName));
+        // UnityEngine.Debug.Log(c.resourceName);
 
         using (MemoryStream m = new MemoryStream()) {
             using (BinaryWriter writer = new BinaryWriter(m)) {

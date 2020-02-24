@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class Projectile : MonoBehaviour
 {
+    public EndData endData;
     public TdPlayerController owningPlayer;
     public Rigidbody2D rb;
     public ProjectileData projectileData;
@@ -22,7 +23,7 @@ public class Projectile : MonoBehaviour
         GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
 
         owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
-        owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, gameObject.GetComponent<SpriteRenderer>().sprite);
+        owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, endData);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
     }
@@ -49,7 +50,7 @@ public class Projectile : MonoBehaviour
                     enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
                 }
 
-                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+                TdGameManager.instance.DestroySceneObject(photonView);
             }
         } else {
             // If projectile is enemy-owned.
@@ -57,7 +58,7 @@ public class Projectile : MonoBehaviour
             // Gate layermask
             if (collision.gameObject.layer == 13){
                 TdGameManager.castle.SetHealth(TdGameManager.castle.health - projectileData.damage);
-                TdGameManager.instance.DestroySceneObject(photonView.ViewID);
+                TdGameManager.instance.DestroySceneObject(photonView);
             }
         }
         

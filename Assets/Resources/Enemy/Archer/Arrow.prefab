@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e4e5f290466e0e47a72e166ac6ff522, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  endData: {fileID: 0}
   owningPlayer: {fileID: 0}
   rb: {fileID: 0}
   projectileData: {fileID: 11400000, guid: d0fc95960d636c94bb48217143213b3a, type: 2}

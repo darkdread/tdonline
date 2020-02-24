@@ -68,8 +68,7 @@ public class EnemySpawner : MonoBehaviour {
 
         foreach(EnemyTypeObjective eto in enemyTypeObjectives){
             if (enemy.enemyType == eto.enemyType){
-                enemy.GetComponent<PhotonView>().RPC("SetTarget", RpcTarget.AllBuffered, 
-                    eto.objective.GetComponent<PhotonView>().ViewID, eto.gate.GetComponent<PhotonView>().ViewID);
+                enemy.SetTarget(eto.objective, eto.gate);
                 break;
             }
         }
