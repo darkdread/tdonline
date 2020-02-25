@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ca8bda927864794895f4a461adcce66, type: 3}
-  m_Name: WarriorData
+  m_Name: ArcherData
   m_EditorClassIdentifier: 
-  enemyType: 0
-  health: 2
-  audioClipObject: {fileID: 11400000, guid: f4569818c34580b4b89f5e384a0e598f, type: 2}
-  attackTime: 2
-  movespeed: 0.01
+  enemyType: 1
+  health: 1
+  audioClipObject: {fileID: 11400000, guid: f8041f5da5d77bc4488fc21537ba68c6, type: 2}
+  attackTime: 0.8
+  movespeed: 2
   stunnedTime: 1
   damage: 1
-  projectile: {fileID: 0}
+  projectile: {fileID: 2546729037515863492, guid: 0c6614fc391bde141bbfd0c921771149,
+    type: 3}

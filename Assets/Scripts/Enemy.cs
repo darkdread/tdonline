@@ -161,9 +161,12 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
     private float GetAnimationDuration(string clipName){
         AnimationClip[] animationClips = animator.runtimeAnimatorController.animationClips;
-
+        
         foreach(AnimationClip animationClip in animationClips){
-            if (animationClip.name == clipName){
+
+            // We have to search here because the clip names have its
+            // prefix of the game object.
+            if (animationClip.name.Contains(clipName)){
                 return animationClip.length;
             }
         }
