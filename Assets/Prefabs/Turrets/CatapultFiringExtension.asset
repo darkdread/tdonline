@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -7707825247899848389, guid: 2599a9260dca4814ca05a9440f369f30, type: 3}
   arcIterations: 40
-  minMaxRotation: {x: 20, y: 60}
+  minMaxRotation: {x: 30, y: 60}

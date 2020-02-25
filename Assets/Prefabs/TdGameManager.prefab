@@ -1682,7 +1682,7 @@ MonoBehaviour:
   - {r: 0, g: 1, b: 0, a: 1}
   playerUiPrefab: {fileID: 5943189537102616949, guid: b7f40911268ee4047b65a4168f9eea2d,
     type: 3}
-  progressInstant: 1
+  progressInstant: 0
   progressReloadTime: 1
   progressCollectTime: 2
   playerEmoteButtonPrefab: {fileID: 3149512381127390244, guid: 6187e39da5ff1364da180a619b95f181,
@@ -1691,15 +1691,19 @@ MonoBehaviour:
   - sprite: {fileID: 21300000, guid: e00d4b8b11e1d11459502a2ea2379209, type: 3}
     buttonString: Emote1
     emoteButtonDisplayString: 1
+    soundEffectString: 
   - sprite: {fileID: 21300000, guid: ae214c671e623294eba628aaf435fa51, type: 3}
     buttonString: Emote2
     emoteButtonDisplayString: 2
+    soundEffectString: 
   - sprite: {fileID: 21300000, guid: 4108a582b6291ab4e8918bc1867668aa, type: 3}
     buttonString: Emote3
     emoteButtonDisplayString: 3
+    soundEffectString: Laugh
   - sprite: {fileID: 21300000, guid: b03be5b94b93acd489553a0d7876fd14, type: 3}
     buttonString: Emote4
     emoteButtonDisplayString: 4
+    soundEffectString: 
   playerEmoteDuration: 2
   collectableResourceDirectory: Collectable
   enemySpawners:

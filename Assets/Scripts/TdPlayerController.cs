@@ -14,11 +14,14 @@ public enum PlayerState {
     CarryingOrUsingTurret = UsingTurret | CarryingObject
 }
 
-public enum PlayerEmote {
-    NeedAmmo,
-    Smile,
-    Death,
-    Angry
+[System.Serializable]
+public struct PlayerEmoteSprite {
+    public Sprite sprite;
+
+    [Header("This string needs to be in the Input Manager.")]
+    public string buttonString;
+    public string emoteButtonDisplayString;
+    public string soundEffectString;
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -33,6 +36,8 @@ public class TdPlayerController : MonoBehaviour
     public Rigidbody2D playerRigidbody;
 
     [Header("Initialization")]
+    public AudioClipObject audioClipObject;
+    public AudioSource audioSource;
     public Transform playerCarryTransform;
     public Collider2D playerFeetCollider;
 
@@ -71,7 +76,14 @@ public class TdPlayerController : MonoBehaviour
 
     [PunRPC]
     private void ShowEmoteRpc(string buttonString, float duration){
-        playerUi.SetEmote(TdGameManager.gameSettings.GetSpriteFromString(buttonString), duration);
+        PlayerEmoteSprite playerEmoteSprite = TdGameManager.gameSettings.GetPlayerEmoteSpriteFromString(buttonString);
+
+        AudioClip emoteClip = audioClipObject.GetAudioClipFromString(playerEmoteSprite.soundEffectString);
+        if (emoteClip != null){
+            audioSource.clip = emoteClip;
+            audioSource.Play();
+        }
+        playerUi.SetEmote(playerEmoteSprite.sprite, duration);
     }
 
     public void ShowEmote(string buttonString, float duration){

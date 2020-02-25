@@ -2,15 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct PlayerEmoteSprite {
-    public Sprite sprite;
-
-    [Header("This string needs to be in the Input Manager.")]
-    public string buttonString;
-    public string emoteButtonDisplayString;
-}
-
 public class TdGameSettings : MonoBehaviour
 {
     [Header("Initialization")]
@@ -44,5 +35,15 @@ public class TdGameSettings : MonoBehaviour
         }
 
         return null;
+    }
+
+    public PlayerEmoteSprite GetPlayerEmoteSpriteFromString(string buttonString){
+        foreach(PlayerEmoteSprite playerEmoteSprite in playerEmoteSprites){
+            if (playerEmoteSprite.buttonString == buttonString){
+                return playerEmoteSprite;
+            }
+        }
+
+        throw new System.Exception("PlayerEmoteSprite not found.");
     }
 }

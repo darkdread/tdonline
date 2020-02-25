@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7501f96490537b742aa22ad591b17416, type: 3}
-  m_Name: CatapultClipObject
+  m_Name: EmoteAudioClipObject
   m_EditorClassIdentifier: 
   audioClipNames:
   - clips:
-    - {fileID: 8300000, guid: 1c6bea2f134153748a106a548bd04574, type: 3}
-    name: Shoot
+    - {fileID: 8300000, guid: d70329249c968e74ea9283b2562be3f2, type: 3}
+    - {fileID: 8300000, guid: 90eefeb6827539b46a69d6a39258d443, type: 3}
+    - {fileID: 8300000, guid: 27aa074dbe205f744b5e12fb9166ac3c, type: 3}
+    name: Laugh
+  - clips: []
+    name: Death
