@@ -285,7 +285,17 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1852593932482485200, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: viewIdField
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2205072738139074654, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3381066103891537074, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -394,6 +404,11 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993398680431651, guid: d6a9f417451b376499e92eebde20d0f2,
+        type: 3}
+      propertyPath: viewIdField
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d6a9f417451b376499e92eebde20d0f2, type: 3}
@@ -7489,7 +7504,7 @@ PrefabInstance:
     - target: {fileID: 3377848413399621258, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3377848413399621258, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
@@ -7520,6 +7535,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Gate (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: viewIdField
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bea7ce4a7677d4742a15ab76331358a6, type: 3}
