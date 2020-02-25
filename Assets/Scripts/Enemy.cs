@@ -11,6 +11,11 @@ public enum EnemyType {
     Ranged
 }
 
+public enum EnemyState {
+    normal,
+    stunned
+}
+
 public class Enemy : MonoBehaviour {
     public EndData endData;
     public EnemyData enemyData;
@@ -18,7 +23,9 @@ public class Enemy : MonoBehaviour {
     
     [Header("Runtime Variables")]
     public EnemyType enemyType;
+    public EnemyState enemyState;
     public int health;
+    public float stunnedTime;
 
     public Transform hitPositionTransform;
     public Transform targetGateTransform;
@@ -107,6 +114,8 @@ public class Enemy : MonoBehaviour {
 
         if (enemy.health <= 0){
             Die();
+        } else {
+            StunEnemy(true);
         }
 
         if (playerViewId != 0 && enemy.health <= 0){
@@ -117,6 +126,16 @@ public class Enemy : MonoBehaviour {
 
     public void SetHealth(int health, int playerViewId = 0){
         photonView.RPC("SetHealthRpc", RpcTarget.All, photonView.ViewID, health, playerViewId);
+    }
+
+    public void StunEnemy(bool stun){
+        if (stun){
+            enemyState = enemyState | EnemyState.stunned;
+            stunnedTime = enemyData.stunnedTime;
+        } else {
+            enemyState = enemyState & ~EnemyState.stunned;
+            stunnedTime = 0f;
+        }
     }
 
     private bool IsNearObjective(float distance){
@@ -145,12 +164,24 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    private void UpdateAnimationSpeed(){
+    public bool IsEnemyStunned(){
+        return (enemyState & EnemyState.stunned) == EnemyState.stunned;
+    }
+
+    private void UpdateEnemy(){
         // If enemy's attack time is faster than animation time.
         // We have to speed up the animation.
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")){
             if (enemyData.attackTime < attackAnimationCompleteTime){
                 animator.speed = attackAnimationCompleteTime / enemyData.attackTime;
+            }
+        }
+
+        if (IsEnemyStunned()){
+            stunnedTime -= Time.deltaTime;
+
+            if (stunnedTime <= 0){
+                StunEnemy(false);
             }
         }
     }
@@ -161,7 +192,7 @@ public class Enemy : MonoBehaviour {
         }
 
         if (!isDying){
-            UpdateAnimationSpeed();
+            UpdateEnemy();
         }
 
         if (!PhotonNetwork.IsMasterClient){
@@ -182,6 +213,10 @@ public class Enemy : MonoBehaviour {
             // Just reached objective.
             if (rb.isKinematic){
                 StopMovement(true);
+            }
+            
+            if (IsEnemyStunned()){
+                return;
             }
 
             attackCooldown -= Time.deltaTime;

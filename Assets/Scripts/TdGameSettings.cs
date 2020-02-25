@@ -25,6 +25,8 @@ public class TdGameSettings : MonoBehaviour
     public float progressCollectTime = 2f;
 
     public List<PlayerEmoteSprite> playerEmoteSprites;
+    public float playerEmoteDuration = 2f;
+    
     public string collectableResourceDirectory = "Collectable";
 
     public EnemySpawner[] enemySpawners;

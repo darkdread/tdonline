@@ -294,7 +294,6 @@ public class TdPlayerController : MonoBehaviour
                 || (verticalAxis < 0 && entityBounds.min.y > ladderBounds.center.y))){
                     playerClimbingLadder = ladder;
                     photonView.RPC("OnStartClimb", RpcTarget.All);
-                    // OnStartClimb(ladder);
                 }
             }
 
@@ -314,7 +313,6 @@ public class TdPlayerController : MonoBehaviour
             if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
-                // OnStopClimb();
             }
         }
 
@@ -331,12 +329,11 @@ public class TdPlayerController : MonoBehaviour
             // If player is moving while doing something, stop progress.
             if (playerFacingDir != 0){
                 StopProgressBar();
-                return;
             }
         }
 
         if (Input.GetKeyDown(KeyCode.H)){
-            ShowEmote(PlayerEmote.Smile, 2f);
+            ShowEmote(PlayerEmote.Smile, TdGameManager.gameSettings.playerEmoteDuration);
         }
 
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;
