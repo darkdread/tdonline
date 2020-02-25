@@ -137,7 +137,9 @@ MonoBehaviour:
   endData: {fileID: 11400000, guid: 2967df775ee94874fbeaa17845dfa6f8, type: 2}
   enemyData: {fileID: 11400000, guid: 3630c0440e1d1c64281139883d323ea8, type: 2}
   enemyType: 0
+  enemyState: 0
   health: 0
+  stunnedTime: 0
   hitPositionTransform: {fileID: 0}
   targetGateTransform: {fileID: 0}
   photonView: {fileID: 0}

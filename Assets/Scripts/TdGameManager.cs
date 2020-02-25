@@ -88,7 +88,9 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     private static int globalSpawnTime;
 
     [Header("Game Interface")]
-    public GameObject gameCanvas;
+    public Transform gameCanvas;
+    public Transform gameUiCanvas;
+    public Transform emoteCanvas;
     public LoseUi loseUi;
 
     private void Awake(){

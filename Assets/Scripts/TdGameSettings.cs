@@ -5,7 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public struct PlayerEmoteSprite {
     public Sprite sprite;
-    public PlayerEmote emote;
+
+    [Header("This string needs to be in the Input Manager.")]
+    public string buttonString;
+    public string emoteButtonDisplayString;
 }
 
 public class TdGameSettings : MonoBehaviour
@@ -24,6 +27,7 @@ public class TdGameSettings : MonoBehaviour
     public float progressReloadTime = 1f;
     public float progressCollectTime = 2f;
 
+    public EmoteButton playerEmoteButtonPrefab;
     public List<PlayerEmoteSprite> playerEmoteSprites;
     public float playerEmoteDuration = 2f;
     
@@ -32,9 +36,9 @@ public class TdGameSettings : MonoBehaviour
     public EnemySpawner[] enemySpawners;
     public string enemyResourceDirectory = "Enemy";
 
-    public Sprite GetSpriteFromEmote(PlayerEmote emote){
+    public Sprite GetSpriteFromString(string buttonString){
         foreach(PlayerEmoteSprite playerEmoteSprite in playerEmoteSprites){
-            if (playerEmoteSprite.emote == emote){
+            if (playerEmoteSprite.buttonString == buttonString){
                 return playerEmoteSprite.sprite;
             }
         }

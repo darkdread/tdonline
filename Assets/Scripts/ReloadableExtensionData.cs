@@ -43,7 +43,7 @@ public class ReloadableExtensionData : TurretExtensionData {
 
     override public void OnPhotonInstantiate(PhotonMessageInfo info){
         ReloadableExtension reloadableExtension = (ReloadableExtension) turretExtension;
-        this.transform.SetParent(TdGameManager.instance.gameCanvas.transform);
+        this.transform.SetParent(TdGameManager.instance.gameUiCanvas);
 
         maxAmmunition = reloadableExtension.maxAmmunition;
         

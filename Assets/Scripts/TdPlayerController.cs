@@ -17,7 +17,8 @@ public enum PlayerState {
 public enum PlayerEmote {
     NeedAmmo,
     Smile,
-    Death
+    Death,
+    Angry
 }
 
 public class TdPlayerController : MonoBehaviour
@@ -62,19 +63,19 @@ public class TdPlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
 
         playerUi = Instantiate<TdPlayerUi>(TdGameManager.gameSettings.playerUiPrefab,
-                            TdGameManager.instance.gameCanvas.transform);
+                            TdGameManager.instance.gameUiCanvas);
         playerUi.SetTarget(this);
 
         playerEndGameData = "Defaults";
     }
 
     [PunRPC]
-    private void ShowEmoteRpc(PlayerEmote emote, float duration){
-        playerUi.SetEmote(TdGameManager.gameSettings.GetSpriteFromEmote(emote), duration);
+    private void ShowEmoteRpc(string buttonString, float duration){
+        playerUi.SetEmote(TdGameManager.gameSettings.GetSpriteFromString(buttonString), duration);
     }
 
-    public void ShowEmote(PlayerEmote emote, float duration){
-        photonView.RPC("ShowEmoteRpc", RpcTarget.All, emote, duration);
+    public void ShowEmote(string buttonString, float duration){
+        photonView.RPC("ShowEmoteRpc", RpcTarget.All, buttonString, duration);
     }
 
     [PunRPC]
@@ -332,8 +333,16 @@ public class TdPlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.H)){
-            ShowEmote(PlayerEmote.Smile, TdGameManager.gameSettings.playerEmoteDuration);
+        if (Input.GetButtonDown("ToggleEmoteList")){
+            playerUi.ShowEmoteList(!TdGameManager.instance.emoteCanvas.gameObject.activeSelf);
+        }
+
+        if (TdGameManager.instance.emoteCanvas.gameObject.activeSelf){
+            foreach(PlayerEmoteSprite playerEmoteSprite in TdGameManager.gameSettings.playerEmoteSprites){
+                if (Input.GetButtonDown(playerEmoteSprite.buttonString)){
+                    ShowEmote(playerEmoteSprite.buttonString, TdGameManager.gameSettings.playerEmoteDuration);
+                }
+            }
         }
 
         // transform.position += new Vector3(velocityDelta.x, velocityDelta.y, 0f) * Time.deltaTime * moveSpeed;

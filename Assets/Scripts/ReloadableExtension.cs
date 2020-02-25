@@ -13,9 +13,6 @@ public class ReloadableExtension : TurretExtension {
     public int maxAmmunition;
 
     override public void OnLoadExtension(Turret turret){
-        Debug.Log(uiPrefab);
-        Debug.Log(TdGameManager.instance.gameCanvas);
-
         // Create UI and attach to game canvas.
         // ReloadableExtensionData data = Instantiate<ReloadableExtensionData>(uiPrefab, TdGameManager.instance.gameCanvas.transform);
 

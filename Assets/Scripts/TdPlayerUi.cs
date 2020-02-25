@@ -20,12 +20,32 @@ public class TdPlayerUi : MonoBehaviour
 
     public void SetTarget(TdPlayerController playerController){
         _playerController = playerController;
+        UpdateEmoteList();
 
         playerNameText.text = playerController.photonView.Owner.NickName;
     }
 
     public void ShowUseButton(bool show){
         playerUseButton.SetActive(show);
+    }
+
+    public void UpdateEmoteList(){
+        Transform emoteCanvas = TdGameManager.instance.emoteCanvas;
+        foreach(Transform t in emoteCanvas){
+            Destroy(t.gameObject);
+        }
+
+        foreach(PlayerEmoteSprite playerEmoteSprite in TdGameManager.gameSettings.playerEmoteSprites){
+            EmoteButton emoteButton = Instantiate<EmoteButton>(
+                TdGameManager.gameSettings.playerEmoteButtonPrefab, emoteCanvas);
+            
+            emoteButton.SetEmoteButton(playerEmoteSprite.sprite, playerEmoteSprite.emoteButtonDisplayString);
+        }
+        
+    }
+
+    public void ShowEmoteList(bool show){
+        TdGameManager.instance.emoteCanvas.gameObject.SetActive(show);
     }
 
     public void SetEmote(Sprite sprite, float duration){
