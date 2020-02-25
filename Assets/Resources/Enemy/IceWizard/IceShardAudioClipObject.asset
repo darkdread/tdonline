@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b687bcc6dc2f01c4d8c1537b1629a751, type: 3}
-  m_Name: ArrowProjectile
+  m_Script: {fileID: 11500000, guid: 7501f96490537b742aa22ad591b17416, type: 3}
+  m_Name: IceShardAudioClipObject
   m_EditorClassIdentifier: 
-  damage: 1
-  areaOfEffect: 0
-  audioClipObject: {fileID: 11400000, guid: 33cea3f32be0b15439755289367e0443, type: 2}
+  audioClipNames:
+  - clips:
+    - {fileID: 8300000, guid: 7d1f2d5caaa98314eb909e312a31cd8d, type: 3}
+    name: Hit

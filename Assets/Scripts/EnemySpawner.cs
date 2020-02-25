@@ -48,6 +48,8 @@ public struct WaveSpawnInfo {
 
 public class EnemySpawner : MonoBehaviour {
 
+    public static int spawnCount = 0;
+
     public EnemyTypeObjective[] enemyTypeObjectives;
     public Wave[] waves;
     public int spawnerId = 0;

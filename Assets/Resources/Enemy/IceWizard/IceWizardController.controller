@@ -20,7 +20,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 985a6c6ad2ec97845a9da524c8996401, type: 2}
+  m_Motion: {fileID: 7400000, guid: d0d64012167e7304a9b5b656d793ba4f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -73,7 +73,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a0699dbc679a9ab41bf502c072f87105, type: 2}
+  m_Motion: {fileID: 7400000, guid: 049d0cc66c5f1214ab62342137455a01, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -113,7 +113,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ArcherController
+  m_Name: IceWizardController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Death
@@ -185,7 +185,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 9341f852d5260544c851e1863c3e0cc9, type: 2}
+  m_Motion: {fileID: 7400000, guid: 75467e3cef5f74449b806b1d0dfa1b94, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

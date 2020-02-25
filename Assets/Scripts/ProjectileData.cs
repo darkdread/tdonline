@@ -7,4 +7,8 @@ public class ProjectileData: ScriptableObject {
     public float areaOfEffect;
     public AudioClipObject audioClipObject;
 
+    [Header("For enemy")]
+    public int arcAngle = 45;
+    public float gravity = 9.81f;
+
 }

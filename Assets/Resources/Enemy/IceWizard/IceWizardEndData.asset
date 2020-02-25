@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fcb674232ceab0f44bb69029248e733a, type: 3}
-  m_Name: ArcherEndData
+  m_Name: IceWizardEndData
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 08dc5ad1c3fca88418193eefa11b4b8d, type: 3}
+  sprite: {fileID: 21300000, guid: 17da160970a934f4eaa9bbb3092c86a2, type: 3}

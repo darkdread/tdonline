@@ -19,6 +19,7 @@ public enum EnemyState {
 public class Enemy : MonoBehaviour, IAudioClipObject {
     public EndData endData;
     public EnemyData enemyData;
+    public SpriteRenderer spriteRenderer;
     public static List<Enemy> enemyList;
     private AudioSource enemyAudioSource;
     
@@ -72,19 +73,19 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     [PunRPC]
     private void ShootProjectileRpc(string resourceName){
         string resourcePath = Path.Combine(TdGameManager.gameSettings.enemyResourceDirectory, TdGameManager.StripCloneFromString(name), resourceName);
-        Projectile p = PhotonNetwork.InstantiateSceneObject(resourcePath, transform.position, Quaternion.identity).GetComponent<Projectile>();
+        Projectile projectile = PhotonNetwork.InstantiateSceneObject(resourcePath, transform.position, Quaternion.identity).GetComponent<Projectile>();
 
         // Velocity logic.
-        float distance = Vector2.Distance(p.transform.position, targetGateTransform.position);
-        float angle = 45;
-        float speed = ProjectileMath.LaunchSpeed(distance, 0, Physics.gravity.magnitude, angle * Mathf.Deg2Rad);
+        float distance = Vector2.Distance(projectile.transform.position, targetGateTransform.position);
+        float angle = projectile.projectileData.arcAngle;
+        float speed = ProjectileMath.LaunchSpeed(distance, 0, projectile.projectileData.gravity, angle * Mathf.Deg2Rad);
         // speed = Mathf.Sqrt(Physics2D.gravity.magnitude * distance / (2 * Mathf.Cos(angle) * Mathf.Sin(angle)));
 
         Vector3 direction = TdGameManager.GetDirectionOfTransform2D(transform);
         Vector3 angleVec = Quaternion.AngleAxis(direction.x * angle, Vector3.forward) * direction;
-        p.transform.rotation = Quaternion.AngleAxis(direction.x * angle, Vector3.forward);
+        projectile.transform.rotation = Quaternion.AngleAxis(direction.x * angle, Vector3.forward);
 
-        p.rb.velocity = angleVec * speed;
+        projectile.rb.velocity = angleVec * speed;
     }
 
     public void ShootProjectile(Projectile projectile, Transform target){
@@ -103,6 +104,9 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         transform.localScale = new Vector3(direction.x * transform.localScale.x,
             transform.localScale.y, transform.localScale.z);
 
+        // Always increase sorting order by 1 for each spawned enemy.
+        EnemySpawner.spawnCount += 1;
+        spriteRenderer.sortingOrder = EnemySpawner.spawnCount;
         rb.isKinematic = true;
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
     }

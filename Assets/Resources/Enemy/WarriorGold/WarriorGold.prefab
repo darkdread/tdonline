@@ -137,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   endData: {fileID: 11400000, guid: c32b940d5d465ea4481e428dd9031886, type: 2}
   enemyData: {fileID: 11400000, guid: 52552a345c957cf4cb24e07200e7a06b, type: 2}
+  spriteRenderer: {fileID: 4731609646192074628}
   enemyType: 0
   enemyState: 0
   health: 0
