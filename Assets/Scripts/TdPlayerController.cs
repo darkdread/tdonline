@@ -290,6 +290,7 @@ public class TdPlayerController : MonoBehaviour
                 // Player is pressing vertical input, is colliding with ladder, and
                 // player presses up input when he is below half the ladder, vice-versa.
 
+                print(MyUtilityScript.IsInBounds(ladderBounds, entityBounds));
                 if (Mathf.Abs(verticalAxis) > 0.01 && MyUtilityScript.IsInBounds(ladderBounds, entityBounds)
                 && ((verticalAxis > 0 && entityBounds.min.y < ladderBounds.center.y)
                 || (verticalAxis < 0 && entityBounds.min.y > ladderBounds.center.y))){
