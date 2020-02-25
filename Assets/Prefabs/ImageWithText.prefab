@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 7757037825892440784}
-  resourceCountText: {fileID: 0}
+  resourceCountText: {fileID: 6311665003047006352}
 --- !u!1 &2863881866268027054
 GameObject:
   m_ObjectHideFlags: 0
