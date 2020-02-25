@@ -5,5 +5,6 @@ using UnityEngine;
 public class ProjectileData: ScriptableObject {
     public int damage;
     public float areaOfEffect;
+    public AudioClipObject audioClipObject;
 
 }

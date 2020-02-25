@@ -16,10 +16,11 @@ public enum EnemyState {
     stunned
 }
 
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour, IAudioClipObject {
     public EndData endData;
     public EnemyData enemyData;
     public static List<Enemy> enemyList;
+    private AudioSource enemyAudioSource;
     
     [Header("Runtime Variables")]
     public EnemyType enemyType;
@@ -45,6 +46,7 @@ public class Enemy : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         photonView = GetComponent<PhotonView>();
         animator = GetComponentInChildren<Animator>();
+        enemyAudioSource = GetComponent<AudioSource>();
         health = enemyData.health;
         enemyType = enemyData.enemyType;
 
@@ -59,9 +61,12 @@ public class Enemy : MonoBehaviour {
         enemyList.Remove(this);
 
         StopMovement(true);
-        deathCooldown = GetAnimationDuration("Death");
+        // 1f for death sound to finish playing.
+        deathCooldown = GetAnimationDuration("Death") + 1f;
         animator.SetTrigger("Death");
         animator.speed = 1f;
+
+        PlaySoundLocal("Death");
     }
 
     [PunRPC]
@@ -126,6 +131,18 @@ public class Enemy : MonoBehaviour {
 
     public void SetHealth(int health, int playerViewId = 0){
         photonView.RPC("SetHealthRpc", RpcTarget.All, photonView.ViewID, health, playerViewId);
+    }
+
+    public void PlaySound(string clipName){
+        TdGameManager.instance.PlaySound(photonView.ViewID, clipName);
+    }
+
+    public void PlaySoundLocal(string clipName){
+        AudioClip audioClip = enemyData.audioClipObject.GetAudioClipFromString(clipName);
+        if (audioClip == null){
+            return;
+        }
+        enemyAudioSource.PlayOneShot(audioClip);
     }
 
     public void StunEnemy(bool stun){
@@ -229,6 +246,7 @@ public class Enemy : MonoBehaviour {
             attackAnimationFinishHitTime -= Time.deltaTime;
             if (attackAnimationFinishHitTime <= 0f){
                 attackAnimationFinishHitTime = Mathf.Infinity;
+                PlaySound("Attack");
 
                 if (enemyType == EnemyType.Melee){
                     TdGameManager.castle.SetHealth(TdGameManager.castle.health - enemyData.damage);
@@ -241,5 +259,10 @@ public class Enemy : MonoBehaviour {
             // TdGameManager.castle.SetHealth(TdGameManager.castle.health - 1);
             // TdGameManager.instance.photonView.RPC("DestroySceneObject", RpcTarget.MasterClient, photonView.ViewID);
         }
+    }
+
+    public AudioClipObject GetAudioClipObject()
+    {
+        return enemyData.audioClipObject;
     }
 }

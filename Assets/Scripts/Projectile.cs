@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Photon.Pun;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IAudioClipObject
 {
     public EndData endData;
     public TdPlayerController owningPlayer;
@@ -26,6 +26,9 @@ public class Projectile : MonoBehaviour
         owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, endData);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
+
+        TdGameManager.instance.PlaySound(turret.GetComponent<Turret>().photonView.ViewID,
+            "Shoot");
     }
 
     private void Update(){
@@ -50,6 +53,7 @@ public class Projectile : MonoBehaviour
                     enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
                 }
 
+                TdGameManager.instance.PlaySound(photonView.ViewID, "Hit");
                 TdGameManager.instance.DestroySceneObject(photonView);
             }
         } else {
@@ -58,6 +62,8 @@ public class Projectile : MonoBehaviour
             // Gate layermask
             if (collision.gameObject.layer == 13){
                 TdGameManager.castle.SetHealth(TdGameManager.castle.health - projectileData.damage);
+
+                TdGameManager.instance.PlaySound(photonView.ViewID, "Hit");
                 TdGameManager.instance.DestroySceneObject(photonView);
             }
         }
@@ -68,5 +74,10 @@ public class Projectile : MonoBehaviour
 
         //     enemy.photonView.RPC("SetHealth", RpcTarget.All, enemy.photonView.ViewID, enemy.health - projectileData.damage);
         // }
+    }
+
+    public AudioClipObject GetAudioClipObject()
+    {
+        return projectileData.audioClipObject;
     }
 }

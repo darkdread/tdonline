@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b687bcc6dc2f01c4d8c1537b1629a751, type: 3}
-  m_Name: ArrowProjectile
+  m_Script: {fileID: 11500000, guid: d6f2dfc99dda78f45b62c9d1f581a425, type: 3}
+  m_Name: CatapultFiringExtension
   m_EditorClassIdentifier: 
-  damage: 1
-  areaOfEffect: 0
-  audioClipObject: {fileID: 11400000, guid: 33cea3f32be0b15439755289367e0443, type: 2}
+  prefab: {fileID: -7707825247899848389, guid: 2599a9260dca4814ca05a9440f369f30, type: 3}
+  arcIterations: 40
+  minMaxRotation: {x: 20, y: 60}

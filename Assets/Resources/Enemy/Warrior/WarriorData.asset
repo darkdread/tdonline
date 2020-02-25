@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: WarriorData
   m_EditorClassIdentifier: 
   enemyType: 0
-  health: 1
-  attackTime: 1
+  health: 2
+  audioClipObject: {fileID: 11400000, guid: f4569818c34580b4b89f5e384a0e598f, type: 2}
+  attackTime: 2
   movespeed: 1
+  stunnedTime: 1
   damage: 1
   projectile: {fileID: 0}

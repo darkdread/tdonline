@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   areaOfEffect: 2
+  audioClipObject: {fileID: 11400000, guid: 2e1955ed36a2c184ebfd7e382975dfce, type: 2}

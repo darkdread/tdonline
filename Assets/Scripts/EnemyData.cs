@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyData: ScriptableObject {
     public EnemyType enemyType;
     public int health = 1;
+    public AudioClipObject audioClipObject;
     public float attackTime = 1f;
     public float movespeed = 1f;
     public float stunnedTime = 1f;

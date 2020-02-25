@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 1
   health: 1
+  audioClipObject: {fileID: 11400000, guid: f8041f5da5d77bc4488fc21537ba68c6, type: 2}
   attackTime: 0.8
-  movespeed: 5
+  movespeed: 2
+  stunnedTime: 1
   damage: 1
   projectile: {fileID: 2546729037515863492, guid: 0c6614fc391bde141bbfd0c921771149,
     type: 3}

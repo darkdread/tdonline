@@ -58,5 +58,6 @@ MonoBehaviour:
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
+  - PlaySoundRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

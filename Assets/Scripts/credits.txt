@@ -2,3 +2,30 @@ https://github.com/IronWarrior/ProjectileShooting
 
 https://stackoverflow.com/questions/1446547/how-to-convert-an-object-to-a-byte-array-in-c-sharp
 Crystalonics
+
+https://assetstore.unity.com/packages/2d/gui/fantasy-wooden-gui-free-103811
+wooden UI
+
+https://freesound.org/people/EverHeat/
+Arrow.wav
+
+https://freesound.org/people/checholio/sounds/443575/
+Arrow impact
+
+https://freesound.org/people/Artmasterrich/sounds/345450/
+male death 1
+
+https://freesound.org/people/LittleRobotSoundFactory/sounds/270446/
+male death 2
+
+https://freesound.org/people/Haramir/sounds/404014/
+male death 3
+
+https://freesound.org/people/lostchocolatelab/sounds/1451/
+sword
+
+https://freesound.org/people/_stubb/sounds/389618/
+rock hit
+
+https://freesound.org/people/pfranzen/sounds/321505/
+catapult fling

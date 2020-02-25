@@ -93,6 +93,9 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public Transform emoteCanvas;
     public LoseUi loseUi;
 
+    [Header("Misc")]
+    public AudioSource audioSource;
+
     private void Awake(){
         instance = this;
         gameSettings = GetComponent<TdGameSettings>();
@@ -171,6 +174,39 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         // We disable the game object first, because the RPC call takes time to reach master client.
         objectPhotonView.gameObject.SetActive(false);
         photonView.RPC("DestroySceneObjectRpc", RpcTarget.MasterClient, objectPhotonView.ViewID);
+    }
+
+    [PunRPC]
+    private void PlaySoundRpc(int viewId, string clipName){
+        PhotonView view = PhotonNetwork.GetPhotonView(viewId);
+        AudioSource source = view.GetComponent<AudioSource>();
+        MonoBehaviour[] scripts = view.GetComponents<MonoBehaviour>();
+
+        IAudioClipObject audioClipObjectInterface = null;
+
+        foreach(MonoBehaviour script in scripts){
+            audioClipObjectInterface = script as IAudioClipObject;
+            if (audioClipObjectInterface != null){
+                break;
+            }
+        }
+
+        if (audioClipObjectInterface == null){
+            return;
+        }
+
+        AudioClipObject audioClipObject = audioClipObjectInterface.GetAudioClipObject();
+
+        if (source){
+            source.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName));
+            return;
+        }
+
+        audioSource.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName));
+    }
+
+    public void PlaySound(int viewId, string clipName){
+        photonView.RPC("PlaySoundRpc", RpcTarget.All, viewId, clipName);
     }
 
     [PunRPC]

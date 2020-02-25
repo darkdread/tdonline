@@ -11,9 +11,7 @@ public enum TurretState {
 public class Turret : Interactable {
     [HideInInspector]
     public PhotonView photonView;
-
     protected Collider2D turretCollider;
-    public TdPlayerController controllingPlayer;
 
     public List<TurretExtension> turretExtensions = new List<TurretExtension>();
 
@@ -23,6 +21,9 @@ public class Turret : Interactable {
     [HideInInspector]
     private HashSet<System.Type> blockTurretExtensions = new HashSet<System.Type>();
 
+
+    [Header("Runtime Variables")]
+    public TdPlayerController controllingPlayer;
     public TurretState turretState;
 
     protected virtual void Awake(){

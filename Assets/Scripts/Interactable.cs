@@ -9,6 +9,7 @@ public class Interactable : MonoBehaviour {
     protected bool canInteract = true;
     protected HashSet<TdPlayerController> interactedPrevious = new HashSet<TdPlayerController>();
 
+    [Header("Initializations")]
     [SerializeField]
     protected Collider2D interactableTrigger;
 

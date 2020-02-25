@@ -68,8 +68,8 @@ GameObject:
   - component: {fileID: 1602190501095719521}
   - component: {fileID: 6286363158809286981}
   - component: {fileID: 1602190501095719520}
-  - component: {fileID: 1602190501095719526}
   - component: {fileID: -4010354754505178820}
+  - component: {fileID: -2524516931238624154}
   m_Layer: 0
   m_Name: Catapult
   m_TagString: Untagged
@@ -141,25 +141,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1602190501095719526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1602190501095719523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67285e4b74a5094383b3427cc6fe8fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactableTrigger: {fileID: 1037708926}
-  photonView: {fileID: 0}
-  controllingPlayer: {fileID: 0}
-  turretExtensions:
-  - {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
-  - {fileID: 11400000, guid: d70a048fba576084ba792dfbeb5025eb, type: 2}
-  turretState: 0
 --- !u!114 &-4010354754505178820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,6 +156,26 @@ MonoBehaviour:
   m_SynchronizePosition: 0
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
+--- !u!114 &-2524516931238624154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602190501095719523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f551b6689ae152842aae44ac86d68802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactableTrigger: {fileID: 1037708926}
+  photonView: {fileID: 0}
+  turretExtensions:
+  - {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
+  - {fileID: 11400000, guid: d70a048fba576084ba792dfbeb5025eb, type: 2}
+  controllingPlayer: {fileID: 0}
+  turretState: 0
+  audioClipObject: {fileID: 11400000, guid: 5a5ce97e987aa414a89c7dc0d8ef25aa, type: 2}
 --- !u!1 &1602190501763788721
 GameObject:
   m_ObjectHideFlags: 0
