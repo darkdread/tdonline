@@ -20,10 +20,10 @@ public class Projectile : MonoBehaviour, IAudioClipObject
     [PunRPC]
     // For turrets
     private void ShootProjectile(int turretId, Vector3 angleVec, float speed){
-        GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
+        Turret turret = PhotonNetwork.GetPhotonView(turretId).GetComponent<Turret>();
         gameObject.SetActive(true);
 
-        owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
+        owningPlayer = turret.GetComponent<Turret>().GetTurretExtensionData<FiringExtensionData>().playerController;
         owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, endData);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;

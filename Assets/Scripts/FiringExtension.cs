@@ -43,8 +43,14 @@ public class FiringExtension : TurretExtension {
 
         // Animation for turret to shoot.
         // If false, means turret has no animation.
-        if (!data.ShootProjectileAnimation(shootProjectile)){
+        if (data.ShootProjectileAnimation(shootProjectile)){
+            // int playerTurretShootTime = (int) (data.shootAnimationCompleteTime * 1000) / Application.targetFrameRate;
+
+            // Debug.Log(playerTurretShootTime);
+            // // Set player interacted.
+            // turret.controllingPlayer.SetInteractingDelayFrameInstant(true, false, playerTurretShootTime);
             
+        } else {
             Debug.Log("Pass away is good.");
             // Immediately shoot projectile if animation is not found.
             shootProjectile();
@@ -58,16 +64,16 @@ public class FiringExtension : TurretExtension {
             return;
         }
 
-        if (data.gameObject.activeSelf){
-
-            // Handles animation callback.
-            if (data.shootCallback != null){
-                data.shootAnimationTime -= Time.deltaTime;
-                if (data.shootAnimationTime <= 0){
-                    data.shootCallback.Invoke();
-                    data.shootCallback = null;
-                }
+        // Handles animation callback.
+        if (data.shootCallback != null){
+            data.shootAnimationTime -= Time.deltaTime;
+            if (data.shootAnimationTime <= 0){
+                data.shootCallback.Invoke();
+                data.shootCallback = null;
             }
+        }
+
+        if (data.gameObject.activeSelf){
 
             int yAxis = (int) Input.GetAxisRaw("Vertical");
 

@@ -12,6 +12,7 @@ public class FiringExtensionData : TurretExtensionData {
     public float shootAnimationCompleteTime = 0f;
     public float shootAnimationTime = 0f;
     public Animator animator;
+    public TdPlayerController playerController;
     public System.Action shootCallback;
 
     private void Awake(){
@@ -27,7 +28,8 @@ public class FiringExtensionData : TurretExtensionData {
     }
 
     [PunRPC]
-    private void ShootProjectileAnimationRpc(){
+    private void ShootProjectileAnimationRpc(int playerView){
+        playerController = PhotonNetwork.GetPhotonView(playerView).GetComponent<TdPlayerController>();
         animator.SetTrigger("Shoot");
     }
 
@@ -35,7 +37,8 @@ public class FiringExtensionData : TurretExtensionData {
         if (animator){
             shootAnimationTime = shootAnimationCompleteTime;
             shootCallback = callback;
-            photonView.RPC("ShootProjectileAnimationRpc", RpcTarget.All);
+            photonView.RPC("ShootProjectileAnimationRpc", RpcTarget.All,
+                turret.controllingPlayer.photonView.ViewID);
             return true;
         }
 

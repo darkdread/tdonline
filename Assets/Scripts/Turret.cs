@@ -51,6 +51,16 @@ public class Turret : Interactable {
         return null;
     }
 
+    public T GetTurretExtensionData<T>(){
+        foreach(TurretExtensionData data in turretExtensionDatas){
+            if (data.GetType() == typeof(T)){
+                return (T)(object) data;
+            }
+        }
+
+        throw new KeyNotFoundException("Type not found.");
+    }
+
     public TurretExtensionData GetTurretExtensionData(TurretExtension turretExtension){
         // Turret extension datas have not been initialized yet.
         // We have to wait for OnLoadExtension -> CreatePhotonData.
