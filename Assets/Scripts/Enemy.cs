@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     public EnemyState enemyState;
     public int health;
     public float stunnedTime;
+    public GameObject stunEffect;
 
     public Transform hitPositionTransform;
     public Transform targetGateTransform;
@@ -55,6 +56,9 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         enemyList.Add(this);
 
         attackAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Attack");
+        stunEffect = Instantiate(TdGameManager.gameSettings.enemyStunPrefab, transform);
+        stunEffect.transform.position += Vector3.up;
+        stunEffect.SetActive(false);
     }
 
     private void Die(){
@@ -150,6 +154,8 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     }
 
     public void StunEnemy(bool stun){
+        stunEffect.SetActive(stun);
+
         if (stun){
             enemyState = enemyState | EnemyState.stunned;
             stunnedTime = enemyData.stunnedTime;

@@ -37,7 +37,25 @@ public class Projectile : MonoBehaviour, IAudioClipObject
         transform.right = rb.velocity.normalized;
     }
 
+    private void UpdateView(Collision2D collision){
+
+        // If projectile is player-owned.
+        if (owningPlayer != null){
+
+            // Ground layermask
+            if (collision.gameObject.layer == 11){
+                GameObject explosion = projectileData.GetExplosionPrefab();
+
+                if (explosion){
+                    Instantiate(explosion, collision.contacts[0].point, Quaternion.identity);
+                }
+            }
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision){
+
+        UpdateView(collision);
 
         if (!PhotonNetwork.IsMasterClient){
             return;

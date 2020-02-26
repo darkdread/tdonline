@@ -1541,6 +1541,8 @@ MonoBehaviour:
     soundEffectString: 
   playerEmoteDuration: 2
   collectableResourceDirectory: Collectable
+  enemyStunPrefab: {fileID: 7508328722661078615, guid: b004dafb693132f48aca0d1a1c0fd918,
+    type: 3}
   enemySpawners:
   - {fileID: 8521665033927008286}
   - {fileID: 8130816915099007518}
@@ -4192,16 +4194,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 917251624}
     m_Modifications:
-    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: m_Name
-      value: RightGate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
     - target: {fileID: 3377848413399621258, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4257,16 +4249,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: ObservedComponents.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: viewIdField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3377848413399621260, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
       propertyPath: m_IsTrigger
@@ -4276,6 +4258,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Size.x
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: m_Name
+      value: RightGate
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: viewIdField
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bea7ce4a7677d4742a15ab76331358a6, type: 3}
@@ -4417,16 +4419,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 917251624}
     m_Modifications:
-    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: m_Name
-      value: LeftGate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
     - target: {fileID: 3377848413399621258, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4487,16 +4479,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: -1
       objectReference: {fileID: 0}
-    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: ObservedComponents.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
-        type: 3}
-      propertyPath: viewIdField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3377848413399621260, guid: bea7ce4a7677d4742a15ab76331358a6,
         type: 3}
       propertyPath: m_IsTrigger
@@ -4506,6 +4488,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Size.x
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: m_Name
+      value: LeftGate
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377848413399621263, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8223993397916868740, guid: bea7ce4a7677d4742a15ab76331358a6,
+        type: 3}
+      propertyPath: viewIdField
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bea7ce4a7677d4742a15ab76331358a6, type: 3}

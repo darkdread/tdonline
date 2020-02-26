@@ -24,6 +24,7 @@ public class TdGameSettings : MonoBehaviour
     
     public string collectableResourceDirectory = "Collectable";
 
+    public GameObject enemyStunPrefab;
     public EnemySpawner[] enemySpawners;
     public string enemyResourceDirectory = "Enemy";
 

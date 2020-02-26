@@ -15,6 +15,8 @@ Turret > TurretExtension > OnLoadExtension > CreatePhotonData > (RPC) OnLoad
 OnInteractAfter > (Set FiringExtensionData to true or false)  
 UpdateTurretExtension > (if FiringExtensionData is true) > AdjustArc > Shoot > (if ReloadableExtension has ammo) > (if Animation exist) > DelayedShootProjectile  
 
+FiringExtension currently has an issue, which is when Player1 shoots and stops using Turret, Player2 can shoot again, because the callback is null for Player2.
+
 `ReloadableExtension`, which inherits from `TurretExtension`, has the following workflow after OnLoad:  
 OnInteract > (If ammo is compatible) > StartProgressBar > LoadObject  
 UpdateTurretExtension > (if ReloadableExtensionData is true) > Update ammo of Turret to match state.
