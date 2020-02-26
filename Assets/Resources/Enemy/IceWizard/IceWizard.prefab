@@ -126,6 +126,7 @@ MonoBehaviour:
   enemyState: 0
   health: 0
   stunnedTime: 0
+  stunEffect: {fileID: 0}
   hitPositionTransform: {fileID: 0}
   targetGateTransform: {fileID: 0}
   photonView: {fileID: 0}

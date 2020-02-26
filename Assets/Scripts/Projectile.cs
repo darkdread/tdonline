@@ -23,12 +23,12 @@ public class Projectile : MonoBehaviour, IAudioClipObject
         Turret turret = PhotonNetwork.GetPhotonView(turretId).GetComponent<Turret>();
         gameObject.SetActive(true);
 
-        owningPlayer = turret.GetComponent<Turret>().GetTurretExtensionData<FiringExtensionData>().playerController;
+        owningPlayer = turret.GetTurretExtensionData<FiringExtensionData>().playerController;
         owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, endData);
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
 
-        TdGameManager.instance.PlaySound(turret.GetComponent<Turret>().photonView.ViewID,
+        TdGameManager.instance.PlaySound(turret.photonView.ViewID,
             "Shoot");
     }
 

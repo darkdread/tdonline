@@ -16,6 +16,7 @@ MonoBehaviour:
   areaOfEffect: 2
   audioClipObject: {fileID: 11400000, guid: 2e1955ed36a2c184ebfd7e382975dfce, type: 2}
   explosionPrefabs:
-  - {fileID: 334406326638205830, guid: 2d4e19ce6a910d3478aaec012418a4ed, type: 3}
+  - {fileID: 7312227307024857645, guid: 9621391128d2c104ab6ea744d84e4520, type: 3}
+  - {fileID: 5204529161656626457, guid: 61c96a10f994377499b308fc04abea5e, type: 3}
   arcAngle: 45
   gravity: 9.81
