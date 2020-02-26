@@ -21,6 +21,8 @@ public class FiringExtensionData : TurretExtensionData {
     }
 
     override public void OnLoadAfter(){
+        turretExtension = turret.GetTurretExtension<FiringExtension>();
+
         animator = turret.GetComponentInChildren<Animator>();
         if (animator){
             shootAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Shoot");
@@ -47,11 +49,5 @@ public class FiringExtensionData : TurretExtensionData {
 
     public void SetProjectileIterations(int iterations){
         arc.iterations = iterations;
-    }
-
-    override public void OnPhotonInstantiate(PhotonMessageInfo info){
-        FiringExtension aimingExtension = (FiringExtension) turretExtension;
-        
-        base.OnPhotonInstantiate(info);
     }
 }

@@ -9,6 +9,7 @@ public class FiringExtension : TurretExtension {
 
     public FiringExtensionData prefab;
     public int arcIterations = 20;
+    public float launchSpeed = 10f;
     public Vector2 minMaxRotation = new Vector2(20f, 60f);
 
     override public void OnLoadExtension(Turret turret){
@@ -19,7 +20,7 @@ public class FiringExtension : TurretExtension {
     }
 
     override public void OnInteractAfter(Turret turret, TdPlayerController playerController){
-        FiringExtensionData data = (FiringExtensionData) turret.GetTurretExtensionData(this);
+        FiringExtensionData data = turret.GetTurretExtensionData<FiringExtensionData>();
 
         if (turret.IsInUse() && turret.controllingPlayer.photonView.ControllerActorNr == PhotonNetwork.LocalPlayer.ActorNumber){
             data.gameObject.SetActive(true);
@@ -33,6 +34,7 @@ public class FiringExtension : TurretExtension {
         Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
 
         PhotonView projectileView = projectile.GetComponent<PhotonView>();
+
         // Add Projectile component.
         TdGameManager.instance.photonView.RPC("AddProjectileComponent", RpcTarget.All, projectileView.ViewID);
 
@@ -58,7 +60,7 @@ public class FiringExtension : TurretExtension {
     }
 
     override public void UpdateTurretExtension(Turret turret){
-        FiringExtensionData data = (FiringExtensionData) turret.GetTurretExtensionData(this);
+        FiringExtensionData data = turret.GetTurretExtensionData<FiringExtensionData>();
 
         if (!data){
             return;
@@ -86,14 +88,15 @@ public class FiringExtension : TurretExtension {
             Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
             
             float distance = direction.magnitude * 10f;
-
-            float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
-            launchSpeed = data.aimRotation / 5f;
+            float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics2D.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
+            launchSpeed = this.launchSpeed;
+            distance = launchSpeed * (2 * (launchSpeed)/Physics2D.gravity.magnitude);
 
             data.SetProjectileIterations(arcIterations);
-            data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
+            data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance,
+                Physics2D.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
-            ReloadableExtensionData reloadableExtensionData = (ReloadableExtensionData) turret.GetTurretExtensionData(typeof(ReloadableExtensionData));
+            ReloadableExtensionData reloadableExtensionData = turret.GetTurretExtensionData<ReloadableExtensionData>();
             if (reloadableExtensionData && data.shootCallback == null){
 
                 // The following code below requires at least an ammunition.

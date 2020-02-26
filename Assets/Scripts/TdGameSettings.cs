@@ -23,6 +23,7 @@ public class TdGameSettings : MonoBehaviour
     public float playerEmoteDuration = 2f;
     
     public string collectableResourceDirectory = "Collectable";
+    public string turretExtensionResourceDirectory = "TurretExtension";
 
     public GameObject enemyStunPrefab;
     public EnemySpawner[] enemySpawners;

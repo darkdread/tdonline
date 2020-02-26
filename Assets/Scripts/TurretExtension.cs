@@ -1,32 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 using Photon.Pun;
-
-public class TurretExtensionData : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
-    [SerializeField]
-    public TurretExtension turretExtension;
-    public Turret turret;
-
-    [PunRPC]
-    public void OnLoad(int viewId){
-        PhotonView turretPhoton = PhotonNetwork.GetPhotonView(viewId);
-        turret = turretPhoton.GetComponent<Turret>();
-        turret.AddTurretExtensionData(this);
-
-        OnLoadAfter();
-    }
-
-    public virtual void OnLoadAfter(){
-
-    }
-
-    public virtual void OnPhotonInstantiate(PhotonMessageInfo info){
-        
-    }
-}
-
 
 public abstract class TurretExtension : ScriptableObject {
     
@@ -63,8 +40,11 @@ public abstract class TurretExtension : ScriptableObject {
         // However, since the method to use the params is private, we can't really access it.
 
         // Workaround: Modify all view ids of instances of objects in scene to a high number.
-        GameObject obj = PhotonNetwork.InstantiateSceneObject(resourceName, Vector3.zero, Quaternion.identity);
+        Debug.Log($"CreatePhotonData {this} {turret}");
+
+        string pathToData = Path.Combine(TdGameManager.gameSettings.turretExtensionResourceDirectory, resourceName);
+        GameObject obj = PhotonNetwork.InstantiateSceneObject(pathToData, Vector3.zero, Quaternion.identity);
         PhotonView photonView = obj.GetComponent<PhotonView>();
-        photonView.RPC("OnLoad", RpcTarget.AllBufferedViaServer, turret.photonView.ViewID);
+        photonView.RPC("OnLoad", RpcTarget.AllBuffered, turret.photonView.ViewID);
     }
 }

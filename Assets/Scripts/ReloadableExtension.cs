@@ -18,7 +18,6 @@ public class ReloadableExtension : TurretExtension {
 
         if (PhotonNetwork.IsMasterClient){
             CreatePhotonData(turret, uiPrefab.name);
-            Debug.Log("CreatePhotonDataMaster");
         }
     }
     
@@ -27,7 +26,7 @@ public class ReloadableExtension : TurretExtension {
     }
 
     private void UpdateUi(Turret turret){
-        ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
+        ReloadableExtensionData data = turret.GetTurretExtensionData<ReloadableExtensionData>();
 
         if (!data){
             return;
@@ -68,7 +67,7 @@ public class ReloadableExtension : TurretExtension {
             return;
         }
 
-        ReloadableExtensionData data = turret.GetTurretExtensionData(this) as ReloadableExtensionData;
+        ReloadableExtensionData data = turret.GetTurretExtensionData<ReloadableExtensionData>();
         if (data.ammunition.Count >= data.maxAmmunition){
             Debug.Log("Max ammunition reached!");
             playerController.SetInteractingDelayFrameInstant(true, false, 1);

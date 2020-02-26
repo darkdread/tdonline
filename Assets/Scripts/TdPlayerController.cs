@@ -298,7 +298,7 @@ public class TdPlayerController : MonoBehaviour
         float horizontalAxis = Input.GetAxisRaw("Horizontal");
         float verticalAxis = Input.GetAxisRaw("Vertical");
 
-        Vector2 velocityDelta = new Vector3(horizontalAxis, verticalAxis);
+        Vector2 velocityDelta = new Vector3(horizontalAxis, verticalAxis) * moveSpeed;
 
         if ((playerState & PlayerState.Climbing) != PlayerState.Climbing){
             
@@ -320,8 +320,7 @@ public class TdPlayerController : MonoBehaviour
                 }
             }
 
-            velocityDelta.y = 0f;
-
+            velocityDelta.y = playerRigidbody.velocity.y;
         } else {
             velocityDelta.x = 0f;
 
@@ -335,11 +334,13 @@ public class TdPlayerController : MonoBehaviour
             // To prevent player from clipping through bottom of ladder.
             if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.2f){
                 playerClimbingLadder = null;
+                velocityDelta.y = 0f;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
             }
         }
 
-        playerRigidbody.velocity = velocityDelta * moveSpeed;
+        playerRigidbody.velocity = velocityDelta;
+        // print(playerRigidbody.velocity);
 
         int playerFacingDir = System.Math.Sign(velocityDelta.x);
         if (playerFacingDir != 0){

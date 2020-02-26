@@ -96,4 +96,34 @@ public static class ProjectileMath
 
         return points;
     }
+
+    /// <summary>
+    /// Samples a series of points along a projectile arc
+    /// </summary>
+    /// <param name="iterations">Number of points to sample</param>
+    /// <param name="speed">Initial speed of the projectile</param>
+    /// <param name="gravity">Downward acceleration in m/s^2</param>
+    /// <param name="angle">Initial launch angle in radians</param>
+    /// <returns>Array of sampled points with the length of the supplied iterations</returns>
+    public static Vector2[] ProjectileArcPoints(int iterations, float speed, float gravity, float angle)
+    {
+        float iterationSize = iterations;
+
+        float radians = angle;
+
+        Vector2[] points = new Vector2[iterations + 1];
+
+        for (int i = 0; i <= iterations; i++)
+        {
+            float x = i * speed;
+            float t = x / (speed * Mathf.Cos(radians));
+            float y = -0.5f * gravity * (t * t) + speed * Mathf.Sin(radians) * t;
+
+            Vector2 p = new Vector2(x, y);
+
+            points[i] = p;
+        }
+
+        return points;
+    }
 }

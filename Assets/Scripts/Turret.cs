@@ -41,17 +41,13 @@ public class Turret : Interactable {
         turretExtensionDatas.Add(turretExtensionData);
     }
 
-    public TurretExtensionData GetTurretExtensionData(System.Type turretExtensionType){
-        foreach(TurretExtensionData data in turretExtensionDatas){
-            if (data.GetType() == turretExtensionType){
-                return data;
-            }
+    public T GetTurretExtensionData<T>(){
+        // Turret extension datas have not been initialized yet.
+        // We have to wait for OnLoadExtension -> CreatePhotonData.
+        if (turretExtensionDatas.Count == 0){
+            throw new System.Exception("Turret extension datas have not been initialized yet.");
         }
 
-        return null;
-    }
-
-    public T GetTurretExtensionData<T>(){
         foreach(TurretExtensionData data in turretExtensionDatas){
             if (data.GetType() == typeof(T)){
                 return (T)(object) data;
@@ -61,14 +57,14 @@ public class Turret : Interactable {
         throw new KeyNotFoundException("Type not found.");
     }
 
-    public TurretExtensionData GetTurretExtensionData(TurretExtension turretExtension){
-        // Turret extension datas have not been initialized yet.
-        // We have to wait for OnLoadExtension -> CreatePhotonData.
-        if (turretExtensionDatas.Count == 0){
-            return null;
+    public T GetTurretExtension<T>(){
+        foreach(TurretExtension turretExtension in turretExtensions){
+            if (turretExtension.GetType() == typeof(T)){
+                return (T)(object) turretExtension;
+            }
         }
 
-        return turretExtensionDatas[turretExtensions.IndexOf(turretExtension)];
+        throw new KeyNotFoundException("Type not found.");
     }
 
     private IEnumerator BlockTurretExtension(System.Type turretExtensionType, float seconds){

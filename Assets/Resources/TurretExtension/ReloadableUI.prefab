@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad9e98945d42f5040a3026b737370927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretExtension: {fileID: 11400000, guid: ad3080d6914ec0d40b4d72409e21ac4e, type: 2}
+  turretExtension: {fileID: 0}
   turret: {fileID: 0}
   ammunition: []
   itemSlots: []

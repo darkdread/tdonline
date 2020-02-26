@@ -6,10 +6,16 @@ Players have `ProgressBar`, which does something once the bar is filled up. When
 
 ## Turrets
 
-A Turret contains `TurretExtension`, which are scripts that contains `TurretExtensionData`, which has `PhotonView`.
+A Turret contains `TurretExtension`, which are scripts that contains `TurretExtensionData`, which has `PhotonView`.  
+`TurretExtension` is tied with `TurretExtensionData`. A new instance of `TurretExtensionData` is created on a per-turret basis.
 
 When a Turret is created, it runs the following:  
-Turret > TurretExtension > OnLoadExtension > CreatePhotonData > (RPC) OnLoad
+Awake > TurretExtension > OnLoadExtension > CreatePhotonData > (RPC) OnLoad > OnLoadAfter
+
+Each implementation of `TurretExtensionData` **NEEDS** to override OnLoadAfter, and have its `turretExtension` field assigned.  
+Certain implementation of extensions require pre-initialized variables, such as `ActivateTrapExtension` requiring `ActivateTrapExtensionInit` on the Turret before Creating Photon Data.
+
+## Extensions implemented
 
 `FiringExtension`, which inherits from `TurretExtension`, has the following workflow after OnLoad:  
 OnInteractAfter > (Set FiringExtensionData to true or false)  
@@ -20,6 +26,10 @@ FiringExtension currently has an issue, which is when Player1 shoots and stops u
 `ReloadableExtension`, which inherits from `TurretExtension`, has the following workflow after OnLoad:  
 OnInteract > (If ammo is compatible) > StartProgressBar > LoadObject  
 UpdateTurretExtension > (if ReloadableExtensionData is true) > Update ammo of Turret to match state.
+
+`ActivateTrapExtension`, which inherits from `TurretExtension`, has the following workflow after OnLoad:  
+<!-- OnInteract > (If ammo is compatible) > StartProgressBar > LoadObject   -->
+UpdateTurretExtension > Update view
 
 ## Players
 

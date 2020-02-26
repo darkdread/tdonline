@@ -47,18 +47,17 @@ MonoBehaviour:
   - PlaySoundRpc
   - RemoveAmmunition
   - RespawnSpaceship
-  - SetAsProjectile
   - SetHealthRpc
   - SetTargetRpc
   - SetTurretState
   - SetTurretUser
   - ShootProjectile
+  - ShootProjectileAnimationRpc
   - ShootProjectileRpc
   - ShowEmoteRpc
   - ShowGameObject
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
-  - ShootProjectileAnimationRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

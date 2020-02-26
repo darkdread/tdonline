@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8861f65b452e3b4fa9506337204809f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turretExtension: {fileID: 11400000, guid: d70a048fba576084ba792dfbeb5025eb, type: 2}
+  turretExtension: {fileID: 0}
   turret: {fileID: 0}
   arc: {fileID: 0}
   aimRotation: 0

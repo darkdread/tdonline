@@ -41,7 +41,9 @@ public class ReloadableExtensionData : TurretExtensionData {
         return lastAmmunitionLoaded;
     }
 
-    override public void OnPhotonInstantiate(PhotonMessageInfo info){
+    override public void OnLoadAfter(){
+        turretExtension = turret.GetTurretExtension<ReloadableExtension>();
+
         ReloadableExtension reloadableExtension = (ReloadableExtension) turretExtension;
         this.transform.SetParent(TdGameManager.instance.gameUiCanvas);
 
@@ -58,7 +60,5 @@ public class ReloadableExtensionData : TurretExtensionData {
         // After investigation, it's because of the gameCanvas parent scale.
         // Although it still doesn't make sense of why the master client has a normal scale.
         transform.localScale = Vector3.one;
-
-        base.OnPhotonInstantiate(info);
     }
 }
