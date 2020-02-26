@@ -16,7 +16,7 @@ public class ReloadableExtensionData : TurretExtensionData {
         // Moves the carried object somewhere else so that when the
         // Projectile is fired, the distance is > 1, and therefore
         // teleports in front of the catapult.
-        view.gameObject.transform.position = Vector3.zero;
+        // view.gameObject.transform.position = Vector3.zero;
 
         view.gameObject.SetActive(false);
         ammunition.Add(view.gameObject);
@@ -26,7 +26,7 @@ public class ReloadableExtensionData : TurretExtensionData {
     public void RemoveAmmunition(int viewId){
         PhotonView view = PhotonNetwork.GetPhotonView(viewId);
         
-        view.gameObject.SetActive(true);
+        // view.gameObject.SetActive(true);
         ammunition.Remove(view.gameObject);
     }
 

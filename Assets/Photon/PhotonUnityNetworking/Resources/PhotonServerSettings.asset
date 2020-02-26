@@ -44,6 +44,7 @@ MonoBehaviour:
   - OnStopUsingTurret
   - OnUsingTurret
   - PauseGameRpc
+  - PlaySoundRpc
   - RemoveAmmunition
   - RespawnSpaceship
   - SetAsProjectile
@@ -58,6 +59,6 @@ MonoBehaviour:
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
-  - PlaySoundRpc
+  - ShootProjectileAnimationRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

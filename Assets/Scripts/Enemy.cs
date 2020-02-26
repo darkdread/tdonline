@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         deathCooldown = Mathf.Infinity;
         enemyList.Add(this);
 
-        attackAnimationCompleteTime = GetAnimationDuration("Attack");
+        attackAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Attack");
     }
 
     private void Die(){
@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
         StopMovement(true);
         // 1f for death sound to finish playing.
-        deathCooldown = GetAnimationDuration("Death") + 1f;
+        deathCooldown = MyUtilityScript.GetAnimationDuration(animator, "Death") + 1f;
         animator.SetTrigger("Death");
         animator.speed = 1f;
 
@@ -161,21 +161,6 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
     private bool IsNearObjective(float distance){
         return Vector3.Distance(transform.position, hitPositionTransform.position) < distance;
-    }
-
-    private float GetAnimationDuration(string clipName){
-        AnimationClip[] animationClips = animator.runtimeAnimatorController.animationClips;
-        
-        foreach(AnimationClip animationClip in animationClips){
-
-            // We have to search here because the clip names have its
-            // prefix of the game object.
-            if (animationClip.name.Contains(clipName)){
-                return animationClip.length;
-            }
-        }
-
-        return 0;
     }
 
     public void StopMovement(bool stop){

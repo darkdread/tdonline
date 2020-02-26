@@ -6,19 +6,40 @@ using Photon.Pun;
 
 public class FiringExtensionData : TurretExtensionData {
 
+    [Header("Runtime Variables")]
     public ProjectileArc arc;
     public int aimRotation = 0;
+    public float shootAnimationCompleteTime = 0f;
+    public float shootAnimationTime = 0f;
+    public Animator animator;
+    public System.Action shootCallback;
 
     private void Awake(){
         arc = GetComponent<ProjectileArc>();
         gameObject.SetActive(false);
     }
 
+    override public void OnLoadAfter(){
+        animator = turret.GetComponentInChildren<Animator>();
+        if (animator){
+            shootAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Shoot");
+        }
+    }
+
     [PunRPC]
-    public void SetAsProjectile(int viewId){
-        PhotonView view = PhotonNetwork.GetPhotonView(viewId);
-        
-        view.gameObject.AddComponent(typeof(Projectile));
+    private void ShootProjectileAnimationRpc(){
+        animator.SetTrigger("Shoot");
+    }
+
+    public bool ShootProjectileAnimation(System.Action callback){
+        if (animator){
+            shootAnimationTime = shootAnimationCompleteTime;
+            shootCallback = callback;
+            photonView.RPC("ShootProjectileAnimationRpc", RpcTarget.All);
+            return true;
+        }
+
+        return false;
     }
 
     public void SetProjectileIterations(int iterations){

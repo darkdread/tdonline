@@ -15,5 +15,5 @@ MonoBehaviour:
   damage: 1
   areaOfEffect: 0
   audioClipObject: {fileID: 11400000, guid: a9bec2409602a9944ac86e05c20466a2, type: 2}
-  arcAngle: 1
-  gravity: 1
+  arcAngle: 10
+  gravity: 9.81

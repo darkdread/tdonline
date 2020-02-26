@@ -32,11 +32,23 @@ public class FiringExtension : TurretExtension {
         Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
         Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
 
+        PhotonView projectileView = projectile.GetComponent<PhotonView>();
         // Add Projectile component.
-        TdGameManager.instance.photonView.RPC("AddProjectileComponent", RpcTarget.All, projectile.GetComponent<PhotonView>().ViewID);
+        TdGameManager.instance.photonView.RPC("AddProjectileComponent", RpcTarget.All, projectileView.ViewID);
 
-        // Shoot projectile.
-        projectile.GetComponent<PhotonView>().RPC("ShootProjectile", RpcTarget.All, turret.photonView.ViewID, angleVec, speed);
+        System.Action shootProjectile = delegate{
+            // Shoot projectile.
+            projectile.GetComponent<PhotonView>().RPC("ShootProjectile", RpcTarget.All, turret.photonView.ViewID, angleVec, speed);
+        };
+
+        // Animation for turret to shoot.
+        // If false, means turret has no animation.
+        if (!data.ShootProjectileAnimation(shootProjectile)){
+            
+            Debug.Log("Pass away is good.");
+            // Immediately shoot projectile if animation is not found.
+            shootProjectile();
+        }
     }
 
     override public void UpdateTurretExtension(Turret turret){
@@ -47,6 +59,16 @@ public class FiringExtension : TurretExtension {
         }
 
         if (data.gameObject.activeSelf){
+
+            // Handles animation callback.
+            if (data.shootCallback != null){
+                data.shootAnimationTime -= Time.deltaTime;
+                if (data.shootAnimationTime <= 0){
+                    data.shootCallback.Invoke();
+                    data.shootCallback = null;
+                }
+            }
+
             int yAxis = (int) Input.GetAxisRaw("Vertical");
 
             // Set rotation of aim.

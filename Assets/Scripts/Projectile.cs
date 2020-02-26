@@ -21,6 +21,7 @@ public class Projectile : MonoBehaviour, IAudioClipObject
     // For turrets
     private void ShootProjectile(int turretId, Vector3 angleVec, float speed){
         GameObject turret = PhotonNetwork.GetPhotonView(turretId).gameObject;
+        gameObject.SetActive(true);
 
         owningPlayer = turret.GetComponent<Turret>().controllingPlayer;
         owningPlayer.playerEndGameData.UpdateCount(EndGameEnum.Shot, endData);

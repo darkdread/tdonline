@@ -14,6 +14,12 @@ public class TurretExtensionData : MonoBehaviourPunCallbacks, IPunInstantiateMag
         PhotonView turretPhoton = PhotonNetwork.GetPhotonView(viewId);
         turret = turretPhoton.GetComponent<Turret>();
         turret.AddTurretExtensionData(this);
+
+        OnLoadAfter();
+    }
+
+    public virtual void OnLoadAfter(){
+
     }
 
     public virtual void OnPhotonInstantiate(PhotonMessageInfo info){

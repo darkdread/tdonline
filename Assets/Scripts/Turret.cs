@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 
 public enum TurretState {
-    InUse = 1
+    InUse = 1,
 }
 
 public class Turret : Interactable {

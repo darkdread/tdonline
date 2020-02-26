@@ -72,6 +72,9 @@ MonoBehaviour:
   turret: {fileID: 0}
   arc: {fileID: 0}
   aimRotation: 0
+  shootAnimationCompleteTime: 0
+  shootAnimationTime: 0
+  animator: {fileID: 0}
 --- !u!114 &-2089038497327239277
 MonoBehaviour:
   m_ObjectHideFlags: 0

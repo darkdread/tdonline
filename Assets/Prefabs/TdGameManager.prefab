@@ -1517,7 +1517,7 @@ MonoBehaviour:
   - {r: 0, g: 1, b: 0, a: 1}
   playerUiPrefab: {fileID: 5943189537102616949, guid: b7f40911268ee4047b65a4168f9eea2d,
     type: 3}
-  progressInstant: 0
+  progressInstant: 1
   progressReloadTime: 1
   progressCollectTime: 2
   playerEmoteButtonPrefab: {fileID: 3149512381127390244, guid: 6187e39da5ff1364da180a619b95f181,
@@ -3863,10 +3863,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 612578898}
     m_Modifications:
-    - target: {fileID: -4790755754559656197, guid: 3ac89bd03be10274d9744ec2f95b5132,
+    - target: {fileID: 6341555540019438333, guid: 3ac89bd03be10274d9744ec2f95b5132,
         type: 3}
-      propertyPath: viewIdField
-      value: 0
+      propertyPath: m_Name
+      value: ReloadableUI
       objectReference: {fileID: 0}
     - target: {fileID: 6341555540019438322, guid: 3ac89bd03be10274d9744ec2f95b5132,
         type: 3}
@@ -3973,10 +3973,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 6341555540019438333, guid: 3ac89bd03be10274d9744ec2f95b5132,
+    - target: {fileID: -4790755754559656197, guid: 3ac89bd03be10274d9744ec2f95b5132,
         type: 3}
-      propertyPath: m_Name
-      value: ReloadableUI
+      propertyPath: viewIdField
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac89bd03be10274d9744ec2f95b5132, type: 3}

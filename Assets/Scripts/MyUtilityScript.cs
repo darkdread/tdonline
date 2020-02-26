@@ -20,4 +20,19 @@ public static class MyUtilityScript
 
         return true;
     }
+
+    public static float GetAnimationDuration(Animator animator, string clipName){
+        AnimationClip[] animationClips = animator.runtimeAnimatorController.animationClips;
+        
+        foreach(AnimationClip animationClip in animationClips){
+
+            // We have to search here because the clip names have its
+            // prefix of the game object.
+            if (animationClip.name.Contains(clipName)){
+                return animationClip.length;
+            }
+        }
+
+        return 0;
+    }
 }
