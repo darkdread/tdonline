@@ -94,7 +94,7 @@ public class FiringExtension : TurretExtension {
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance, Physics.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
             ReloadableExtensionData reloadableExtensionData = (ReloadableExtensionData) turret.GetTurretExtensionData(typeof(ReloadableExtensionData));
-            if (reloadableExtensionData){
+            if (reloadableExtensionData && data.shootCallback == null){
 
                 // The following code below requires at least an ammunition.
                 if (reloadableExtensionData.ammunition.Count <= 0){
