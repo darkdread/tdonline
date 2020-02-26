@@ -16,7 +16,8 @@ MonoBehaviour:
   health: 2
   audioClipObject: {fileID: 11400000, guid: f4569818c34580b4b89f5e384a0e598f, type: 2}
   attackTime: 2
-  movespeed: 0.01
+  movespeed: 1
   stunnedTime: 1
+  attackRange: 0.9
   damage: 1
   projectile: {fileID: 0}

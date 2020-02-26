@@ -30,7 +30,6 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     public float stunnedTime;
     public GameObject stunEffect;
 
-    public Transform hitPositionTransform;
     public Transform targetGateTransform;
     public PhotonView photonView;
 
@@ -92,19 +91,16 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         projectile.rb.velocity = angleVec * speed;
     }
 
-    public void ShootProjectile(Projectile projectile, Transform target){
+    public void ShootProjectile(Projectile projectile){
         photonView.RPC("ShootProjectileRpc", RpcTarget.MasterClient, projectile.name);
     }
 
     [PunRPC]
-    private void SetTargetRpc(int hitTransformId, int gateTransformId){
-        Transform target = PhotonNetwork.GetPhotonView(hitTransformId).transform;
-        hitPositionTransform = target;
-
+    private void SetTargetRpc(int gateTransformId){
         Transform gate = PhotonNetwork.GetPhotonView(gateTransformId).transform;
         targetGateTransform = gate;
 
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (gate.position - transform.position).normalized;
         transform.localScale = new Vector3(direction.x * transform.localScale.x,
             transform.localScale.y, transform.localScale.z);
 
@@ -115,9 +111,8 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         rb.velocity = TdGameManager.GetDirectionOfTransform2D(transform) * enemyData.movespeed;
     }
 
-    public void SetTarget(Transform hitTransform, Transform gateTransform){
-        photonView.RPC("SetTargetRpc", RpcTarget.All, hitTransform.GetComponent<PhotonView>().ViewID,
-            gateTransform.GetComponent<PhotonView>().ViewID);
+    public void SetTarget(Transform gateTransform){
+        photonView.RPC("SetTargetRpc", RpcTarget.All, gateTransform.GetComponent<PhotonView>().ViewID);
     }
 
     [PunRPC]
@@ -166,7 +161,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     }
 
     private bool IsNearObjective(float distance){
-        return Vector3.Distance(transform.position, hitPositionTransform.position) < distance;
+        return Vector3.Distance(transform.position, targetGateTransform.position) < distance;
     }
 
     public void StopMovement(bool stop){
@@ -223,7 +218,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
             return;
         }
 
-        if (IsNearObjective(0.1f)){
+        if (IsNearObjective(enemyData.attackRange)){
 
             // Just reached objective.
             if (rb.isKinematic){
@@ -250,7 +245,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
                     TdGameManager.castle.SetHealth(TdGameManager.castle.health - enemyData.damage);
                 } else {
                     // Spawn projectile
-                    ShootProjectile(enemyData.projectile, hitPositionTransform);
+                    ShootProjectile(enemyData.projectile);
                 }
             }
 

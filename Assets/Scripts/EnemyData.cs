@@ -9,6 +9,7 @@ public class EnemyData: ScriptableObject {
     public float attackTime = 1f;
     public float movespeed = 1f;
     public float stunnedTime = 1f;
+    public float attackRange = 0.9f;
 
     [Header("If ranged, damage derives from projectile.")]
     public int damage = 1;

@@ -49,9 +49,11 @@ public struct WaveSpawnInfo {
 public class EnemySpawner : MonoBehaviour {
 
     public static int spawnCount = 0;
+    public Transform gateTransform;
 
-    public EnemyTypeObjective[] enemyTypeObjectives;
     public Wave[] waves;
+
+    [Header("Runtime Variables")]
     public int spawnerId = 0;
     public int currentWaveId = 0;
     public int currentSpawnId = 0;
@@ -68,12 +70,7 @@ public class EnemySpawner : MonoBehaviour {
             transform.position, Quaternion.identity);
         Enemy enemy = go.GetComponent<Enemy>();
 
-        foreach(EnemyTypeObjective eto in enemyTypeObjectives){
-            if (enemy.enemyType == eto.enemyType){
-                enemy.SetTarget(eto.objective, eto.gate);
-                break;
-            }
-        }
+        enemy.SetTarget(gateTransform);
     }
 
     public void LoadWaveProgress(WaveSpawnInfo info){

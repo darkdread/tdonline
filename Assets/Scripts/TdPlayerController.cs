@@ -59,6 +59,7 @@ public class TdPlayerController : MonoBehaviour
     public System.Action progressCallback;
 
     public EndGameData playerEndGameData;
+    private Animator animator;
 
     public float moveSpeed = 1f;
 
@@ -66,6 +67,7 @@ public class TdPlayerController : MonoBehaviour
         photonView = GetComponent<PhotonView>();
         playerCollider = GetComponent<Collider2D>();
         playerRigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponentInChildren<Animator>();
 
         playerUi = Instantiate<TdPlayerUi>(TdGameManager.gameSettings.playerUiPrefab,
                             TdGameManager.instance.gameUiCanvas);
@@ -207,6 +209,10 @@ public class TdPlayerController : MonoBehaviour
         return (playerState & PlayerState.IsDoingSomething) != 0;
     }
 
+    public bool IsClimbing(){
+        return (playerState & PlayerState.Climbing) != 0;
+    }
+
     public bool IsCarryingObject(){
         return (playerState & PlayerState.CarryingObject) != 0;
     }
@@ -240,6 +246,9 @@ public class TdPlayerController : MonoBehaviour
         if (IsCarryingObject()) {
             playerCarriedObject.transform.position = playerCarryTransform.transform.position;
         }
+
+        animator.SetFloat("speed", Mathf.Abs(playerRigidbody.velocity.x));
+        animator.SetBool("isClimbing", IsClimbing());
     }
 
     public void CompleteProgressBar(){
@@ -324,7 +333,7 @@ public class TdPlayerController : MonoBehaviour
             // with offset.
 
             // To prevent player from clipping through bottom of ladder.
-            if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y){
+            if (!IsCollidingLadder() || verticalAxis < 0 && entityBounds.min.y < ladderBounds.min.y + 0.2f){
                 playerClimbingLadder = null;
                 photonView.RPC("OnStopClimb", RpcTarget.All);
             }

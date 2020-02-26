@@ -18,6 +18,7 @@ MonoBehaviour:
   attackTime: 0.2
   movespeed: 1
   stunnedTime: 1
+  attackRange: 4
   damage: 1
   projectile: {fileID: 2546729037515863492, guid: e9657dd6485ad2745884a267db525c7b,
     type: 3}
