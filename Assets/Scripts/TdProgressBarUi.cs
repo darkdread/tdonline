@@ -73,11 +73,8 @@ public class TdProgressBarUi : MonoBehaviour
     }
 
     public void CompleteProgressBar(){
-        if (progressCallback != null){
-            // print(progressCallback.Method.Name);
-            progressCallback.Invoke();
-            progressCallback = null;
-        }
+        // print(progressCallback.Method.Name);
+        progressCallback.Invoke();
 
         StopProgressBar();
     }
@@ -101,7 +98,10 @@ public class TdProgressBarUi : MonoBehaviour
             progressCurrent += Time.deltaTime;
             SetProgressBar(progressCurrent);
 
-            if (_referencedPhotonView.IsMine){
+            // We cannot use _referencedPhotonView.IsMine here because the referencedPhotonView may not be owned by the player.
+            // For example, the lever is owned by the MasterClient.
+            // To know who is the caller, check for progressCallback.
+            if (progressCallback != null){
                 if (progressCurrent > progressMax){
                     CompleteProgressBar();
                 }
@@ -109,7 +109,5 @@ public class TdProgressBarUi : MonoBehaviour
         }
         
         transform.position = Camera.main.WorldToScreenPoint(_referencedPhotonView.transform.position);
-        // rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x - (rectTransform.rect.width / 2),
-        //     rectTransform.anchoredPosition.y);
     }
 }

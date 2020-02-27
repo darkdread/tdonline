@@ -67,6 +67,10 @@ public class ActivateTrapExtension : TurretExtension {
         if (!data){
             return;
         }
+
+        if (!playerController.photonView.IsMine){
+            return;
+        }
         
         // Show which traps the turret controls.
         if (!data.progressBarUi.IsRunning()){
@@ -80,6 +84,10 @@ public class ActivateTrapExtension : TurretExtension {
         ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
 
         if (!data){
+            return;
+        }
+
+        if (!playerController.photonView.IsMine){
             return;
         }
 
