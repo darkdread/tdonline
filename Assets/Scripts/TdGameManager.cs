@@ -292,7 +292,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         int waveFade = 5000;
         
         foreach(EnemySpawner spawner in gameSettings.enemySpawners){
-            if (spawner.currentWaveId + 1 >= spawner.waves.Length){
+            if (spawner.currentWaveId >= spawner.waves.Length){
                 print("Reset wave");
                 spawner.currentWaveId = 0;
             }
