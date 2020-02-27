@@ -43,8 +43,10 @@ OnInteract > (If ammo is compatible) > StartProgressBar > LoadObject
 UpdateTurretExtension > (if ReloadableExtensionData is true) > Update ammo of Turret to match state.
 
 `ActivateTrapExtension`, which inherits from `TurretExtension`, has the following workflow after OnLoad:  
-<!-- OnInteract > (If ammo is compatible) > StartProgressBar > LoadObject   -->
-UpdateTurretExtension > Update view
+OnInteract > (If trap is reloaded) > StartProgressBar(Reload) > Trigger trap > RPC hide trap & spawn projectile boulder  
+UpdateTurretExtension > Update ProgressBar position  
+OnEnter > ShowOutline  
+OnExit > HideOutline
 
 ## Players
 

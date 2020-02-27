@@ -34,4 +34,8 @@ public static class MyUtilityScript
 
         return 0;
     }
+
+    public static float ScaleValue(float value, Vector2 oldMinMax, Vector2 newMinMax){
+        return ((value - oldMinMax.x) / (oldMinMax.y - oldMinMax.x) ) * (newMinMax.y - newMinMax.x) + newMinMax.x;
+    }
 }

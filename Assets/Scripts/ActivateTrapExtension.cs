@@ -9,6 +9,7 @@ public class ActivateTrapExtension : TurretExtension {
 
     public ActivateTrapExtensionData prefab;
     public float trapReloadTime = 20f;
+    public Color outlineColor = Color.blue;
 
     override public void OnLoadExtension(Turret turret){
 
@@ -60,6 +61,34 @@ public class ActivateTrapExtension : TurretExtension {
         });
     }
 
+    override public void OnEnterInteractRadius(Turret turret, TdPlayerController playerController){
+        ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
+
+        if (!data){
+            return;
+        }
+        
+        // Show which traps the turret controls.
+        if (!data.progressBarUi.IsRunning()){
+            foreach(Trap trap in data.activateTrapExtensionInit.traps){
+                trap.ShowOutline(outlineColor);
+            }
+        }
+    }
+
+    override public void OnExitInteractRadius(Turret turret, TdPlayerController playerController){
+        ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
+
+        if (!data){
+            return;
+        }
+
+        // Reset trap color.
+        foreach(Trap trap in data.activateTrapExtensionInit.traps){
+            trap.ShowOutline(Color.white);
+        }
+    }
+
     override public void UpdateTurretExtension(Turret turret){
         ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
 
@@ -67,6 +96,7 @@ public class ActivateTrapExtension : TurretExtension {
             return;
         }
 
+        // Data consist of progress bar position, therefore we have to always center it.
         data.transform.position = turret.transform.position;
     }
 

@@ -129,6 +129,14 @@ public class Turret : Interactable {
     }
 
     override protected void OnEnterInteractRadius(TdPlayerController playerController) {
+        foreach(TurretExtension turretExtension in turretExtensions){
+            if (IsExtensionBlocked(turretExtension.GetType())){
+                continue;
+            }
+
+            turretExtension.OnEnterInteractRadius(this, playerController);
+        }
+
         // Show interact button if not in use.
         if ((turretState & TurretState.InUse) != TurretState.InUse) {
             base.OnEnterInteractRadius(playerController);
@@ -136,6 +144,14 @@ public class Turret : Interactable {
     }
 
     override protected void OnExitInteractRadius(TdPlayerController playerController) {
+        foreach(TurretExtension turretExtension in turretExtensions){
+            if (IsExtensionBlocked(turretExtension.GetType())){
+                continue;
+            }
+
+            turretExtension.OnExitInteractRadius(this, playerController);
+        }
+
         base.OnExitInteractRadius(playerController);
     }
 

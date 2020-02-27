@@ -28,6 +28,20 @@ public abstract class TurretExtension : ScriptableObject {
     public virtual void OnInteractAfter(Turret turret, TdPlayerController playerController){}
 
     /// <summary>
+    /// Called when player enters interact radius.
+    /// </summary>
+    /// <param name="turret"></param>
+    /// /// <param name="playerController"></param>
+    public virtual void OnEnterInteractRadius(Turret turret, TdPlayerController playerController){}
+
+    /// <summary>
+    /// Called when player exits interact radius.
+    /// </summary>
+    /// <param name="turret"></param>
+    /// /// <param name="playerController"></param>
+    public virtual void OnExitInteractRadius(Turret turret, TdPlayerController playerController){}
+
+    /// <summary>
     /// Called on Update.
     /// </summary>
     /// <param name="turret"></param>

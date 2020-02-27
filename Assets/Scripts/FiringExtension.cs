@@ -10,6 +10,8 @@ public class FiringExtension : TurretExtension {
     public FiringExtensionData prefab;
     public int arcIterations = 20;
     public float distanceOfArc = 20f;
+
+    public float maxRotationMultiplier = 1f;
     public float launchSpeed = 0.2f;
     public Vector2 minMaxRotation = new Vector2(20f, 60f);
 
@@ -87,7 +89,8 @@ public class FiringExtension : TurretExtension {
             
             float distance = direction.magnitude * this.distanceOfArc;
             float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics2D.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
-            launchSpeed = data.aimRotation * this.launchSpeed;
+            float extraSpeed = MyUtilityScript.ScaleValue(data.aimRotation, minMaxRotation, Vector2.up) * maxRotationMultiplier;
+            launchSpeed = data.aimRotation * this.launchSpeed + extraSpeed;
 
             data.SetProjectileIterations(arcIterations);
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance,
