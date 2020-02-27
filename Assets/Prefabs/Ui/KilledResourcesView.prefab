@@ -419,7 +419,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2728977477723652752}
+  - {fileID: 5449220612287772285}
   m_Father: {fileID: 8715778148314888031}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -748,6 +748,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageWithText
       objectReference: {fileID: 0}
+    - target: {fileID: 1237585230576925093, guid: 597d21f892186894aa7d19641d72dc09,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -806,12 +811,12 @@ PrefabInstance:
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
@@ -831,7 +836,7 @@ PrefabInstance:
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
@@ -841,7 +846,7 @@ PrefabInstance:
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
         type: 3}
@@ -855,7 +860,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 597d21f892186894aa7d19641d72dc09, type: 3}
---- !u!224 &2728977477723652752 stripped
+--- !u!224 &5449220612287772285 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7944565007346611296, guid: 597d21f892186894aa7d19641d72dc09,
     type: 3}

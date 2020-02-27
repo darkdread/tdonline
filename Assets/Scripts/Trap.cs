@@ -27,6 +27,7 @@ public class Trap : MonoBehaviour
         GameObject go = PhotonNetwork.Instantiate(Path.Combine(TdGameManager.gameSettings.trapResourceDirectory, resourceName, resourceName)
             , transform.position, transform.rotation);
         // TdGameManager.instance.AddProjectileComponent(go.GetComponent<PhotonView>().ViewID);
+        playerController.playerEndGameData.UpdateCount(EndGameEnum.Shot, go.GetComponent<Projectile>().endData);
         TdGameManager.instance.SetOwningPlayer(playerController.GetComponent<PhotonView>().ViewID, go.GetComponent<PhotonView>().ViewID);
     }
 }
