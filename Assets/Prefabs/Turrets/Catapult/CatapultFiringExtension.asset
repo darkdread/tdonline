@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: -7707825247899848389, guid: 2599a9260dca4814ca05a9440f369f30, type: 3}
   arcIterations: 20
-  launchSpeed: 6.44
+  distanceOfArc: 20
+  launchSpeed: 0.2
   minMaxRotation: {x: 30, y: 60}

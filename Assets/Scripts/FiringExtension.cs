@@ -9,7 +9,8 @@ public class FiringExtension : TurretExtension {
 
     public FiringExtensionData prefab;
     public int arcIterations = 20;
-    public float launchSpeed = 10f;
+    public float distanceOfArc = 20f;
+    public float launchSpeed = 0.2f;
     public Vector2 minMaxRotation = new Vector2(20f, 60f);
 
     override public void OnLoadExtension(Turret turret){
@@ -29,10 +30,7 @@ public class FiringExtension : TurretExtension {
         }
     }
 
-    private void ShootProjectile(FiringExtensionData data, Turret turret, GameObject projectile, float speed){
-        Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
-        Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
-
+    private void ShootProjectile(FiringExtensionData data, Turret turret, GameObject projectile, Vector3 angleVec, float speed){
         PhotonView projectileView = projectile.GetComponent<PhotonView>();
 
         // Add Projectile component.
@@ -83,14 +81,13 @@ public class FiringExtension : TurretExtension {
             data.aimRotation += yAxis;
             data.aimRotation = Mathf.Clamp(data.aimRotation, (int) minMaxRotation.x, (int) minMaxRotation.y);
 
-            // Calculate direction and distance.
+            // Calculate direction.
             Vector3 direction = TdGameManager.GetDirectionOfTransform2D(turret.transform);
             Vector3 angleVec = Quaternion.AngleAxis(direction.x * data.aimRotation, Vector3.forward) * direction;
             
-            float distance = direction.magnitude * 10f;
+            float distance = direction.magnitude * this.distanceOfArc;
             float launchSpeed = ProjectileMath.LaunchSpeed(distance, 0f, Physics2D.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad);
-            launchSpeed = this.launchSpeed;
-            distance = launchSpeed * (2 * (launchSpeed)/Physics2D.gravity.magnitude);
+            launchSpeed = data.aimRotation * this.launchSpeed;
 
             data.SetProjectileIterations(arcIterations);
             data.arc.UpdateArc(turret.transform.position + angleVec, launchSpeed, distance,
@@ -115,7 +112,7 @@ public class FiringExtension : TurretExtension {
                     // Hide aoe radius.
                     data.arc.projectileData = null;
 
-                    ShootProjectile(data, turret, projectile, launchSpeed);
+                    ShootProjectile(data, turret, projectile, angleVec, launchSpeed);
                 }
             }
         }

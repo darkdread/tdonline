@@ -23,8 +23,10 @@ public class ProjectileArc : MonoBehaviour
 
     public void UpdateArc(Vector2 offset, float speed, float distance, float gravity, float angle, Vector3 direction, bool valid)
     {
-        // Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, distance, gravity, angle);
-        Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, gravity, angle);
+        print(speed);
+        print(distance);
+        Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, distance, gravity, angle);
+        // Vector2[] arcPoints = ProjectileMath.ProjectileArcPoints(iterations, speed, gravity, angle);
         Vector3[] points3d = new Vector3[arcPoints.Length];
 
         hitId = 0;
@@ -32,7 +34,7 @@ public class ProjectileArc : MonoBehaviour
         {
             if (hitId != 0){
                 points3d[i] = points3d[hitId];
-                continue;
+                // continue;
             }
 
             points3d[i] = new Vector3(direction.x * arcPoints[i].x + offset.x, arcPoints[i].y + offset.y, 0f);

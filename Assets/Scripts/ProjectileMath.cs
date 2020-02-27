@@ -115,7 +115,7 @@ public static class ProjectileMath
 
         for (int i = 0; i <= iterations; i++)
         {
-            float x = i * speed;
+            float x = i;
             float t = x / (speed * Mathf.Cos(radians));
             float y = -0.5f * gravity * (t * t) + speed * Mathf.Sin(radians) * t;
 
