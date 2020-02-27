@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: StoneLeverTrapExtension
   m_EditorClassIdentifier: 
   prefab: {fileID: -6405975224818230281, guid: e8f6e30da30b6114e88da1067f79b8f1, type: 3}
-  trapReloadTime: 1
+  trapReloadTime: 20
+  outlineColor: {r: 0, g: 0, b: 1, a: 1}

@@ -390,7 +390,7 @@ RectTransform:
   m_Father: {fileID: 1222730341}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.6723654}
+  m_AnchorMin: {x: 0, y: 0.71097267}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -5393,7 +5393,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 87162034}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.32763454
+  m_Size: 0.28902733
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6598,7 +6598,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 575.19995, y: 0}
-  m_SizeDelta: {x: 1150, y: 1784}
+  m_SizeDelta: {x: 1150, y: 2022.3}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1474658601
 MonoBehaviour:
@@ -6631,7 +6631,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Walson Low\nP1747773\n\nGunaseelan\nP1702501\n\nSpecial Thanks:\nhttps://github.com/IronWarrior/ProjectileShooting\r\n\r\nhttps://stackoverflow.com/questions/1446547/how-to-convert-an-object-to-a-byte-array-in-c-sharp\r\nCrystalonics\r\n\r\nhttps://assetstore.unity.com/packages/2d/gui/fantasy-wooden-gui-free-103811\r\nwooden
+  m_Text: "Walson Low\nP1747773\nDGDD/FT/3B/01\n\nGunaseelan\nP1702501\nDGDD/FT/3B/02\n\nSpecial
+    Thanks:\nhttps://github.com/IronWarrior/ProjectileShooting\r\n\r\nhttps://stackoverflow.com/questions/1446547/how-to-convert-an-object-to-a-byte-array-in-c-sharp\r\nCrystalonics\r\n\r\nhttps://assetstore.unity.com/packages/2d/gui/fantasy-wooden-gui-free-103811\r\nwooden
     UI\r\n\r\nhttps://freesound.org/people/EverHeat/\r\nArrow.wav\r\n\r\nhttps://freesound.org/people/checholio/sounds/443575/\r\nArrow
     impact\r\n\r\nhttps://freesound.org/people/Artmasterrich/sounds/345450/\r\nmale
     death 1\r\n\r\nhttps://freesound.org/people/LittleRobotSoundFactory/sounds/270446/\r\nmale
@@ -6645,7 +6646,8 @@ MonoBehaviour:
     Sprite\n\nhttp://powstudios.com/content/smoke-animation-pack-1\nSmoke Animation
     Sprites\r\n\nhttps://josephlamblog.wordpress.com/2015/11/29/week-9-skills-andstun/\nStun
     Sprite\n\nhttps://assetstore.unity.com/packages/2d/environments/medieval-pixel-art-asset-free-130131\nMedieval
-    Pixel Art Asset"
+    Pixel Art Asset\n\nhttps://freesound.org/people/DrMinky/sounds/167048/\r\nlever\r\n\r\nhttps://www.youtube.com/watch?v=kenar8s7oRE\r\nbgm
+    song"
 --- !u!222 &1474658602
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8781,7 +8783,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 1199.5}
+  m_SizeDelta: {x: 0, y: 1437.8}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2015984782
 MonoBehaviour:
