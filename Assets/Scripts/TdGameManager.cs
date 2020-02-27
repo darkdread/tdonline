@@ -160,6 +160,17 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    private void UpdateCountRpc(int playerId, int projectileId, EndGameEnum endGameEnum){
+        PhotonNetwork.GetPhotonView(playerId).GetComponent<TdPlayerController>().playerEndGameData.UpdateCount(
+            endGameEnum, PhotonNetwork.GetPhotonView(projectileId).GetComponent<Projectile>().endData
+        );
+    }
+
+    public void UpdateCount(int playerId, int projectileId, EndGameEnum endGameEnum){
+        photonView.RPC("UpdateCountRpc", RpcTarget.All, playerId, projectileId, endGameEnum);
+    }
+
+    [PunRPC]
     private void ShowGameObjectRpc(int viewId, bool show){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         obj.gameObject.SetActive(show);
