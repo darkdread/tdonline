@@ -32,7 +32,7 @@ public class ProjectileArc : MonoBehaviour
         {
             if (hitId != 0){
                 points3d[i] = points3d[hitId];
-                // continue;
+                continue;
             }
 
             points3d[i] = new Vector3(direction.x * arcPoints[i].x + offset.x, arcPoints[i].y + offset.y, 0f);
