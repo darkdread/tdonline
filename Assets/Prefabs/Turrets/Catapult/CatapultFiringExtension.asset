@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CatapultFiringExtension
   m_EditorClassIdentifier: 
   prefab: {fileID: -7707825247899848389, guid: 2599a9260dca4814ca05a9440f369f30, type: 3}
-  arcIterations: 20
+  arcIterations: 40
   distanceOfArc: 20
   maxRotationMultiplier: 3
   launchSpeed: 0.1

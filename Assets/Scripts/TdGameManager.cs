@@ -94,7 +94,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public LoseUi loseUi;
 
     [Header("Misc")]
-    public AudioSource audioSource;
+    public AudioSource musicAudioSource;
+    public AudioSource sfxAudioSource;
 
     private void Awake(){
         instance = this;
@@ -113,7 +114,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        nextInstanceId = 100;
+        // nextInstanceId = 100;
 
         // Note that we modified the property of lastUsedViewSubIdStatic from private to public.
         PhotonNetwork.lastUsedViewSubIdStatic = nextInstanceId;
@@ -196,7 +197,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void PlaySoundRpc(int viewId, string clipName){
+    private void PlaySoundRpc(int viewId, string clipName, float volume){
         PhotonView view = PhotonNetwork.GetPhotonView(viewId);
         AudioSource source = view.GetComponent<AudioSource>();
         MonoBehaviour[] scripts = view.GetComponents<MonoBehaviour>();
@@ -217,15 +218,15 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         AudioClipObject audioClipObject = audioClipObjectInterface.GetAudioClipObject();
 
         if (source){
-            source.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName));
+            source.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName), volume);
             return;
         }
 
-        audioSource.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName));
+        sfxAudioSource.PlayOneShot(audioClipObject.GetAudioClipFromString(clipName), volume);
     }
 
-    public void PlaySound(int viewId, string clipName){
-        photonView.RPC("PlaySoundRpc", RpcTarget.All, viewId, clipName);
+    public void PlaySound(int viewId, string clipName, float volume = 1f){
+        photonView.RPC("PlaySoundRpc", RpcTarget.All, viewId, clipName, volume);
     }
 
     [PunRPC]
