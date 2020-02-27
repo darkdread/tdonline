@@ -36,7 +36,7 @@ public class FiringExtension : TurretExtension {
         PhotonView projectileView = projectile.GetComponent<PhotonView>();
 
         // Add Projectile component.
-        TdGameManager.instance.photonView.RPC("AddProjectileComponent", RpcTarget.All, projectileView.ViewID);
+        TdGameManager.instance.AddProjectileComponent(projectileView.ViewID);
 
         System.Action shootProjectile = delegate{
             // Shoot projectile.

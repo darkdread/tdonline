@@ -8,6 +8,7 @@ using Photon.Pun;
 public class ActivateTrapExtension : TurretExtension {
 
     public ActivateTrapExtensionData prefab;
+    public float trapReloadTime = 20f;
 
     override public void OnLoadExtension(Turret turret){
 
@@ -24,8 +25,39 @@ public class ActivateTrapExtension : TurretExtension {
         }
     }
 
+    public void ReloadTrap(Turret turret){
+        ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
+
+        for(int i = 0; i < data.activateTrapExtensionInit.traps.Length; i++){
+            Trap trap = data.activateTrapExtensionInit.traps[i];
+
+            trap.ShowTrap(true);
+        }
+
+        Debug.Log("Reloaded!");
+    }
+
     override public void OnInteract(Turret turret, TdPlayerController playerController){
         ActivateTrapExtensionData data = turret.GetTurretExtensionData<ActivateTrapExtensionData>();
+
+        // Block player from using the turret.
+        playerController.SetInteractingDelayFrameInstant(true, false, 1);
+
+        if (data.progressBarUi.IsRunning()){
+            Debug.Log("Trap still reloading.");
+            return;
+        }
+
+        for(int i = 0; i < data.activateTrapExtensionInit.traps.Length; i++){
+            Trap trap = data.activateTrapExtensionInit.traps[i];
+
+            trap.Trigger(playerController);
+            trap.ShowTrap(false);
+        }
+
+        data.progressBarUi.StartProgressBar(trapReloadTime, delegate {
+            ReloadTrap(turret);
+        });
     }
 
     override public void UpdateTurretExtension(Turret turret){
@@ -35,7 +67,7 @@ public class ActivateTrapExtension : TurretExtension {
             return;
         }
 
-        Debug.Log(data.activateTrapExtensionInit);
+        data.transform.position = turret.transform.position;
     }
 
 }

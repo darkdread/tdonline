@@ -212,7 +212,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         if (isDying){
             deathCooldown -= Time.deltaTime;
             if (deathCooldown <= 0f){
-                TdGameManager.instance.DestroySceneObject(photonView);
+                TdGameManager.instance.DestroyPhotonNetworkedObject(photonView);
             }
 
             return;

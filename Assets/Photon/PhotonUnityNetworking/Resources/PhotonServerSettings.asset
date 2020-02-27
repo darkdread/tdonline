@@ -24,14 +24,14 @@ MonoBehaviour:
     Protocol: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  PunLogging: 0
+  PunLogging: 2
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
   - AddAmmunition
   - AddPlayerToList
-  - AddProjectileComponent
+  - AddProjectileComponentRpc
   - ClickRpc
   - DestroyRpc
   - DestroySceneObjectRpc
@@ -48,6 +48,7 @@ MonoBehaviour:
   - RemoveAmmunition
   - RespawnSpaceship
   - SetHealthRpc
+  - SetOwningPlayerRpc
   - SetTargetRpc
   - SetTurretState
   - SetTurretUser
@@ -55,9 +56,10 @@ MonoBehaviour:
   - ShootProjectileAnimationRpc
   - ShootProjectileRpc
   - ShowEmoteRpc
-  - ShowGameObject
+  - ShowGameObjectRpc
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
+  - DestroyPhotonNetworkedObjectRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1

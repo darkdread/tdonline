@@ -68,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turretExtension: {fileID: 0}
   turret: {fileID: 0}
+  progressBarUi: {fileID: 0}
   animator: {fileID: 0}
   playerController: {fileID: 0}
   activateTrapExtensionInit: {fileID: 0}

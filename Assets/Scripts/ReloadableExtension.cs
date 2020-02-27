@@ -75,8 +75,16 @@ public class ReloadableExtension : TurretExtension {
             return;
         }
 
+        if (playerController.progressBarUi.IsRunning()){
+            Debug.Log("Player is doing something!");
+            playerController.SetInteractingDelayFrameInstant(true, false, 1);
+            turret.BlockTurretExtensionUntilSeconds(typeof(FiringExtension));
+            return;
+        }
+
         playerController.SetInteractingDelayFrameInstant(true, false, 1);
-        playerController.StartProgressBar(TdGameManager.gameSettings.progressReloadTime, delegate{
+
+        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressReloadTime, delegate{
             playerController.DropObject();
             LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
         });

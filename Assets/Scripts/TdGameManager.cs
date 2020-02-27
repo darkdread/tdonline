@@ -148,32 +148,49 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void ShowGameObject(int viewId, bool show){
+    private void SetOwningPlayerRpc(int playerId, int projectileId){
+        PhotonNetwork.GetPhotonView(projectileId).GetComponent<Projectile>().owningPlayer = PhotonNetwork.GetPhotonView(playerId).GetComponent<TdPlayerController>();
+    }
+
+    public void SetOwningPlayer(int playerId, int projectileId){
+        photonView.RPC("SetOwningPlayerRpc", RpcTarget.All, playerId, projectileId);
+    }
+
+    [PunRPC]
+    private void ShowGameObjectRpc(int viewId, bool show){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         obj.gameObject.SetActive(show);
     }
 
+    public void ShowGameObject(int viewId, bool show){
+        photonView.RPC("ShowGameObjectRpc", RpcTarget.All, viewId, show);
+    }
+
     [PunRPC]
-    public void AddProjectileComponent(int viewId){
+    public void AddProjectileComponentRpc(int viewId){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         Projectile projectile = obj.gameObject.AddComponent<Projectile>();
 
         projectile.endData = projectile.GetComponent<Collectable>().endData;
         projectile.projectileData = projectile.GetComponent<Collectable>().projectileData;
         projectile.gameObject.layer = 12;
-        projectile.transform.position = Vector3.up;
+    }
+
+    public void AddProjectileComponent(int viewId){
+        photonView.RPC("AddProjectileComponentRpc", RpcTarget.All, viewId);
     }
 
     [PunRPC]
-    private void DestroySceneObjectRpc(int viewId){
+    private void DestroyPhotonNetworkedObjectRpc(int viewId){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
-        PhotonNetwork.Destroy(obj);
+
+        if (obj.IsMine){
+            PhotonNetwork.Destroy(obj.gameObject);
+        }
     }
 
-    public void DestroySceneObject(PhotonView objectPhotonView){
-        // We disable the game object first, because the RPC call takes time to reach master client.
-        objectPhotonView.gameObject.SetActive(false);
-        photonView.RPC("DestroySceneObjectRpc", RpcTarget.MasterClient, objectPhotonView.ViewID);
+    public void DestroyPhotonNetworkedObject(PhotonView objectPhotonView){
+        photonView.RPC("DestroyPhotonNetworkedObjectRpc", RpcTarget.All, objectPhotonView.ViewID);
     }
 
     [PunRPC]
@@ -316,13 +333,13 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         Quaternion rotation = Quaternion.identity;
 
         // Instantiate the player, player name, and set custom property of player controller for local player.
-        GameObject playerObject = PhotonNetwork.Instantiate("Player", position, rotation, 0);
+        GameObject playerObject = PhotonNetwork.Instantiate(TdGameManager.gameSettings.playerPrefab, position, rotation, 0);
         TdPlayerController playerController = playerObject.GetComponent<TdPlayerController>();
         photonView.RPC("AddPlayerToList", RpcTarget.All, playerController.photonView.ViewID);
 
         playerObject.name = playerObject.name + localPlayerId;
 
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && gameSettings.spawnEnemies)
         {
             StartSpawnTimer();
         }
@@ -396,7 +413,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     private void Update(){
 
-        if (PhotonNetwork.IsMasterClient && !isPaused){
+        if (PhotonNetwork.IsMasterClient && !isPaused && gameSettings.spawnEnemies){
             globalSpawnTime -= (int) (Time.deltaTime * 1000);
 
             if (globalSpawnTime <= 0){

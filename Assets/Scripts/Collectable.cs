@@ -30,7 +30,7 @@ public class Collectable : Interactable {
             return;
         }
 
-        playerController.StartProgressBar(TdGameManager.gameSettings.progressCollectTime, delegate{
+        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressCollectTime, delegate{
             StartCoroutine(SpawnAndCarry(playerController));
         });
     }

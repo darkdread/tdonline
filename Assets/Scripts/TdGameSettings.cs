@@ -18,13 +18,17 @@ public class TdGameSettings : MonoBehaviour
     public float progressReloadTime = 1f;
     public float progressCollectTime = 2f;
 
+    public TdProgressBarUi progressBarUiPrefab;
     public EmoteButton playerEmoteButtonPrefab;
     public List<PlayerEmoteSprite> playerEmoteSprites;
     public float playerEmoteDuration = 2f;
     
+    public string playerPrefab = "Player";
     public string collectableResourceDirectory = "Collectable";
     public string turretExtensionResourceDirectory = "TurretExtension";
+    public string trapResourceDirectory = "Trap";
 
+    public bool spawnEnemies = false;
     public GameObject enemyStunPrefab;
     public EnemySpawner[] enemySpawners;
     public string enemyResourceDirectory = "Enemy";

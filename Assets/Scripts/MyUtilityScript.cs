@@ -8,7 +8,6 @@ public static class MyUtilityScript
         float bounds2CenterX = bounds2.center.x;
         
         if (bounds1.min.x > bounds2CenterX || bounds1.max.x < bounds2CenterX){
-            Debug.Log("1");
             return false;
         }
 

@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 2253311653299050244}
   - component: {fileID: 3948590031099363188}
   - component: {fileID: 996979616045732842}
+  - component: {fileID: 2111715330}
   m_Layer: 0
   m_Name: StoneLever
   m_TagString: Untagged
@@ -171,4 +172,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c800dd58b3b9a43b55a51d9de26a82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  traps: []
+  traps:
+  - {fileID: 0}
+--- !u!114 &2111715330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2139261135180027498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

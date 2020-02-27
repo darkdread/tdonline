@@ -52,11 +52,11 @@ public class TdPlayerController : MonoBehaviour
     [HideInInspector]
     public TdPlayerUi playerUi;
 
+    [HideInInspector]
+    public TdProgressBarUi progressBarUi;
+
     [Header("Runtime Variables")]
     public PlayerState playerState;
-    public float progressMax;
-    public float progressCurrent;
-    public System.Action progressCallback;
 
     public EndGameData playerEndGameData;
     private Animator animator;
@@ -70,10 +70,32 @@ public class TdPlayerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         playerUi = Instantiate<TdPlayerUi>(TdGameManager.gameSettings.playerUiPrefab,
-                            TdGameManager.instance.gameUiCanvas);
+            TdGameManager.instance.gameUiCanvas);
         playerUi.SetTarget(this);
 
+        progressBarUi = TdProgressBarUi.Spawn(photonView);
+        progressBarUi.SetTarget(photonView);
+
         playerEndGameData = "Defaults";
+    }
+
+    [PunRPC]
+    public void SetTargetRpc(int referenceId){
+        progressBarUi._referencedPhotonView = PhotonNetwork.GetPhotonView(referenceId);
+    }
+
+    [PunRPC]
+    private void StartProgressBarRpc(float duration){
+        progressBarUi.progressCurrent = 0f;
+        progressBarUi.progressMax = duration;
+        progressBarUi.SetProgressBar(0f);
+        progressBarUi.ShowProgressBar(true);
+    }
+
+    [PunRPC]
+    private void StopProgressBarRpc(){
+        progressBarUi.progressMax = -1f;
+        progressBarUi.ShowProgressBar(false);
     }
 
     [PunRPC]
@@ -90,31 +112,6 @@ public class TdPlayerController : MonoBehaviour
 
     public void ShowEmote(string buttonString, float duration){
         photonView.RPC("ShowEmoteRpc", RpcTarget.All, buttonString, duration);
-    }
-
-    [PunRPC]
-    private void StartProgressBarRpc(float duration){
-        playerState = playerState | PlayerState.IsDoingSomething;
-
-        progressCurrent = 0f;
-        progressMax = duration;
-        playerUi.SetProgressBar(progressCurrent);
-        playerUi.ShowProgressBar(true);
-    }
-
-    public void StartProgressBar(float duration, System.Action callback){
-        progressCallback = callback;
-        photonView.RPC("StartProgressBarRpc", RpcTarget.All, duration);
-    }
-
-    [PunRPC]
-    private void StopProgressBarRpc(){
-        playerState = playerState & ~PlayerState.IsDoingSomething;
-        playerUi.ShowProgressBar(false);
-    }
-
-    public void StopProgressBar(){
-        photonView.RPC("StopProgressBarRpc", RpcTarget.All);
     }
 
     [PunRPC]
@@ -206,7 +203,7 @@ public class TdPlayerController : MonoBehaviour
     }
 
     public bool IsDoingSomething(){
-        return (playerState & PlayerState.IsDoingSomething) != 0;
+        return progressBarUi.IsRunning();
     }
 
     public bool IsClimbing(){
@@ -227,7 +224,7 @@ public class TdPlayerController : MonoBehaviour
         if (remove){
             // It is a scene object, run rpc to destroy.
             if (objectPhotonView.IsSceneView){
-                TdGameManager.instance.DestroySceneObject(objectPhotonView);
+                TdGameManager.instance.DestroyPhotonNetworkedObject(objectPhotonView);
             } else {
                 PhotonNetwork.Destroy(objectPhotonView);
             }
@@ -239,10 +236,6 @@ public class TdPlayerController : MonoBehaviour
     }
 
     private void UpdateView() {
-        if (IsDoingSomething()){
-            playerUi.SetProgressBar(progressCurrent / progressMax);
-        }
-
         if (IsCarryingObject()) {
             playerCarriedObject.transform.position = playerCarryTransform.transform.position;
         }
@@ -251,29 +244,12 @@ public class TdPlayerController : MonoBehaviour
         animator.SetBool("isClimbing", IsClimbing());
     }
 
-    public void CompleteProgressBar(){
-        StopProgressBar();
-
-        if (photonView.IsMine){
-            // print(progressCallback.Method.Name);
-            progressCallback.Invoke();
-        }
-    }
-
     private void Update(){
         if (TdGameManager.isPaused){
             return;
         }
 
         UpdateView();
-
-        // Update progress bar for player.
-        if (IsDoingSomething()){
-            progressCurrent += Time.deltaTime;
-            if (progressCurrent > progressMax){
-                CompleteProgressBar();
-            }
-        }
 
         if (!photonView.IsMine){
             return;
@@ -311,7 +287,7 @@ public class TdPlayerController : MonoBehaviour
                 // Player is pressing vertical input, is colliding with ladder, and
                 // player presses up input when he is below half the ladder, vice-versa.
 
-                print(MyUtilityScript.IsInBounds(ladderBounds, entityBounds));
+                // print(MyUtilityScript.IsInBounds(ladderBounds, entityBounds));
                 if (Mathf.Abs(verticalAxis) > 0.01 && MyUtilityScript.IsInBounds(ladderBounds, entityBounds)
                 && ((verticalAxis > 0 && entityBounds.min.y < ladderBounds.center.y)
                 || (verticalAxis < 0 && entityBounds.min.y > ladderBounds.center.y))){
@@ -352,7 +328,7 @@ public class TdPlayerController : MonoBehaviour
 
             // If player is moving while doing something, stop progress.
             if (playerFacingDir != 0){
-                StopProgressBar();
+                progressBarUi.StopProgressBar();
             }
         }
 

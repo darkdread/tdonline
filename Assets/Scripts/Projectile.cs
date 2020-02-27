@@ -39,15 +39,21 @@ public class Projectile : MonoBehaviour, IAudioClipObject
 
     private void UpdateView(Collision2D collision){
 
+        print("hell2o");
+        
         // If projectile is player-owned.
         if (owningPlayer != null){
+            print(owningPlayer);
+            print(collision.gameObject);
 
             // Ground layermask
             if (collision.gameObject.layer == 11){
                 GameObject explosion = projectileData.GetExplosionPrefab();
+                print("hello");
 
                 if (explosion){
-                    Instantiate(explosion, collision.contacts[0].point, Quaternion.identity);
+                    GameObject spawnedExplosion = Instantiate(explosion, collision.contacts[0].point, Quaternion.identity);
+                    spawnedExplosion.transform.localScale = Vector3.one * projectileData.areaOfEffect / 2;
                 }
             }
         }
@@ -55,9 +61,10 @@ public class Projectile : MonoBehaviour, IAudioClipObject
 
     private void OnCollisionEnter2D(Collision2D collision){
 
+        // Function doesn't run for big boulder, only client who invoked projectile can.
         UpdateView(collision);
 
-        if (!PhotonNetwork.IsMasterClient){
+        if (!photonView.IsMine){
             return;
         }
 
@@ -73,7 +80,7 @@ public class Projectile : MonoBehaviour, IAudioClipObject
                 }
 
                 TdGameManager.instance.PlaySound(photonView.ViewID, "Hit");
-                TdGameManager.instance.DestroySceneObject(photonView);
+                TdGameManager.instance.DestroyPhotonNetworkedObject(photonView);
             }
         } else {
             // If projectile is enemy-owned.
@@ -83,7 +90,7 @@ public class Projectile : MonoBehaviour, IAudioClipObject
                 TdGameManager.castle.SetHealth(TdGameManager.castle.health - projectileData.damage);
 
                 TdGameManager.instance.PlaySound(photonView.ViewID, "Hit");
-                TdGameManager.instance.DestroySceneObject(photonView);
+                TdGameManager.instance.DestroyPhotonNetworkedObject(photonView);
             }
         }
         

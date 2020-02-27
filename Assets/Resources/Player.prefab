@@ -99,9 +99,8 @@ MonoBehaviour:
   playerClimbingLadder: {fileID: 0}
   playerCarriedObject: {fileID: 0}
   playerUi: {fileID: 0}
+  progressBarUi: {fileID: 0}
   playerState: 0
-  progressMax: 0
-  progressCurrent: 0
   moveSpeed: 5
 --- !u!61 &5328174382671833121
 BoxCollider2D:
