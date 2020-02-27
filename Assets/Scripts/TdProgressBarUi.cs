@@ -7,6 +7,32 @@ using TMPro;
 using Photon.Realtime;
 using Photon.Pun;
 
+public interface ITdProgressBarUi {
+
+    TdProgressBarUi progressBarUi {get; set;}
+
+    [PunRPC]
+    void StartProgressBarRpc(float duration);
+
+    [PunRPC]
+    void StopProgressBarRpc();
+}
+
+public static class ITdProgressBarUiHelper {
+    
+    public static void StartProgressBar(this ITdProgressBarUi iTdProgressBarUi, float duration){
+        iTdProgressBarUi.progressBarUi.progressCurrent = 0f;
+        iTdProgressBarUi.progressBarUi.progressMax = duration;
+        iTdProgressBarUi.progressBarUi.SetProgressBar(0f);
+        iTdProgressBarUi.progressBarUi.ShowProgressBar(true);
+    }
+
+    public static void StopProgressBar(this ITdProgressBarUi iTdProgressBarUi){
+        iTdProgressBarUi.progressBarUi.progressMax = -1f;
+        iTdProgressBarUi.progressBarUi.ShowProgressBar(false);
+    }
+}
+
 public class TdProgressBarUi : MonoBehaviour
 {
     public PhotonView _referencedPhotonView;
@@ -26,10 +52,6 @@ public class TdProgressBarUi : MonoBehaviour
 
     private void Awake(){
         rectTransform = GetComponent<RectTransform>();
-    }
-
-    public void SetTarget(PhotonView go){
-        _referencedPhotonView.RPC("SetTargetRpc", RpcTarget.All, go.ViewID);
     }
 
     public void SetProgressBar(float value){
@@ -79,8 +101,10 @@ public class TdProgressBarUi : MonoBehaviour
             progressCurrent += Time.deltaTime;
             SetProgressBar(progressCurrent);
 
-            if (progressCurrent > progressMax){
-                CompleteProgressBar();
+            if (_referencedPhotonView.IsMine){
+                if (progressCurrent > progressMax){
+                    CompleteProgressBar();
+                }
             }
         }
         

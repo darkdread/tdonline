@@ -2,7 +2,22 @@
 
 ## Progress Bar
 
-Players have `ProgressBar`, which does something once the bar is filled up. When the bar is ran through RPC, the local player stores the callback tied to the bar. The callback only runs for local player.
+`ProgressBar` are optional UI attached to PhotonViews, and are created via `TdProgressBarUi.Spawn`.  
+The `PhotonView` **NEEDS** to have the following implementations:
+
+```
+TdProgressBarUi progressBarUi {get; set;}
+
+[PunRPC]
+void StartProgressBarRpc(float duration);
+
+[PunRPC]
+void StopProgressBarRpc();
+```
+
+There is a Helper class for ITdProgressBarUi which does the job such that we don't have to implement the body ourselves.
+
+A `ProgressBar` does something once the bar is filled up. Only the player that triggered `StartProgressBar` stores the callback. The callback only runs for local player.
 
 ## Turrets
 

@@ -24,7 +24,7 @@ public struct PlayerEmoteSprite {
     public string soundEffectString;
 }
 
-public class TdPlayerController : MonoBehaviour
+public class TdPlayerController : MonoBehaviour, ITdProgressBarUi
 {
     [HideInInspector]
     public PhotonView photonView;
@@ -53,7 +53,7 @@ public class TdPlayerController : MonoBehaviour
     public TdPlayerUi playerUi;
 
     [HideInInspector]
-    public TdProgressBarUi progressBarUi;
+    public TdProgressBarUi progressBarUi {get; set;}
 
     [Header("Runtime Variables")]
     public PlayerState playerState;
@@ -74,28 +74,18 @@ public class TdPlayerController : MonoBehaviour
         playerUi.SetTarget(this);
 
         progressBarUi = TdProgressBarUi.Spawn(photonView);
-        progressBarUi.SetTarget(photonView);
 
         playerEndGameData = "Defaults";
     }
 
     [PunRPC]
-    public void SetTargetRpc(int referenceId){
-        progressBarUi._referencedPhotonView = PhotonNetwork.GetPhotonView(referenceId);
+    public void StartProgressBarRpc(float duration){
+        this.StartProgressBar(duration);
     }
 
     [PunRPC]
-    private void StartProgressBarRpc(float duration){
-        progressBarUi.progressCurrent = 0f;
-        progressBarUi.progressMax = duration;
-        progressBarUi.SetProgressBar(0f);
-        progressBarUi.ShowProgressBar(true);
-    }
-
-    [PunRPC]
-    private void StopProgressBarRpc(){
-        progressBarUi.progressMax = -1f;
-        progressBarUi.ShowProgressBar(false);
+    public void StopProgressBarRpc(){
+        this.StopProgressBar();
     }
 
     [PunRPC]

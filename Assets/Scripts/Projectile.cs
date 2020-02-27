@@ -28,6 +28,10 @@ public class Projectile : MonoBehaviour, IAudioClipObject
         transform.position = turret.transform.position + angleVec;
         rb.velocity = angleVec * speed;
 
+        if (!owningPlayer.photonView.IsMine){
+            return;
+        }
+
         TdGameManager.instance.PlaySound(turret.photonView.ViewID,
             "Shoot");
     }
@@ -38,18 +42,13 @@ public class Projectile : MonoBehaviour, IAudioClipObject
     }
 
     private void UpdateView(Collision2D collision){
-
-        print("hell2o");
         
         // If projectile is player-owned.
         if (owningPlayer != null){
-            print(owningPlayer);
-            print(collision.gameObject);
 
             // Ground layermask
             if (collision.gameObject.layer == 11){
                 GameObject explosion = projectileData.GetExplosionPrefab();
-                print("hello");
 
                 if (explosion){
                     GameObject spawnedExplosion = Instantiate(explosion, collision.contacts[0].point, Quaternion.identity);

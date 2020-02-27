@@ -9,6 +9,10 @@ public class Castle : MonoBehaviourPunCallbacks {
     public int health;
 
     private void Awake(){
+        if (!photonView.IsMine){
+            return;
+        }
+
         SetHealth(TdGameManager.gameSettings.castleMaxHealth);
     }
 

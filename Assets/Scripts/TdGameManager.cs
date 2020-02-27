@@ -171,6 +171,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
         Projectile projectile = obj.gameObject.AddComponent<Projectile>();
 
+        projectile.GetComponent<Rigidbody2D>().isKinematic = false;
         projectile.endData = projectile.GetComponent<Collectable>().endData;
         projectile.projectileData = projectile.GetComponent<Collectable>().projectileData;
         projectile.gameObject.layer = 12;

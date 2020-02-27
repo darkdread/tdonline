@@ -4,31 +4,28 @@ using UnityEngine;
 
 using Photon.Pun;
 
-public class ActivateTrapExtensionData : TurretExtensionData {
+public class ActivateTrapExtensionData : TurretExtensionData, ITdProgressBarUi {
+
+    public TdProgressBarUi progressBarUi {get; set;}
 
     [Header("Runtime Variables")]
-    public TdProgressBarUi progressBarUi;
     public Animator animator;
     public TdPlayerController playerController;
     public ActivateTrapExtensionInit activateTrapExtensionInit;
 
+    // [PunRPC]
+    // public void SetTargetRpc(int referenceId){
+    //     this.SetTarget(referenceId);
+    // }
+
     [PunRPC]
-    public void SetTargetRpc(int referenceId){
-        progressBarUi._referencedPhotonView = PhotonNetwork.GetPhotonView(referenceId);
+    public void StartProgressBarRpc(float duration){
+        this.StartProgressBar(duration);
     }
 
     [PunRPC]
-    private void StartProgressBarRpc(float duration){
-        progressBarUi.progressCurrent = 0f;
-        progressBarUi.progressMax = duration;
-        progressBarUi.SetProgressBar(0f);
-        progressBarUi.ShowProgressBar(true);
-    }
-
-    [PunRPC]
-    private void StopProgressBarRpc(){
-        progressBarUi.progressMax = -1f;
-        progressBarUi.ShowProgressBar(false);
+    public void StopProgressBarRpc(){
+        this.StopProgressBar();
     }
 
     override public void OnLoadAfter(){
@@ -36,7 +33,7 @@ public class ActivateTrapExtensionData : TurretExtensionData {
         activateTrapExtensionInit = turret.GetComponent<ActivateTrapExtensionInit>();
 
         progressBarUi = TdProgressBarUi.Spawn(photonView);
-        progressBarUi.SetTarget(photonView);
+        // progressBarUi.SetTarget(photonView);
 
         animator = turret.GetComponentInChildren<Animator>();
         if (animator){
