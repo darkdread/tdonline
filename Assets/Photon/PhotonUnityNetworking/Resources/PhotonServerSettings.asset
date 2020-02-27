@@ -48,6 +48,7 @@ MonoBehaviour:
   - RemoveAmmunition
   - RespawnSpaceship
   - SetHealthRpc
+  - SetLootedRpc
   - SetOwningPlayerRpc
   - SetTargetRpc
   - SetTurretState
@@ -60,6 +61,6 @@ MonoBehaviour:
   - SpawnCollectableObject
   - StartProgressBarRpc
   - StopProgressBarRpc
-  - SetLootedRpc
+  - UpdateCountRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 1
