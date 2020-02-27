@@ -71,3 +71,5 @@ MonoBehaviour:
   animator: {fileID: 0}
   playerController: {fileID: 0}
   activateTrapExtensionInit: {fileID: 0}
+  animationCompleteTime: 0
+  animationTime: 0

@@ -7,21 +7,34 @@ using Photon.Pun;
 
 public class Collectable : Interactable {
 
+    public PhotonView photonView;
+
     [Header("Infinite Stack")]
     public bool infinite = true;
+    public bool isBeingLooted = false;
     public GameObject collectablePrefab;
 
     [Header("One Time Loot")]
     public EndData endData;
-    public PhotonView photonView;
     public ProjectileData projectileData;
 
     private void Awake() {
         PhotonView photonView = GetComponent<PhotonView>();
+        print(photonView);
+        print(this);
 
-        if (!infinite && photonView == null) {
+        if (photonView == null) {
             print($"Collectable {this.gameObject} does not have photon view!");
         }
+    }
+
+    [PunRPC]
+    private void SetLootedRpc(bool lootedState){
+        isBeingLooted = lootedState;
+    }
+
+    public void SetLooted(bool lootedState){
+        photonView.RPC("SetLootedRpc", RpcTarget.All, lootedState);
     }
 
     private void CollectingFromStack(TdPlayerController playerController) {
@@ -30,9 +43,23 @@ public class Collectable : Interactable {
             return;
         }
 
-        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressCollectTime, delegate{
+        if (isBeingLooted){
+            print("Already being looted!");
+            return;
+        }
+
+        SetLooted(true);
+
+        System.Action completeCallback = delegate{
             StartCoroutine(SpawnAndCarry(playerController));
-        });
+            SetLooted(false);
+        };
+
+        System.Action failedCallback = delegate{
+            SetLooted(false);
+        };
+
+        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressCollectTime, completeCallback, failedCallback);
     }
 
     private IEnumerator SpawnAndCarry(TdPlayerController playerController) {
@@ -65,7 +92,6 @@ public class Collectable : Interactable {
         // If it's a stack, spawn the object and force player to carry it.
         if (infinite) {
             CollectingFromStack(playerController);
-            // StartCoroutine(SpawnAndCarry(playerController));
         } else {
             // Carry collectable object.
             StartCoroutine(Carry(playerController));

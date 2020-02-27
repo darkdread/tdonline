@@ -150,6 +150,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
     public void StunEnemy(bool stun){
         stunEffect.SetActive(stun);
+        StopMovement(stun);
 
         if (stun){
             enemyState = enemyState | EnemyState.stunned;

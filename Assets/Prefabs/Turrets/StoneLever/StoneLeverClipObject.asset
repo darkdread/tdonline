@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClipNames:
   - clips:
-    - {fileID: 8300000, guid: 1c6bea2f134153748a106a548bd04574, type: 3}
-    name: Shoot
+    - {fileID: 8300000, guid: fe74b0108792e2a4f8f783de2254b954, type: 3}
+    name: Trigger

@@ -49,16 +49,23 @@ public class ActivateTrapExtension : TurretExtension {
             return;
         }
 
-        for(int i = 0; i < data.activateTrapExtensionInit.traps.Length; i++){
-            Trap trap = data.activateTrapExtensionInit.traps[i];
+        System.Action activateTrap = delegate {
+            for(int i = 0; i < data.activateTrapExtensionInit.traps.Length; i++){
+                Trap trap = data.activateTrapExtensionInit.traps[i];
 
-            trap.Trigger(playerController);
-            trap.ShowTrap(false);
+                trap.Trigger(playerController);
+                trap.ShowTrap(false);
+            }
+        };
+
+        if (!data.TriggerAnimation(activateTrap)){
+            activateTrap();
         }
 
+        TdGameManager.instance.PlaySound(turret.photonView.ViewID, "Trigger");
         data.progressBarUi.StartProgressBar(trapReloadTime, delegate {
             ReloadTrap(turret);
-        });
+        }, null);
     }
 
     override public void OnEnterInteractRadius(Turret turret, TdPlayerController playerController){
@@ -104,8 +111,16 @@ public class ActivateTrapExtension : TurretExtension {
             return;
         }
 
+        // Handles animation callback.
+        if (data.animationCompleteCallback != null){
+            data.animationTime -= Time.deltaTime;
+            if (data.animationTime <= 0){
+                data.animationCompleteCallback.Invoke();
+                data.animationCompleteCallback = null;
+            }
+        }
+
         // Data consist of progress bar position, therefore we have to always center it.
         data.transform.position = turret.transform.position;
     }
-
 }

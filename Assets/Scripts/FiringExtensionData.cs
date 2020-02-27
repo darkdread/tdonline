@@ -9,11 +9,11 @@ public class FiringExtensionData : TurretExtensionData {
     [Header("Runtime Variables")]
     public ProjectileArc arc;
     public int aimRotation = 0;
-    public float shootAnimationCompleteTime = 0f;
-    public float shootAnimationTime = 0f;
+    public float animationCompleteTime = 0f;
+    public float animationTime = 0f;
     public Animator animator;
     public TdPlayerController playerController;
-    public System.Action shootCallback;
+    public System.Action animationCompleteCallback;
 
     private void Awake(){
         arc = GetComponent<ProjectileArc>();
@@ -25,7 +25,7 @@ public class FiringExtensionData : TurretExtensionData {
 
         animator = turret.GetComponentInChildren<Animator>();
         if (animator){
-            shootAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Shoot");
+            animationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Shoot");
         }
     }
 
@@ -37,8 +37,8 @@ public class FiringExtensionData : TurretExtensionData {
 
     public bool ShootProjectileAnimation(System.Action callback){
         if (animator){
-            shootAnimationTime = shootAnimationCompleteTime;
-            shootCallback = callback;
+            animationTime = animationCompleteTime;
+            animationCompleteCallback = callback;
             photonView.RPC("ShootProjectileAnimationRpc", RpcTarget.All,
                 turret.controllingPlayer.photonView.ViewID);
             return true;

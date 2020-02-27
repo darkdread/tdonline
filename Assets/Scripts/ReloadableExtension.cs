@@ -57,6 +57,7 @@ public class ReloadableExtension : TurretExtension {
         foreach(GameObject go in compatibleObjects){
             if (playerController.playerCarriedObject.GetComponent<SpriteRenderer>().sprite == go.GetComponent<SpriteRenderer>().sprite){
                 compatibleObject = playerController.playerCarriedObject;
+                break;
             }
         }
 
@@ -84,10 +85,12 @@ public class ReloadableExtension : TurretExtension {
 
         playerController.SetInteractingDelayFrameInstant(true, false, 1);
 
-        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressReloadTime, delegate{
+        System.Action completeCallback = delegate{
             playerController.DropObject();
             LoadObject(turret, data, compatibleObject.GetComponent<PhotonView>());
-        });
+        };
+
+        playerController.progressBarUi.StartProgressBar(TdGameManager.gameSettings.progressReloadTime, completeCallback, null);
     }
 
     override public void UpdateTurretExtension(Turret turret){

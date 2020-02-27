@@ -6,6 +6,7 @@ using Photon.Pun;
 
 public class CatapultTurret : Turret, IAudioClipObject
 {
+    [Header("Initializations")]
     public AudioClipObject audioClipObject;
 
     public AudioClipObject GetAudioClipObject()

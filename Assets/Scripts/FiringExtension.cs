@@ -67,11 +67,11 @@ public class FiringExtension : TurretExtension {
         }
 
         // Handles animation callback.
-        if (data.shootCallback != null){
-            data.shootAnimationTime -= Time.deltaTime;
-            if (data.shootAnimationTime <= 0){
-                data.shootCallback.Invoke();
-                data.shootCallback = null;
+        if (data.animationCompleteCallback != null){
+            data.animationTime -= Time.deltaTime;
+            if (data.animationTime <= 0){
+                data.animationCompleteCallback.Invoke();
+                data.animationCompleteCallback = null;
             }
         }
 
@@ -97,7 +97,7 @@ public class FiringExtension : TurretExtension {
                 Physics2D.gravity.magnitude, data.aimRotation * Mathf.Deg2Rad, direction, true);
 
             ReloadableExtensionData reloadableExtensionData = turret.GetTurretExtensionData<ReloadableExtensionData>();
-            if (reloadableExtensionData && data.shootCallback == null){
+            if (reloadableExtensionData && data.animationCompleteCallback == null){
 
                 // The following code below requires at least an ammunition.
                 if (reloadableExtensionData.ammunition.Count <= 0){

@@ -318,7 +318,7 @@ public class TdPlayerController : MonoBehaviour, ITdProgressBarUi
 
             // If player is moving while doing something, stop progress.
             if (playerFacingDir != 0){
-                progressBarUi.StopProgressBar();
+                progressBarUi.FailedProgressBar();
             }
         }
 

@@ -72,8 +72,8 @@ MonoBehaviour:
   turret: {fileID: 0}
   arc: {fileID: 0}
   aimRotation: 0
-  shootAnimationCompleteTime: 0
-  shootAnimationTime: 0
+  animationCompleteTime: 0
+  animationTime: 0
   animator: {fileID: 0}
   playerController: {fileID: 0}
 --- !u!114 &-2089038497327239277

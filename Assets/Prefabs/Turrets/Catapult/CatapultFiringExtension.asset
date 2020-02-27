@@ -15,6 +15,6 @@ MonoBehaviour:
   prefab: {fileID: -7707825247899848389, guid: 2599a9260dca4814ca05a9440f369f30, type: 3}
   arcIterations: 20
   distanceOfArc: 20
-  maxRotationMultiplier: 1
-  launchSpeed: 0.15
+  maxRotationMultiplier: 3
+  launchSpeed: 0.1
   minMaxRotation: {x: 30, y: 50}

@@ -12,7 +12,6 @@ public class TdPlayerUi : MonoBehaviour
     private TdPlayerController _playerController;
     
     public TextMeshProUGUI playerNameText;
-    public Slider playerProgressBar;
     public GameObject playerUseButton;
     public Image playerEmote;
 
@@ -52,14 +51,6 @@ public class TdPlayerUi : MonoBehaviour
         emoteTimeout = duration;
         playerEmote.sprite = sprite;
         playerEmote.gameObject.SetActive(sprite != null);
-    }
-
-    public void SetProgressBar(float value){
-        playerProgressBar.value = value;
-    }
-
-    public void ShowProgressBar(bool show){
-        playerProgressBar.gameObject.SetActive(show);
     }
 
     private void Update(){

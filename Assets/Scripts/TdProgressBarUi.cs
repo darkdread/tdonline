@@ -40,7 +40,8 @@ public class TdProgressBarUi : MonoBehaviour
 
     public float progressMax = -1f;
     public float progressCurrent;
-    public System.Action progressCallback;
+    public System.Action progressCompleteCallback;
+    public System.Action progressFailedCallback;
 
     private RectTransform rectTransform;
 
@@ -62,19 +63,29 @@ public class TdProgressBarUi : MonoBehaviour
         playerProgressBar.gameObject.SetActive(show);
     }
 
-    public void StartProgressBar(float duration, System.Action callback){
-        progressCallback = callback;
+    public void StartProgressBar(float duration, System.Action completeCallback, System.Action failedCallback){
+        progressCompleteCallback = completeCallback;
+        progressFailedCallback = failedCallback;
         _referencedPhotonView.RPC("StartProgressBarRpc", RpcTarget.All, duration);
     }
 
     public void StopProgressBar(){
-        progressCallback = null;
+        progressCompleteCallback = null;
+        progressFailedCallback = null;
         _referencedPhotonView.RPC("StopProgressBarRpc", RpcTarget.All);
+    }
+
+    public void FailedProgressBar(){
+        if (progressFailedCallback != null){
+            progressFailedCallback.Invoke();
+        }
+
+        StopProgressBar();
     }
 
     public void CompleteProgressBar(){
         // print(progressCallback.Method.Name);
-        progressCallback.Invoke();
+        progressCompleteCallback.Invoke();
 
         StopProgressBar();
     }
@@ -101,7 +112,7 @@ public class TdProgressBarUi : MonoBehaviour
             // We cannot use _referencedPhotonView.IsMine here because the referencedPhotonView may not be owned by the player.
             // For example, the lever is owned by the MasterClient.
             // To know who is the caller, check for progressCallback.
-            if (progressCallback != null){
+            if (progressCompleteCallback != null){
                 if (progressCurrent > progressMax){
                     CompleteProgressBar();
                 }
