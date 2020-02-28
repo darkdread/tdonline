@@ -5,8 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 
-public class LoseUi : MonoBehaviour
+public class EndGameUi : MonoBehaviour
 {
+    public TextMeshProUGUI resultText;
     public Button backToMain;
 
     public ImageWithText imageWithTextPrefab;
@@ -16,6 +17,10 @@ public class LoseUi : MonoBehaviour
 
     private void Awake(){
         backToMain.onClick.AddListener(TdGameManager.PlayerLeaveGame);
+    }
+
+    public void SetResult(string text){
+        resultText.text = text;
     }
 
     public void LoadEndGameData(){
@@ -43,6 +48,11 @@ public class LoseUi : MonoBehaviour
                 parentTransform = killedResources;
             } else if (kvp.Key == EndGameEnum.Shot){
                 parentTransform = shotResources;
+            }
+
+            // Destroy all UI object, just in case this function is called more than once.
+            foreach(Transform t in parentTransform){
+                Destroy(t.gameObject);
             }
 
             foreach(KeyValuePair<string, ResourceData> kvp2 in kvp.Value){

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClipNames:
   - clips:
-    - {fileID: 8300000, guid: 7d1f2d5caaa98314eb909e312a31cd8d, type: 3}
+    - {fileID: 8300000, guid: ed3fade8e390c5b42abf912a10d10121, type: 3}
     name: Hit

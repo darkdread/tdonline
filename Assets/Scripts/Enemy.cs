@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     private Rigidbody2D rb;
 
     private float attackAnimationCompleteTime;
-    private bool isDying;
+    public bool isDying;
 
     public float attackAnimationFinishHitTime;
     public float attackCooldown;
@@ -62,7 +62,6 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
     private void Die(){
         isDying = true;
-        enemyList.Remove(this);
 
         StopMovement(true);
         // 1f for death sound to finish playing.
@@ -151,13 +150,19 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
     public void StunEnemy(bool stun){
         stunEffect.SetActive(stun);
         StopMovement(stun);
+        animator.SetBool("Stunned", stun);
 
         if (stun){
             enemyState = enemyState | EnemyState.stunned;
             stunnedTime = enemyData.stunnedTime;
+            attackCooldown = enemyData.attackTime;
+            attackAnimationFinishHitTime = Mathf.Infinity;
+
+            animator.speed = 0;
         } else {
             enemyState = enemyState & ~EnemyState.stunned;
             stunnedTime = 0f;
+            animator.speed = 1;
         }
     }
 
@@ -187,6 +192,8 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
                 animator.speed = attackAnimationCompleteTime / enemyData.attackTime;
             }
         }
+
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
 
         if (IsEnemyStunned()){
             stunnedTime -= Time.deltaTime;
@@ -223,6 +230,9 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
             // Just reached objective.
             if (rb.isKinematic){
+                // Sometimes, when the enemy has reached its attack position, its distance is somehow detected not as it reaching its position.
+                // For example, Archer with 5 movespeed, 7 attack range will not work. The spawner is 15 units away from the gate.
+                transform.position = targetGateTransform.position + TdGameManager.GetDirectionOfTransform2D(targetGateTransform) * (enemyData.attackRange - 0.01f);
                 StopMovement(true);
             }
             

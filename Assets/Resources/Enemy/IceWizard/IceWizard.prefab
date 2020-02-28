@@ -129,6 +129,7 @@ MonoBehaviour:
   stunEffect: {fileID: 0}
   targetGateTransform: {fileID: 0}
   photonView: {fileID: 0}
+  isDying: 0
   attackAnimationFinishHitTime: 0
   attackCooldown: 0
   deathCooldown: 0

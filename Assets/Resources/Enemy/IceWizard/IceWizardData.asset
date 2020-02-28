@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: IceWizardData
   m_EditorClassIdentifier: 
   enemyType: 1
-  health: 1
+  health: 2
   audioClipObject: {fileID: 11400000, guid: de3abe5e335b2434ca3acec4a1f66de2, type: 2}
-  attackTime: 0.2
+  attackTime: 2
   movespeed: 0.4
-  stunnedTime: 1
+  stunnedTime: 2
   attackRange: 4
   damage: 1
   projectile: {fileID: 2546729037515863492, guid: e9657dd6485ad2745884a267db525c7b,

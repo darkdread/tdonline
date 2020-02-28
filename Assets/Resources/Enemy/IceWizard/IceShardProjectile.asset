@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b687bcc6dc2f01c4d8c1537b1629a751, type: 3}
   m_Name: IceShardProjectile
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 3
   areaOfEffect: 0
   audioClipObject: {fileID: 11400000, guid: a9bec2409602a9944ac86e05c20466a2, type: 2}
+  explosionPrefabs: []
   arcAngle: 10
   gravity: 9.81

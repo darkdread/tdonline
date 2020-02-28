@@ -49,6 +49,7 @@ public struct WaveSpawnInfo {
 public class EnemySpawner : MonoBehaviour {
 
     public static int spawnCount = 0;
+    public static bool wavesFinished;
     public Transform gateTransform;
 
     public Wave[] waves;

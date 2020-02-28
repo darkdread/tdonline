@@ -306,7 +306,6 @@ public class TdPlayerController : MonoBehaviour, ITdProgressBarUi
         }
 
         playerRigidbody.velocity = velocityDelta;
-        // print(playerRigidbody.velocity);
 
         int playerFacingDir = System.Math.Sign(velocityDelta.x);
         if (playerFacingDir != 0){

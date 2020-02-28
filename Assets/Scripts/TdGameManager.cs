@@ -91,7 +91,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public Transform gameCanvas;
     public Transform gameUiCanvas;
     public Transform emoteCanvas;
-    public LoseUi loseUi;
+    public EndGameUi endGameUi;
 
     [Header("Misc")]
     public AudioSource musicAudioSource;
@@ -103,6 +103,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         castle = GetComponentInChildren<Castle>();
         players = new List<TdPlayerController>();
         Enemy.enemyList = new List<Enemy>();
+        EnemySpawner.wavesFinished = false;
 
         PhotonView[] photonViews = Resources.FindObjectsOfTypeAll(typeof(PhotonView)) as PhotonView[];
 
@@ -198,6 +199,19 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     private void DestroyPhotonNetworkedObjectRpc(int viewId){
         PhotonView obj = PhotonNetwork.GetPhotonView(viewId);
 
+        Enemy enemy = obj.GetComponent<Enemy>();
+        if (enemy){
+            Enemy.enemyList.Remove(enemy);
+            if (EnemySpawner.wavesFinished && Enemy.enemyList.Count <= 0){
+                TdGameManager.instance.Win();
+            }
+        }
+
+        Projectile projectile = obj.GetComponent<Projectile>();
+        if (projectile){
+            Projectile.projectileList.Remove(projectile);
+        }
+
         if (obj.IsMine){
             PhotonNetwork.Destroy(obj.gameObject);
         }
@@ -264,12 +278,20 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void Win(){
+        PauseGame(true);
+
+        endGameUi.gameObject.SetActive(true);
+        endGameUi.LoadEndGameData();
+        endGameUi.SetResult(gameSettings.resultWinText);
+    }
+
     public void Lose(){
         PauseGame(true);
 
-        // Load lose ui.
-        loseUi.gameObject.SetActive(true);
-        loseUi.LoadEndGameData();
+        endGameUi.gameObject.SetActive(true);
+        endGameUi.LoadEndGameData();
+        endGameUi.SetResult(gameSettings.resultLoseText);
     }
 
     public static void PlayerLeaveGame(){
@@ -305,7 +327,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         
         foreach(EnemySpawner spawner in gameSettings.enemySpawners){
             if (spawner.currentWaveId >= spawner.waves.Length){
-                print("Reset wave");
+                // print("Reset wave");
+                continue;
                 spawner.currentWaveId = 0;
             }
             
@@ -317,8 +340,19 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             }
         }
 
+        // All waves have ended.
+        if (longestWaveDuration == 0){
+            photonView.RPC("SetWaveFinished", RpcTarget.All, true);
+            return;
+        }
+
         longestWaveDuration += waveFade;
         globalSpawnTime = longestWaveDuration;
+    }
+
+    [PunRPC]
+    private void SetWaveFinished(bool finished){
+        EnemySpawner.wavesFinished = finished;
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient){
@@ -418,6 +452,10 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             enemy.StopMovement(pause);
         }
 
+        foreach(Projectile projectile in Projectile.projectileList){
+            projectile.StopMovement(pause);
+        }
+
         // Time.timeScale = isPaused ? 0 : 1;
     }
 
@@ -427,7 +465,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     private void Update(){
 
-        if (PhotonNetwork.IsMasterClient && !isPaused && gameSettings.spawnEnemies){
+        if (PhotonNetwork.IsMasterClient && !isPaused && gameSettings.spawnEnemies && !EnemySpawner.wavesFinished){
             globalSpawnTime -= (int) (Time.deltaTime * 1000);
 
             if (globalSpawnTime <= 0){
@@ -435,27 +473,27 @@ public class TdGameManager : MonoBehaviourPunCallbacks
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.X)){
+        // if (Input.GetKeyDown(KeyCode.X)){
 
-            // Sync the wave id.
-            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
-                WaveSpawnInfo waveInfo = WaveSpawnInfo.Deserialize((byte[]) PhotonNetwork.CurrentRoom.CustomProperties[TdGame.WAVE_INFO + spawner.spawnerId]);
+        //     // Sync the wave id.
+        //     foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+        //         WaveSpawnInfo waveInfo = WaveSpawnInfo.Deserialize((byte[]) PhotonNetwork.CurrentRoom.CustomProperties[TdGame.WAVE_INFO + spawner.spawnerId]);
                 
-                spawner.LoadWaveProgress(waveInfo);
-            }
+        //         spawner.LoadWaveProgress(waveInfo);
+        //     }
 
-            StartSpawnTimer();
-        } else if (Input.GetKeyDown(KeyCode.Z)) {
-            foreach(EnemySpawner spawner in gameSettings.enemySpawners){
-                spawner.SaveWaveProgress();
-            }
-        } else if (Input.GetKeyDown(KeyCode.Q)){
-            foreach(TdPlayerController playerController in players){
-                print(JsonConvert.SerializeObject(playerController.playerEndGameData));
-            }
-        } else if (Input.GetKeyDown(KeyCode.Escape)){
-            // PauseGame(!isPaused);
-            Lose();
-        }
+        //     StartSpawnTimer();
+        // } else if (Input.GetKeyDown(KeyCode.Z)) {
+        //     foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+        //         spawner.SaveWaveProgress();
+        //     }
+        // } else if (Input.GetKeyDown(KeyCode.Q)){
+        //     foreach(TdPlayerController playerController in players){
+        //         print(JsonConvert.SerializeObject(playerController.playerEndGameData));
+        //     }
+        // } else if (Input.GetKeyDown(KeyCode.Escape)){
+        //     // PauseGame(!isPaused);
+        //     Lose();
+        // }
     }
 }

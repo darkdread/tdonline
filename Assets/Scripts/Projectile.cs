@@ -6,15 +6,20 @@ using Photon.Pun;
 
 public class Projectile : MonoBehaviour, IAudioClipObject
 {
+    public static List<Projectile> projectileList = new List<Projectile>();
     public EndData endData;
     public TdPlayerController owningPlayer;
     public Rigidbody2D rb;
     public ProjectileData projectileData;
     public PhotonView photonView;
 
+    private Vector3 storedVelocity;
+
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
         photonView = GetComponent<PhotonView>();
+
+        projectileList.Add(this);
     }
 
     [PunRPC]
@@ -36,7 +41,22 @@ public class Projectile : MonoBehaviour, IAudioClipObject
             "Shoot");
     }
 
+    public void StopMovement(bool stop){
+        rb.isKinematic = stop;
+
+        if (stop){
+            storedVelocity = rb.velocity;
+            rb.velocity = Vector3.zero;
+        } else {
+            rb.velocity = storedVelocity;
+        }
+    }
+
     private void Update(){
+        if (TdGameManager.isPaused){
+            return;
+        }
+
         // Face forward direction.
         transform.right = rb.velocity.normalized;
     }
@@ -75,7 +95,9 @@ public class Projectile : MonoBehaviour, IAudioClipObject
                 Enemy[] enemies = TdGameManager.GetEnemiesOverlapSphere(collision.GetContact(0).point, projectileData.areaOfEffect);
 
                 foreach(Enemy enemy in enemies){
-                    enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
+                    if (!enemy.isDying){
+                        enemy.SetHealth(enemy.health - projectileData.damage, owningPlayer.photonView.ViewID);
+                    }
                 }
 
                 TdGameManager.instance.PlaySound(photonView.ViewID, "Hit");
@@ -84,7 +106,7 @@ public class Projectile : MonoBehaviour, IAudioClipObject
         } else {
             // If projectile is enemy-owned.
 
-            // Gate layermask
+            // Gate layermask.
             if (collision.gameObject.layer == 13){
                 TdGameManager.castle.SetHealth(TdGameManager.castle.health - projectileData.damage);
 

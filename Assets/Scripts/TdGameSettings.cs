@@ -18,6 +18,9 @@ public class TdGameSettings : MonoBehaviour
     public float progressReloadTime = 1f;
     public float progressCollectTime = 2f;
 
+    public string resultWinText = "You Win!";
+    public string resultLoseText = "You Lose!";
+
     public TdProgressBarUi progressBarUiPrefab;
     public EmoteButton playerEmoteButtonPrefab;
     public List<PlayerEmoteSprite> playerEmoteSprites;

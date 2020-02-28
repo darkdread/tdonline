@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: WarriorGoldData
   m_EditorClassIdentifier: 
   enemyType: 0
-  health: 3
+  health: 7
   audioClipObject: {fileID: 11400000, guid: f14b131ae4b8d9445bc33e4e0b12e844, type: 2}
-  attackTime: 1
+  attackTime: 1.2
   movespeed: 0.2
   stunnedTime: 1
-  attackRange: 0.9
-  damage: 1
+  attackRange: 1
+  damage: 2
   projectile: {fileID: 0}

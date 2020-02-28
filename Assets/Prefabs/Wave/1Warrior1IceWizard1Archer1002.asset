@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ee6e03e5c5b2ea40ba000217b005c9a, type: 3}
-  m_Name: 1WarriorGold1Archer1Warrior1000
+  m_Name: 1Warrior1IceWizard1Archer1002
   m_EditorClassIdentifier: 
   waveStructs:
-  - waveEnemy: {fileID: 1056586894354208505, guid: cff9550ff24a51e43a51b97051481c6c,
+  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
       type: 3}
     waveDelayMs: 2500
   - waveEnemy: {fileID: 1056586894354208505, guid: 3c117a1481cf39d4dad70d8d3561c9c6,
       type: 3}
-    waveDelayMs: 1000
-  - waveEnemy: {fileID: 1056586894354208505, guid: 96ded27312c34b2418308cec48c364e9,
+    waveDelayMs: 500
+  - waveEnemy: {fileID: 1056586894354208505, guid: f00a9bdb404ab1e41b35655bb74cd145,
       type: 3}
-    waveDelayMs: 2000
+    waveDelayMs: 3000
