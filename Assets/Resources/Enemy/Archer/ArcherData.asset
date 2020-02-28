@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: ArcherData
   m_EditorClassIdentifier: 
   enemyType: 1
-  health: 55
+  health: 2
   audioClipObject: {fileID: 11400000, guid: f8041f5da5d77bc4488fc21537ba68c6, type: 2}
   attackTime: 1
-  movespeed: 5
+  movespeed: 1
   stunnedTime: 1.5
   attackRange: 7
   damage: 1
