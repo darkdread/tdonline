@@ -61,8 +61,22 @@ public class Projectile : MonoBehaviour, IAudioClipObject
         transform.right = rb.velocity.normalized;
     }
 
-    private void UpdateView(Collision2D collision){
-        
+    public void SpawnExplosion(){
+
+        // If projectile is player-owned.
+        if (owningPlayer != null){
+
+            GameObject explosion = projectileData.GetExplosionPrefab();
+
+            if (explosion){
+                GameObject spawnedExplosion = Instantiate(explosion, transform.position, Quaternion.identity);
+                spawnedExplosion.transform.localScale = Vector3.one * projectileData.areaOfEffect / 2;
+            }
+        }
+    }
+
+    public void UpdateView(Collision2D collision){
+
         // If projectile is player-owned.
         if (owningPlayer != null){
 
@@ -80,8 +94,9 @@ public class Projectile : MonoBehaviour, IAudioClipObject
 
     private void OnCollisionEnter2D(Collision2D collision){
 
-        // Function doesn't run for big boulder, only client who invoked projectile can.
-        UpdateView(collision);
+        // Function sometimes doesn't run on other clients; presumably because the owning client removed it before it reached
+        // the ground for other client. We moved the logic to when it gets destroyed.
+        // UpdateView(collision);
 
         if (!photonView.IsMine){
             return;

@@ -86,6 +86,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     public static List<TdPlayerController> players;
 
     private static int globalSpawnTime;
+    private bool allowSpawn;
 
     [Header("Game Interface")]
     public Transform gameCanvas;
@@ -210,6 +211,8 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         Projectile projectile = obj.GetComponent<Projectile>();
         if (projectile){
             Projectile.projectileList.Remove(projectile);
+
+            projectile.SpawnExplosion();
         }
 
         if (obj.IsMine){
@@ -394,7 +397,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     }
 
     private void StartSpawnTimer(){
-        globalSpawnTime = 0;
+        allowSpawn = true;
     }
 
     public static Enemy[] GetEnemiesOverlapSphere(Vector2 position, float radius){
@@ -465,7 +468,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
     private void Update(){
 
-        if (PhotonNetwork.IsMasterClient && !isPaused && gameSettings.spawnEnemies && !EnemySpawner.wavesFinished){
+        if (PhotonNetwork.IsMasterClient && !isPaused && allowSpawn && gameSettings.spawnEnemies && !EnemySpawner.wavesFinished){
             globalSpawnTime -= (int) (Time.deltaTime * 1000);
 
             if (globalSpawnTime <= 0){

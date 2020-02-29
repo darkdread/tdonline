@@ -274,6 +274,7 @@ namespace Photon.Pun.Demo.Asteroids
             PhotonNetwork.CurrentRoom.IsVisible = false;
 
             PhotonNetwork.LoadLevel("TileMapTest");
+            // PhotonNetwork.LoadLevel("DebugTest");
         }
 
         #endregion

@@ -62,8 +62,8 @@ namespace Photon.Pun.Demo.Asteroids
                     }
                 });
 
-                // // Auto ready.
-                // PlayerReadyButton.onClick.Invoke();
+                // Auto ready.
+                PlayerReadyButton.onClick.Invoke();
             }
         }
 
