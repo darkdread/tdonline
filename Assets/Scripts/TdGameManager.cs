@@ -327,8 +327,13 @@ public class TdGameManager : MonoBehaviourPunCallbacks
     private void SpawnEnemies(){
         int longestWaveDuration = 0;
         int waveFade = 5000;
+        bool isNextWaveEmpty = true;
         
         foreach(EnemySpawner spawner in gameSettings.enemySpawners){
+            if (spawner.currentWaveId + 1 < spawner.waves.Length){
+                isNextWaveEmpty = false;
+            }
+
             if (spawner.currentWaveId >= spawner.waves.Length){
                 // print("Reset wave");
                 continue;
@@ -344,7 +349,7 @@ public class TdGameManager : MonoBehaviourPunCallbacks
         }
 
         // All waves have ended.
-        if (longestWaveDuration == 0){
+        if (isNextWaveEmpty){
             photonView.RPC("SetWaveFinished", RpcTarget.All, true);
             return;
         }
@@ -473,6 +478,15 @@ public class TdGameManager : MonoBehaviourPunCallbacks
 
             if (globalSpawnTime <= 0){
                 SpawnEnemies();
+            }
+        }
+
+        if (TdDebugManager.instance){
+            
+            foreach(KeyCodeCallback keyCodeCallback in TdDebugManager.instance.debugCalls){
+                if (Input.GetKeyDown(keyCodeCallback.code)){
+                    keyCodeCallback.callback.Invoke();
+                }
             }
         }
 

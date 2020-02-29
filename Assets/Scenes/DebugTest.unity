@@ -225,6 +225,60 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 22101921}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &80081285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 80081287}
+  - component: {fileID: 80081286}
+  m_Layer: 0
+  m_Name: TestEnemySpawn (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &80081286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80081285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4eaef89c51fcc499f8f0dec7a50cbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gateTransform: {fileID: 205423799}
+  waves:
+  - {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef, type: 2}
+  - {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef, type: 2}
+  - {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef, type: 2}
+  spawnerId: 0
+  currentWaveId: 0
+  currentSpawnId: 0
+  currentDelayMs: 0
+  currentWaveMaxSpawn: 0
+  nextSpawn: 0
+--- !u!4 &80081287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80081285}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 15, y: -2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 205423800}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &122562143
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -338,37 +392,37 @@ PrefabInstance:
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: a93b6d4ee47764148b98588ef49d135c,
+      objectReference: {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef,
         type: 2}
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: a93b6d4ee47764148b98588ef49d135c,
+      objectReference: {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef,
         type: 2}
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: a93b6d4ee47764148b98588ef49d135c,
+      objectReference: {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef,
         type: 2}
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: a93b6d4ee47764148b98588ef49d135c,
+      objectReference: {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef,
         type: 2}
     - target: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: waves.Array.data[4]
       value: 
-      objectReference: {fileID: 11400000, guid: a93b6d4ee47764148b98588ef49d135c,
+      objectReference: {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef,
         type: 2}
     - target: {fileID: 1852593932482485200, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
@@ -408,22 +462,22 @@ PrefabInstance:
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: enemySpawners.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: enemySpawners.Array.data[0]
       value: 
-      objectReference: {fileID: 205423798}
+      objectReference: {fileID: 2058062600}
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: enemySpawners.Array.data[1]
       value: 
-      objectReference: {fileID: 205423797}
+      objectReference: {fileID: 80081286}
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: castleMaxHealth
-      value: 500
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
@@ -438,7 +492,7 @@ PrefabInstance:
     - target: {fileID: 3638888300171199430, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
       propertyPath: spawnEnemies
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3638888300171199431, guid: d6a9f417451b376499e92eebde20d0f2,
         type: 3}
@@ -711,30 +765,18 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6871828799479768128, guid: d6a9f417451b376499e92eebde20d0f2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d6a9f417451b376499e92eebde20d0f2, type: 3}
---- !u!114 &205423797 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8130816915099007518, guid: d6a9f417451b376499e92eebde20d0f2,
+--- !u!4 &205423799 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5004701011384378846, guid: d6a9f417451b376499e92eebde20d0f2,
     type: 3}
   m_PrefabInstance: {fileID: 205423796}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e4eaef89c51fcc499f8f0dec7a50cbe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &205423798 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 157697625676107260, guid: d6a9f417451b376499e92eebde20d0f2,
+--- !u!4 &205423800 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1465800249, guid: d6a9f417451b376499e92eebde20d0f2,
     type: 3}
   m_PrefabInstance: {fileID: 205423796}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e4eaef89c51fcc499f8f0dec7a50cbe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &374382792
 GameObject:
   m_ObjectHideFlags: 0
@@ -11607,6 +11649,59 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2051274150}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2058062598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2058062599}
+  - component: {fileID: 2058062600}
+  m_Layer: 0
+  m_Name: TestEnemySpawn (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2058062599
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058062598}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -15, y: -2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 205423800}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2058062600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058062598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4eaef89c51fcc499f8f0dec7a50cbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gateTransform: {fileID: 205423799}
+  waves:
+  - {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef, type: 2}
+  - {fileID: 11400000, guid: dc7a5562e3b0dfa4b98aee4e76aaacef, type: 2}
+  spawnerId: 0
+  currentWaveId: 0
+  currentSpawnId: 0
+  currentDelayMs: 0
+  currentWaveMaxSpawn: 0
+  nextSpawn: 0
 --- !u!1001 &2091353985
 PrefabInstance:
   m_ObjectHideFlags: 0

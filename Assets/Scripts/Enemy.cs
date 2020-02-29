@@ -55,6 +55,10 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         enemyList.Add(this);
 
         attackAnimationCompleteTime = MyUtilityScript.GetAnimationDuration(animator, "Attack");
+
+        // 1f for death sound to finish playing.
+        deathCooldown = MyUtilityScript.GetAnimationDuration(animator, "Death") + 1f;
+
         stunEffect = Instantiate(TdGameManager.gameSettings.enemyStunPrefab, transform);
         stunEffect.transform.position += Vector3.up;
         stunEffect.SetActive(false);
@@ -64,8 +68,6 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
         isDying = true;
 
         StopMovement(true);
-        // 1f for death sound to finish playing.
-        deathCooldown = MyUtilityScript.GetAnimationDuration(animator, "Death") + 1f;
         animator.SetTrigger("Death");
         animator.speed = 1f;
 
@@ -121,13 +123,13 @@ public class Enemy : MonoBehaviour, IAudioClipObject {
 
         if (enemy.health <= 0){
             Die();
+
+            if (playerViewId != 0){
+                TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
+                hittingPlayer.playerEndGameData.UpdateCount(EndGameEnum.Killed, endData);
+            }
         } else {
             StunEnemy(true);
-        }
-
-        if (playerViewId != 0 && enemy.health <= 0){
-            TdPlayerController hittingPlayer = PhotonNetwork.GetPhotonView(playerViewId).GetComponent<TdPlayerController>();
-            hittingPlayer.playerEndGameData.UpdateCount(EndGameEnum.Killed, endData);
         }
     }
 
